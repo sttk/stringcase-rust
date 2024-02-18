@@ -20,7 +20,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! stringcase = { git = "https://github.com/sttk/stringcase-rust" }
+//! stringcase = "0.1.0"
 //! ```
 //!
 //! ## Usage
