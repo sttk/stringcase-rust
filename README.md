@@ -4,7 +4,7 @@ This library provides some functions that convert string cases between camelCase
 
 Basically, these functions targets the upper and lower cases of only ASCII alphabets for capitalization, and all characters except ASCII alphabets and ASCII numbers are eliminated as word separators.
 
-To limit characters using as separators, the functions named like *_with_sep are provided, and to keep specified characters, the functions named like *_with_keep are provided.
+To limit characters using as separators, the functions named like `*_with_sep` are provided, and to keep specified characters, the functions named like `*_with_keep` are provided.
 
 ## Install
 
@@ -12,7 +12,7 @@ In `Cargo.toml`, write this crate as a dependency.
 
 ```toml
 [dependencies]
-stringcase = { git = "https://github.com/sttk/stringcase-rust" }
+stringcase = "0.1.0"
 ```
 
 ## Usage
