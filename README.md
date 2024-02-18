@@ -1,4 +1,4 @@
-# [stringcast-rust][repo-url] [![CI Status][ci-img]][ci-url] [![MIT License][mit-img]][mit-url]
+# [stringcast-rust][repo-url] [![crate.io][crateio-img]][crateio-url] [![doc.rs][docrs-img]][docrs-url] [![CI Status][ci-img]][ci-url] [![MIT License][mit-img]][mit-url]
 
 This library provides some functions that convert string cases between camelCase, COBOL-CASE, kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
 
@@ -55,6 +55,10 @@ See the file LICENSE in this distribution for more details.
 
 
 [repo-url]: https://github.com/sttk/stringcase-rust
+[crateio-img]: https://img.shields.io/badge/crate.io-ver.0.1.0-fc8d62?logo=rust
+[crateio-url]: https://crates.io/crates/stringcase
+[docrs-img]: https://img.shields.io/badge/doc.rs-stringcase-66c2a5?logo=docs.rs
+[docrs-url]: https://docs.rs/stringcase
 [ci-img]: https://github.com/sttk/stringcase-rust/actions/workflows/rust.yml/badge.svg?branch=main
 [ci-url]: https://github.com/sttk/stringcase-rust/actions
 [mit-img]: https://img.shields.io/badge/license-MIT-green.svg
