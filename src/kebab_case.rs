@@ -43,7 +43,7 @@ pub fn kebab_case(input: &str) -> String {
                         result.push('-');
                         result.push(prev);
                     },
-                    None => (), // imbossible
+                    None => (), // impossible
                 },
                 3 => result.push('-'),
                 _ => (),
@@ -87,7 +87,7 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one an two chars before is upper
+    // 2: one an two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
@@ -161,7 +161,7 @@ pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two chars before is upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
@@ -184,7 +184,7 @@ pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
                         result.push('-');
                         result.push(prev);
                     },
-                    None => (), // impossibble
+                    None => (), // impossible
                 },
                 3 | 4 => result.push('-'),
                 _ => (),

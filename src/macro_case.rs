@@ -21,7 +21,7 @@ pub fn macro_case(input: &str) -> String {
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two char before are upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark
     // 4: other
 
@@ -87,7 +87,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two chars before and upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other

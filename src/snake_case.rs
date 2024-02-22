@@ -87,7 +87,7 @@ pub fn snake_case_with_sep(input: &str, seps: &str) -> String {
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two chars before is upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
@@ -161,7 +161,7 @@ pub fn snake_case_with_keep(input: &str, keeped: &str) -> String {
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two chars before is upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
