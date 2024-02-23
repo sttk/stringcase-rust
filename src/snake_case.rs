@@ -16,7 +16,8 @@
 ///     assert_eq!(snake, "foo_bar_baz");
 /// ```
 pub fn snake_case(input: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -33,7 +34,7 @@ pub fn snake_case(input: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
@@ -42,7 +43,7 @@ pub fn snake_case(input: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 => result.push('_'),
@@ -51,9 +52,8 @@ pub fn snake_case(input: &str) -> String {
             flag = 4;
             result.push(ch);
         } else if ch.is_ascii_digit() {
-            match flag {
-                3 => result.push('_'),
-                _ => (),
+            if flag == 3 {
+                result.push('_');
             }
             flag = 4;
             result.push(ch);
@@ -82,12 +82,13 @@ pub fn snake_case(input: &str) -> String {
 ///     assert_eq!(snake, "foo_bar100%_baz");
 /// ```
 pub fn snake_case_with_sep(input: &str, seps: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two chars before is upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
@@ -104,7 +105,7 @@ pub fn snake_case_with_sep(input: &str, seps: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
@@ -113,7 +114,7 @@ pub fn snake_case_with_sep(input: &str, seps: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 | 4 => result.push('_'),
@@ -156,12 +157,13 @@ pub fn snake_case_with_sep(input: &str, seps: &str) -> String {
 ///     assert_eq!(snake, "foo_bar100%_baz");
 /// ```
 pub fn snake_case_with_keep(input: &str, keeped: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two chars before is upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
@@ -174,7 +176,7 @@ pub fn snake_case_with_keep(input: &str, keeped: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
@@ -183,7 +185,7 @@ pub fn snake_case_with_keep(input: &str, keeped: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 | 4 => result.push('_'),
@@ -220,8 +222,8 @@ mod tests_of_snake_case {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = snake_case("abcDefGhi");
-        assert_eq!(result, "abc_def_ghi");
+        let result = snake_case("abcDefGHIjk");
+        assert_eq!(result, "abc_def_gh_ijk");
     }
 
     #[test]
@@ -262,8 +264,8 @@ mod tests_of_snake_case {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = snake_case("abc123-456defG89HIJklMN12");
-        assert_eq!(result, "abc123_456def_g89_hi_jkl_mn12");
+        let result = snake_case("abc123-456defG789HIJklMN12");
+        assert_eq!(result, "abc123_456def_g789_hi_jkl_mn12");
     }
 
     #[test]
@@ -285,8 +287,8 @@ mod tests_of_snake_case_with_sep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = snake_case_with_sep("abcDefGhi", "-_");
-        assert_eq!(result, "abc_def_ghi");
+        let result = snake_case_with_sep("abcDefGHIjk", "-_");
+        assert_eq!(result, "abc_def_gh_ijk");
     }
 
     #[test]
@@ -333,11 +335,11 @@ mod tests_of_snake_case_with_sep {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = snake_case_with_sep("abc123-456defG89HIJklMN12", "-");
-        assert_eq!(result, "abc123_456def_g89_hi_jkl_mn12");
+        let result = snake_case_with_sep("abc123-456defG789HIJklMN12", "-");
+        assert_eq!(result, "abc123_456def_g789_hi_jkl_mn12");
 
-        let result = snake_case_with_sep("abc123-456defG89HIJklMN12", "_");
-        assert_eq!(result, "abc123-_456def_g89_hi_jkl_mn12");
+        let result = snake_case_with_sep("abc123-456defG789HIJklMN12", "_");
+        assert_eq!(result, "abc123-_456def_g789_hi_jkl_mn12");
     }
 
     #[test]
@@ -359,8 +361,8 @@ mod tests_of_snake_case_with_keep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = snake_case_with_keep("abcDefGhi", "-_");
-        assert_eq!(result, "abc_def_ghi");
+        let result = snake_case_with_keep("abcDefGHIjk", "-_");
+        assert_eq!(result, "abc_def_gh_ijk");
     }
 
     #[test]
@@ -407,11 +409,11 @@ mod tests_of_snake_case_with_keep {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = snake_case_with_keep("abc123-456defG89HIJklMN12", "_");
-        assert_eq!(result, "abc123_456def_g89_hi_jkl_mn12");
+        let result = snake_case_with_keep("abc123-456defG789HIJklMN12", "_");
+        assert_eq!(result, "abc123_456def_g789_hi_jkl_mn12");
 
-        let result = snake_case_with_keep("abc123-456defG89HIJklMN12", "-");
-        assert_eq!(result, "abc123-_456def_g89_hi_jkl_mn12");
+        let result = snake_case_with_keep("abc123-456defG789HIJklMN12", "-");
+        assert_eq!(result, "abc123-_456def_g789_hi_jkl_mn12");
     }
 
     #[test]

@@ -16,7 +16,8 @@
 ///     assert_eq!(camel, "fooBarBaz");
 /// ```
 pub fn camel_case(input: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -62,8 +63,8 @@ pub fn camel_case(input: &str) -> String {
             }
         } else if ch.is_ascii_digit() {
             match flag {
-            3 => flag = 2,
-            _ => flag = 4,
+                3 => flag = 2,
+                _ => flag = 4,
             }
             result.push(ch);
         } else {
@@ -91,7 +92,8 @@ pub fn camel_case(input: &str) -> String {
 ///     assert_eq!(camel, "fooBar100%Baz");
 /// ```
 pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -110,15 +112,15 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
                 0 | 1 => {
                     flag = 1;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 2 => {
                     flag = 2;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 _ => {
                     flag = 2;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
@@ -127,17 +129,17 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
                         flag = 4;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 => {
                     flag = 2;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 4;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
@@ -170,7 +172,8 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
 ///     assert_eq!(camel, "fooBar100%Baz");
 /// ```
 pub fn camel_case_with_keep(input: &str, keeped: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char

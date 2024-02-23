@@ -16,161 +16,8 @@
 ///     assert_eq!(pascal, "FooBarBaz");
 /// ```
 pub fn pascal_case(input: &str) -> String {
-    let mut result = String::from("");
-
-    let mut flag: u8 = 0;
-    // 0: first char
-    // 1: previous char is upper
-    // 2: previous char is mark
-    // 3: other
-
-    for ch in input.chars() {
-        if ch.is_ascii_uppercase() {
-            match flag {
-                1 => {
-                    flag = 1;
-                    result.push(ch.to_ascii_lowercase());
-                },
-                _ => {
-                    flag = 1;
-                    result.push(ch);
-                },
-            }
-        } else if ch.is_ascii_lowercase() {
-            match flag {
-                1 => match result.pop() {
-                    Some(prev) => {
-                        flag = 3;
-                        result.push(prev.to_ascii_uppercase());
-                        result.push(ch);
-                    },
-                    None => (), // impossible
-                },
-                0 | 2 => {
-                    flag = 1;
-                    result.push(ch.to_ascii_uppercase());
-                },
-                _ => {
-                    flag = 3;
-                    result.push(ch);
-                },
-            }
-        } else if ch.is_ascii_digit() {
-            match flag {
-                0 | 2 => {
-                    flag = 1;
-                    result.push(ch);
-                },
-                _ => {
-                    flag = 3;
-                    result.push(ch);
-                },
-            }
-        } else {
-            if flag != 0 {
-                flag = 2;
-            }
-        }
-    }
-
-    result
-}
-
-/// Converts a string to pascal case using the specified characters as
-/// separators.
-///
-/// This function takes a string slice as its argument, then returns a `String`
-/// of which the case style is pascal case.
-///
-/// This function targets only the upper and lower cases of ASCII alphabets for
-/// capitalization, and the characters specified as the second argument of this
-/// function are regarded as word separators and are eliminated.
-///
-/// ```rust
-///     let pascal = stringcase::pascal_case_with_sep("foo-Bar100%Baz", "- ");
-///     assert_eq!(pascal, "FooBar100%Baz");
-/// ```
-pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
-    let mut result = String::from("");
-
-    let mut flag: u8 = 0;
-    // 0: first char
-    // 1: previous char is upper
-    // 2: previous char is mark
-    // 3: other
-
-    for ch in input.chars() {
-        if seps.contains(ch) {
-            if flag != 0 {
-                flag = 2;
-            }
-        } else if ch.is_ascii_uppercase() {
-            match flag {
-                1 => {
-                    flag = 1;
-                    result.push(ch.to_ascii_lowercase());
-                },
-                _ => {
-                    flag = 1;
-                    result.push(ch);
-                },
-            }
-        } else if ch.is_ascii_lowercase() {
-            match flag {
-                1 => match result.pop() {
-                    Some(prev) => {
-                        flag = 3;
-                        result.push(prev.to_ascii_uppercase());
-                        result.push(ch);
-                    },
-                    None => (), // impossible
-                },
-                0 | 2 => {
-                    flag = 1;
-                    result.push(ch.to_ascii_uppercase());
-                },
-                _ => {
-                    flag = 3;
-                    result.push(ch);
-                },
-            }
-        } else if ch.is_ascii_digit() {
-            match flag {
-                0 | 2 => {
-                    flag = 1;
-                    result.push(ch);
-                },
-                _ => {
-                    flag = 3;
-                    result.push(ch);
-                },
-            }
-        } else {
-            flag = 2;
-            result.push(ch);
-        }
-    }
-
-    result
-}
-
-/// Converts a string to pascal case using characters other than the specified
-/// characters as separators.
-///
-/// This function takes a string slice as its argument, then returns a `String`
-/// of which the case style is pascal case.
-///
-/// This function targets only the upper and lower cases of ASCII alphabets for
-/// capitalization, and the characters other than the specified characters as
-/// the second argument of this function are regarded as word separators and
-/// are eliminated.
-///
-/// ```rust
-///     let pascal = stringcase::pascal_case_with_keep("foo-bar100%baz", "%");
-///     assert_eq!(pascal, "FooBar100%Baz");
-/// ```
-pub fn pascal_case_with_keep(input: &str, keeped: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -203,22 +50,178 @@ pub fn pascal_case_with_keep(input: &str, keeped: &str) -> String {
                 0 | 2 => {
                     flag = 1;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 3;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
                 0 | 2 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 3;
                     result.push(ch);
+                }
+            }
+        } else {
+            if flag != 0 {
+                flag = 2;
+            }
+        }
+    }
+
+    result
+}
+
+/// Converts a string to pascal case using the specified characters as
+/// separators.
+///
+/// This function takes a string slice as its argument, then returns a `String`
+/// of which the case style is pascal case.
+///
+/// This function targets only the upper and lower cases of ASCII alphabets for
+/// capitalization, and the characters specified as the second argument of this
+/// function are regarded as word separators and are eliminated.
+///
+/// ```rust
+///     let pascal = stringcase::pascal_case_with_sep("foo-Bar100%Baz", "- ");
+///     assert_eq!(pascal, "FooBar100%Baz");
+/// ```
+pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
+
+    let mut flag: u8 = 0;
+    // 0: first char
+    // 1: previous char is upper
+    // 2: previous char is mark
+    // 3: other
+
+    for ch in input.chars() {
+        if seps.contains(ch) {
+            if flag != 0 {
+                flag = 2;
+            }
+        } else if ch.is_ascii_uppercase() {
+            match flag {
+                1 => {
+                    flag = 1;
+                    result.push(ch.to_ascii_lowercase());
+                }
+                _ => {
+                    flag = 1;
+                    result.push(ch);
+                }
+            }
+        } else if ch.is_ascii_lowercase() {
+            match flag {
+                1 => match result.pop() {
+                    Some(prev) => {
+                        flag = 3;
+                        result.push(prev.to_ascii_uppercase());
+                        result.push(ch);
+                    }
+                    None => (), // impossible
                 },
+                0 | 2 => {
+                    flag = 1;
+                    result.push(ch.to_ascii_uppercase());
+                }
+                _ => {
+                    flag = 3;
+                    result.push(ch);
+                }
+            }
+        } else if ch.is_ascii_digit() {
+            match flag {
+                0 | 2 => {
+                    flag = 1;
+                    result.push(ch);
+                }
+                _ => {
+                    flag = 3;
+                    result.push(ch);
+                }
+            }
+        } else {
+            flag = 2;
+            result.push(ch);
+        }
+    }
+
+    result
+}
+
+/// Converts a string to pascal case using characters other than the specified
+/// characters as separators.
+///
+/// This function takes a string slice as its argument, then returns a `String`
+/// of which the case style is pascal case.
+///
+/// This function targets only the upper and lower cases of ASCII alphabets for
+/// capitalization, and the characters other than the specified characters as
+/// the second argument of this function are regarded as word separators and
+/// are eliminated.
+///
+/// ```rust
+///     let pascal = stringcase::pascal_case_with_keep("foo-bar100%baz", "%");
+///     assert_eq!(pascal, "FooBar100%Baz");
+/// ```
+pub fn pascal_case_with_keep(input: &str, keeped: &str) -> String {
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
+
+    let mut flag: u8 = 0;
+    // 0: first char
+    // 1: previous char is upper
+    // 2: previous char is mark
+    // 3: other
+
+    for ch in input.chars() {
+        if ch.is_ascii_uppercase() {
+            match flag {
+                1 => {
+                    flag = 1;
+                    result.push(ch.to_ascii_lowercase());
+                }
+                _ => {
+                    flag = 1;
+                    result.push(ch);
+                }
+            }
+        } else if ch.is_ascii_lowercase() {
+            match flag {
+                1 => match result.pop() {
+                    Some(prev) => {
+                        flag = 3;
+                        result.push(prev.to_ascii_uppercase());
+                        result.push(ch);
+                    }
+                    None => (), // impossible
+                },
+                0 | 2 => {
+                    flag = 1;
+                    result.push(ch.to_ascii_uppercase());
+                }
+                _ => {
+                    flag = 3;
+                    result.push(ch);
+                }
+            }
+        } else if ch.is_ascii_digit() {
+            match flag {
+                0 | 2 => {
+                    flag = 1;
+                    result.push(ch);
+                }
+                _ => {
+                    flag = 3;
+                    result.push(ch);
+                }
             }
         } else if keeped.contains(ch) {
             flag = 2;

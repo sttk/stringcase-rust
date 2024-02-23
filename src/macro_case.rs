@@ -16,12 +16,13 @@
 ///     assert_eq!(m, "FOO_BAR_BAZ");
 /// ```
 pub fn macro_case(input: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two char before are upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark
     // 4: other
 
@@ -33,7 +34,7 @@ pub fn macro_case(input: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch);
         } else if ch.is_ascii_lowercase() {
@@ -42,7 +43,7 @@ pub fn macro_case(input: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 => result.push('_'),
@@ -51,9 +52,8 @@ pub fn macro_case(input: &str) -> String {
             flag = 4;
             result.push(ch.to_ascii_uppercase());
         } else if ch.is_ascii_digit() {
-            match flag {
-                3 => result.push('_'),
-                _ => (),
+            if flag == 3 {
+                result.push('_');
             }
             flag = 4;
             result.push(ch)
@@ -82,12 +82,13 @@ pub fn macro_case(input: &str) -> String {
 ///     assert_eq!(m, "FOO_BAR100%_BAZ");
 /// ```
 pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two chars before and upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
@@ -104,7 +105,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch);
         } else if ch.is_ascii_lowercase() {
@@ -113,7 +114,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 | 4 => result.push('_'),
@@ -127,13 +128,13 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
                 _ => (),
             }
             flag = 5;
-            result.push(ch.to_ascii_uppercase());
+            result.push(ch);
         } else {
             if flag == 3 {
                 result.push('_');
             }
-            result.push(ch);
             flag = 4;
+            result.push(ch);
         }
     }
 
@@ -156,7 +157,8 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
 ///     assert_eq!(m, "FOO_BAR100%_BAZ");
 /// ```
 pub fn macro_case_with_keep(input: &str, keeped: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -174,7 +176,7 @@ pub fn macro_case_with_keep(input: &str, keeped: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch);
         } else if ch.is_ascii_lowercase() {
@@ -183,7 +185,7 @@ pub fn macro_case_with_keep(input: &str, keeped: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 | 4 => result.push('_'),
@@ -220,14 +222,14 @@ mod tests_of_macro_case {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = macro_case("abcDefGhi");
-        assert_eq!(result, "ABC_DEF_GHI");
+        let result = macro_case("abcDefGHIjk");
+        assert_eq!(result, "ABC_DEF_GH_IJK");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
-        let result = macro_case("AbcDefGhi");
-        assert_eq!(result, "ABC_DEF_GHI");
+        let result = macro_case("AbcDefGHIjk");
+        assert_eq!(result, "ABC_DEF_GH_IJK");
     }
 
     #[test]
@@ -285,8 +287,8 @@ mod tests_of_macro_case_with_sep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = macro_case_with_sep("abcDefGhi", "-_");
-        assert_eq!(result, "ABC_DEF_GHI");
+        let result = macro_case_with_sep("abcDefGHIjk", "-_");
+        assert_eq!(result, "ABC_DEF_GH_IJK");
     }
 
     #[test]
@@ -359,8 +361,8 @@ mod tests_of_macro_case_with_keep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = macro_case_with_keep("abcDefGhi", "-_");
-        assert_eq!(result, "ABC_DEF_GHI");
+        let result = macro_case_with_keep("abcDefGHIjk", "-_");
+        assert_eq!(result, "ABC_DEF_GH_IJK");
     }
 
     #[test]

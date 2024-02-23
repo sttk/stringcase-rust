@@ -16,7 +16,8 @@
 ///     assert_eq!(kebab, "foo-bar-baz");
 /// ```
 pub fn kebab_case(input: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -33,7 +34,7 @@ pub fn kebab_case(input: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('-');
-                },
+                }
             }
             result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
@@ -42,8 +43,8 @@ pub fn kebab_case(input: &str) -> String {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
-                    },
-                    None => (), // imbossible
+                    }
+                    None => (), // impossible
                 },
                 3 => result.push('-'),
                 _ => (),
@@ -51,9 +52,8 @@ pub fn kebab_case(input: &str) -> String {
             flag = 4;
             result.push(ch);
         } else if ch.is_ascii_digit() {
-            match flag {
-                3 => result.push('-'),
-                _ => (),
+            if flag == 3 {
+                result.push('-');
             }
             flag = 4;
             result.push(ch);
@@ -82,12 +82,13 @@ pub fn kebab_case(input: &str) -> String {
 ///     assert_eq!(kebab, "foo-bar100%-baz");
 /// ```
 pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one an two chars before is upper
+    // 2: one an two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
@@ -104,7 +105,7 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('-');
-                },
+                }
             }
             result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
@@ -113,7 +114,7 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 | 4 => result.push('-'),
@@ -156,12 +157,13 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
 ///     assert_eq!(kebab, "foo-bar100%-baz");
 /// ```
 pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
     // 1: previous char is upper
-    // 2: one and two chars before is upper
+    // 2: one and two chars before are upper
     // 3: previous char is mark (separator)
     // 4: previous char is mark (keeped)
     // 5: other
@@ -174,7 +176,7 @@ pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('-');
-                },
+                }
             }
             result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
@@ -183,8 +185,8 @@ pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
-                    },
-                    None => (), // impossibble
+                    }
+                    None => (), // impossible
                 },
                 3 | 4 => result.push('-'),
                 _ => (),
@@ -220,14 +222,14 @@ mod tests_of_kebab_case {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = kebab_case("abcDefGhi");
-        assert_eq!(result, "abc-def-ghi");
+        let result = kebab_case("abcDefGHIjk");
+        assert_eq!(result, "abc-def-gh-ijk");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
-        let result = kebab_case("AbcDefGhi");
-        assert_eq!(result, "abc-def-ghi");
+        let result = kebab_case("AbcDefGHIjk");
+        assert_eq!(result, "abc-def-gh-ijk");
     }
 
     #[test]
@@ -262,8 +264,8 @@ mod tests_of_kebab_case {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = kebab_case("abc123-456defG89HIJklMN12");
-        assert_eq!(result, "abc123-456def-g89-hi-jkl-mn12");
+        let result = kebab_case("abc123-456defG789HIJklMN12");
+        assert_eq!(result, "abc123-456def-g789-hi-jkl-mn12");
     }
 
     #[test]
@@ -285,14 +287,23 @@ mod tests_of_kebab_case_with_sep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = kebab_case_with_sep("abcDefGhi", "-_");
-        assert_eq!(result, "abc-def-ghi");
+        let result = kebab_case_with_sep("abcDefGHIjk", "-_");
+        assert_eq!(result, "abc-def-gh-ijk");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
         let result = kebab_case_with_sep("AbcDefGHIjk", "-_");
         assert_eq!(result, "abc-def-gh-ijk");
+    }
+
+    #[test]
+    fn it_should_convert_snake_case() {
+        let result = kebab_case_with_sep("abc_def_ghi", "_");
+        assert_eq!(result, "abc-def-ghi");
+
+        let result = kebab_case_with_sep("abc_def_ghi", "-");
+        assert_eq!(result, "abc_-def_-ghi");
     }
 
     #[test]
@@ -333,11 +344,11 @@ mod tests_of_kebab_case_with_sep {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = kebab_case_with_sep("abc123-456defG89HIJklMN12", "-");
-        assert_eq!(result, "abc123-456def-g89-hi-jkl-mn12");
+        let result = kebab_case_with_sep("abc123-456defG789HIJklMN12", "-");
+        assert_eq!(result, "abc123-456def-g789-hi-jkl-mn12");
 
-        let result = kebab_case_with_sep("abc123-456defG89HIJklMN12", "_");
-        assert_eq!(result, "abc123--456def-g89-hi-jkl-mn12");
+        let result = kebab_case_with_sep("abc123-456defG789HIJklMN12", "_");
+        assert_eq!(result, "abc123--456def-g789-hi-jkl-mn12");
     }
 
     #[test]
@@ -359,14 +370,23 @@ mod tests_of_kebab_case_with_keep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = kebab_case_with_keep("abcDefGhi", "-_");
-        assert_eq!(result, "abc-def-ghi");
+        let result = kebab_case_with_keep("abcDefGHIjk", "-_");
+        assert_eq!(result, "abc-def-gh-ijk");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
         let result = kebab_case_with_keep("AbcDefGHIjk", "-_");
         assert_eq!(result, "abc-def-gh-ijk");
+    }
+
+    #[test]
+    fn it_should_convert_snake_case() {
+        let result = kebab_case_with_keep("abc_def_ghi", "-");
+        assert_eq!(result, "abc-def-ghi");
+
+        let result = kebab_case_with_keep("abc_def_ghi", "_");
+        assert_eq!(result, "abc_-def_-ghi");
     }
 
     #[test]
@@ -407,11 +427,11 @@ mod tests_of_kebab_case_with_keep {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = kebab_case_with_keep("abc123-456defG89HIJklMN12", "_");
-        assert_eq!(result, "abc123-456def-g89-hi-jkl-mn12");
+        let result = kebab_case_with_keep("abc123-456defG789HIJklMN12", "_");
+        assert_eq!(result, "abc123-456def-g789-hi-jkl-mn12");
 
-        let result = kebab_case_with_keep("abc123-456defG89HIJklMN12", "-");
-        assert_eq!(result, "abc123--456def-g89-hi-jkl-mn12");
+        let result = kebab_case_with_keep("abc123-456defG789HIJklMN12", "-");
+        assert_eq!(result, "abc123--456def-g789-hi-jkl-mn12");
     }
 
     #[test]
