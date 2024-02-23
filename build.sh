@@ -38,7 +38,7 @@ cover() {
 }
 
 bench() {
-  cargo bench -- $1
+  cargo bench --quiet -- $1
   errcheck $?
 }
 
