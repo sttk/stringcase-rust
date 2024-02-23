@@ -12,7 +12,7 @@ In `Cargo.toml`, write this crate as a dependency.
 
 ```toml
 [dependencies]
-stringcase = "0.1.0"
+stringcase = "0.1.1"
 ```
 
 ## Usage
@@ -55,7 +55,7 @@ See the file LICENSE in this distribution for more details.
 
 
 [repo-url]: https://github.com/sttk/stringcase-rust
-[crateio-img]: https://img.shields.io/badge/crate.io-ver.0.1.0-fc8d62?logo=rust
+[crateio-img]: https://img.shields.io/badge/crate.io-ver.0.1.1-fc8d62?logo=rust
 [crateio-url]: https://crates.io/crates/stringcase
 [docrs-img]: https://img.shields.io/badge/doc.rs-stringcase-66c2a5?logo=docs.rs
 [docrs-url]: https://docs.rs/stringcase
