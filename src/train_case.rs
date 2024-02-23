@@ -31,29 +31,29 @@ pub fn train_case(input: &str) -> String {
                 1 | 2 => {
                     flag = 2;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 0 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 1;
                     result.push('-');
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
                 0 => {
                     flag = 1;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 1 => match result.pop() {
                     Some(prev) => {
                         flag = 4;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
+                    }
                     None => (), // impossible
                 },
                 2 => match result.pop() {
@@ -62,34 +62,34 @@ pub fn train_case(input: &str) -> String {
                         result.push('-');
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
-                    None => (),  // impossible
+                    }
+                    None => (), // impossible
                 },
                 3 => {
                     flag = 1;
                     result.push('-');
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 4;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
                 0 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 3 => {
                     flag = 1;
                     result.push('-');
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 4;
                     result.push(ch);
-                },
+                }
             }
         } else {
             if flag != 0 {
@@ -135,29 +135,29 @@ pub fn train_case_with_sep(input: &str, seps: &str) -> String {
                 1 | 2 => {
                     flag = 2;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 0 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 1;
                     result.push('-');
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
                 0 => {
                     flag = 1;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 1 => match result.pop() {
                     Some(prev) => {
                         flag = 4;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
+                    }
                     None => (), // impossible
                 },
                 2 => match result.pop() {
@@ -166,34 +166,34 @@ pub fn train_case_with_sep(input: &str, seps: &str) -> String {
                         result.push('-');
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 => {
                     flag = 1;
                     result.push('-');
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 4;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
                 0 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 3 => {
                     flag = 1;
                     result.push('-');
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 4;
                     result.push(ch);
-                },
+                }
             }
         } else {
             flag = 3;
@@ -235,29 +235,29 @@ pub fn train_case_with_keep(input: &str, keeped: &str) -> String {
                 1 | 2 => {
                     flag = 2;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 0 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 1;
                     result.push('-');
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
                 0 => {
                     flag = 1;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 1 => match result.pop() {
                     Some(prev) => {
                         flag = 4;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
+                    }
                     None => (), // impossible
                 },
                 2 => match result.pop() {
@@ -266,34 +266,34 @@ pub fn train_case_with_keep(input: &str, keeped: &str) -> String {
                         result.push('-');
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
-                    None => (),  // impossible
+                    }
+                    None => (), // impossible
                 },
                 3 => {
                     flag = 1;
                     result.push('-');
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 4;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
                 0 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 3 => {
                     flag = 1;
                     result.push('-');
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 4;
                     result.push(ch);
-                },
+                }
             }
         } else if keeped.contains(ch) {
             flag = 3;
@@ -314,14 +314,14 @@ mod tests_of_train_case {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = train_case("abcDefGhi");
-        assert_eq!(result, "Abc-Def-Ghi");
+        let result = train_case("abcDefGHIjk");
+        assert_eq!(result, "Abc-Def-Gh-Ijk");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
-        let result = train_case("AbcDefGhi");
-        assert_eq!(result, "Abc-Def-Ghi");
+        let result = train_case("AbcDefGHIjk");
+        assert_eq!(result, "Abc-Def-Gh-Ijk");
     }
 
     #[test]
@@ -356,8 +356,8 @@ mod tests_of_train_case {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = train_case("abc123-456defG89HIJklMN12");
-        assert_eq!(result, "Abc123-456def-G89-Hi-Jkl-Mn12");
+        let result = train_case("abc123-456defG789HIJklMN12");
+        assert_eq!(result, "Abc123-456def-G789-Hi-Jkl-Mn12");
     }
 
     #[test]

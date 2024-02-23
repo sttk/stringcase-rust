@@ -33,7 +33,7 @@ pub fn macro_case(input: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch);
         } else if ch.is_ascii_lowercase() {
@@ -42,7 +42,7 @@ pub fn macro_case(input: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 => result.push('_'),
@@ -51,9 +51,8 @@ pub fn macro_case(input: &str) -> String {
             flag = 4;
             result.push(ch.to_ascii_uppercase());
         } else if ch.is_ascii_digit() {
-            match flag {
-                3 => result.push('_'),
-                _ => (),
+            if flag == 3 {
+                result.push('_');
             }
             flag = 4;
             result.push(ch)
@@ -104,7 +103,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch);
         } else if ch.is_ascii_lowercase() {
@@ -113,7 +112,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 | 4 => result.push('_'),
@@ -127,13 +126,13 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
                 _ => (),
             }
             flag = 5;
-            result.push(ch.to_ascii_uppercase());
+            result.push(ch);
         } else {
             if flag == 3 {
                 result.push('_');
             }
-            result.push(ch);
             flag = 4;
+            result.push(ch);
         }
     }
 
@@ -174,7 +173,7 @@ pub fn macro_case_with_keep(input: &str, keeped: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('_');
-                },
+                }
             }
             result.push(ch);
         } else if ch.is_ascii_lowercase() {
@@ -183,7 +182,7 @@ pub fn macro_case_with_keep(input: &str, keeped: &str) -> String {
                     Some(prev) => {
                         result.push('_');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 | 4 => result.push('_'),
@@ -220,14 +219,14 @@ mod tests_of_macro_case {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = macro_case("abcDefGhi");
-        assert_eq!(result, "ABC_DEF_GHI");
+        let result = macro_case("abcDefGHIjk");
+        assert_eq!(result, "ABC_DEF_GH_IJK");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
-        let result = macro_case("AbcDefGhi");
-        assert_eq!(result, "ABC_DEF_GHI");
+        let result = macro_case("AbcDefGHIjk");
+        assert_eq!(result, "ABC_DEF_GH_IJK");
     }
 
     #[test]
@@ -285,8 +284,8 @@ mod tests_of_macro_case_with_sep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = macro_case_with_sep("abcDefGhi", "-_");
-        assert_eq!(result, "ABC_DEF_GHI");
+        let result = macro_case_with_sep("abcDefGHIjk", "-_");
+        assert_eq!(result, "ABC_DEF_GH_IJK");
     }
 
     #[test]
@@ -359,8 +358,8 @@ mod tests_of_macro_case_with_keep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = macro_case_with_keep("abcDefGhi", "-_");
-        assert_eq!(result, "ABC_DEF_GHI");
+        let result = macro_case_with_keep("abcDefGHIjk", "-_");
+        assert_eq!(result, "ABC_DEF_GH_IJK");
     }
 
     #[test]

@@ -42,7 +42,7 @@ pub fn cobol_case(input: &str) -> String {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 => result.push('-'),
@@ -51,9 +51,8 @@ pub fn cobol_case(input: &str) -> String {
             flag = 4;
             result.push(ch.to_ascii_uppercase());
         } else if ch.is_ascii_digit() {
-            match flag {
-                3 => result.push('-'),
-                _ => (),
+            if flag == 3 {
+                result.push('-');
             }
             flag = 4;
             result.push(ch);
@@ -104,7 +103,7 @@ pub fn cobol_case_with_sep(input: &str, seps: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('-');
-                },
+                }
             }
             result.push(ch);
         } else if ch.is_ascii_lowercase() {
@@ -113,7 +112,7 @@ pub fn cobol_case_with_sep(input: &str, seps: &str) -> String {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 | 4 => result.push('-'),
@@ -174,7 +173,7 @@ pub fn cobol_case_with_keep(input: &str, keeped: &str) -> String {
                 _ => {
                     flag = 1;
                     result.push('-');
-                },
+                }
             }
             result.push(ch);
         } else if ch.is_ascii_lowercase() {
@@ -183,8 +182,8 @@ pub fn cobol_case_with_keep(input: &str, keeped: &str) -> String {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
-                    },
-                    None => (),  // impossible
+                    }
+                    None => (), // impossible
                 },
                 3 | 4 => result.push('-'),
                 _ => (),
@@ -220,14 +219,14 @@ mod tests_of_cobol_case {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = cobol_case("abcDefGhi");
-        assert_eq!(result, "ABC-DEF-GHI");
+        let result = cobol_case("abcDefGHIjk");
+        assert_eq!(result, "ABC-DEF-GH-IJK");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
-        let result = cobol_case("AbcDefGhi");
-        assert_eq!(result, "ABC-DEF-GHI");
+        let result = cobol_case("AbcDefGHIjk");
+        assert_eq!(result, "ABC-DEF-GH-IJK");
     }
 
     #[test]
@@ -262,8 +261,8 @@ mod tests_of_cobol_case {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = cobol_case("abc123-456defG89HIJklMN12");
-        assert_eq!(result, "ABC123-456DEF-G89-HI-JKL-MN12");
+        let result = cobol_case("abc123-456defG789HIJklMN12");
+        assert_eq!(result, "ABC123-456DEF-G789-HI-JKL-MN12");
     }
 
     #[test]
@@ -285,14 +284,23 @@ mod tests_of_cobol_case_with_sep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = cobol_case_with_sep("abcDefGhi", "-_");
-        assert_eq!(result, "ABC-DEF-GHI");
+        let result = cobol_case_with_sep("abcDefGHIjk", "-_");
+        assert_eq!(result, "ABC-DEF-GH-IJK");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
         let result = cobol_case_with_sep("AbcDefGHIjk", "-_");
         assert_eq!(result, "ABC-DEF-GH-IJK");
+    }
+
+    #[test]
+    fn it_should_convert_snake_case() {
+        let result = cobol_case_with_sep("abc_def_ghi", "_");
+        assert_eq!(result, "ABC-DEF-GHI");
+
+        let result = cobol_case_with_sep("abc_def_ghi", "-");
+        assert_eq!(result, "ABC_-DEF_-GHI");
     }
 
     #[test]
@@ -333,11 +341,11 @@ mod tests_of_cobol_case_with_sep {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = cobol_case_with_sep("abc123-456defG89HIJklMN12", "-");
-        assert_eq!(result, "ABC123-456DEF-G89-HI-JKL-MN12");
+        let result = cobol_case_with_sep("abc123-456defG789HIJklMN12", "-");
+        assert_eq!(result, "ABC123-456DEF-G789-HI-JKL-MN12");
 
-        let result = cobol_case_with_sep("abc123-456defG89HIJklMN12", "_");
-        assert_eq!(result, "ABC123--456DEF-G89-HI-JKL-MN12");
+        let result = cobol_case_with_sep("abc123-456defG789HIJklMN12", "_");
+        assert_eq!(result, "ABC123--456DEF-G789-HI-JKL-MN12");
     }
 
     #[test]
@@ -359,14 +367,23 @@ mod tests_of_cobol_case_with_keep {
 
     #[test]
     fn it_should_convert_camel_case() {
-        let result = cobol_case_with_keep("abcDefGhi", "-_");
-        assert_eq!(result, "ABC-DEF-GHI");
+        let result = cobol_case_with_keep("abcDefGHIjk", "-_");
+        assert_eq!(result, "ABC-DEF-GH-IJK");
     }
 
     #[test]
     fn it_should_convert_pascal_case() {
         let result = cobol_case_with_keep("AbcDefGHIjk", "-_");
         assert_eq!(result, "ABC-DEF-GH-IJK");
+    }
+
+    #[test]
+    fn it_should_convert_snake_case() {
+        let result = cobol_case_with_keep("abc_def_ghi", "-");
+        assert_eq!(result, "ABC-DEF-GHI");
+
+        let result = cobol_case_with_keep("abc_def_ghi", "_");
+        assert_eq!(result, "ABC_-DEF_-GHI");
     }
 
     #[test]
@@ -407,11 +424,11 @@ mod tests_of_cobol_case_with_keep {
 
     #[test]
     fn it_should_keep_digits() {
-        let result = cobol_case_with_keep("abc123-456defG89HIJklMN12", "_");
-        assert_eq!(result, "ABC123-456DEF-G89-HI-JKL-MN12");
+        let result = cobol_case_with_keep("abc123-456defG789HIJklMN12", "_");
+        assert_eq!(result, "ABC123-456DEF-G789-HI-JKL-MN12");
 
-        let result = cobol_case_with_keep("abc123-456defG89HIJklMN12", "-");
-        assert_eq!(result, "ABC123--456DEF-G89-HI-JKL-MN12");
+        let result = cobol_case_with_keep("abc123-456defG789HIJklMN12", "-");
+        assert_eq!(result, "ABC123--456DEF-G789-HI-JKL-MN12");
     }
 
     #[test]

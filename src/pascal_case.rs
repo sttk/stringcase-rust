@@ -30,11 +30,11 @@ pub fn pascal_case(input: &str) -> String {
                 1 => {
                     flag = 1;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 _ => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
@@ -43,28 +43,28 @@ pub fn pascal_case(input: &str) -> String {
                         flag = 3;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
+                    }
                     None => (), // impossible
                 },
                 0 | 2 => {
                     flag = 1;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 3;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
                 0 | 2 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 3;
                     result.push(ch);
-                },
+                }
             }
         } else {
             if flag != 0 {
@@ -109,11 +109,11 @@ pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
                 1 => {
                     flag = 1;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 _ => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
@@ -122,28 +122,28 @@ pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
                         flag = 3;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
+                    }
                     None => (), // impossible
                 },
                 0 | 2 => {
                     flag = 1;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 3;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
                 0 | 2 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 3;
                     result.push(ch);
-                },
+                }
             }
         } else {
             flag = 2;
@@ -203,22 +203,22 @@ pub fn pascal_case_with_keep(input: &str, keeped: &str) -> String {
                 0 | 2 => {
                     flag = 1;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 3;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
                 0 | 2 => {
                     flag = 1;
                     result.push(ch);
-                },
+                }
                 _ => {
                     flag = 3;
                     result.push(ch);
-                },
+                }
             }
         } else if keeped.contains(ch) {
             flag = 2;

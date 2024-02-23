@@ -62,8 +62,8 @@ pub fn camel_case(input: &str) -> String {
             }
         } else if ch.is_ascii_digit() {
             match flag {
-            3 => flag = 2,
-            _ => flag = 4,
+                3 => flag = 2,
+                _ => flag = 4,
             }
             result.push(ch);
         } else {
@@ -110,15 +110,15 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
                 0 | 1 => {
                     flag = 1;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 2 => {
                     flag = 2;
                     result.push(ch.to_ascii_lowercase());
-                },
+                }
                 _ => {
                     flag = 2;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
@@ -127,17 +127,17 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
                         flag = 4;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                    },
+                    }
                     None => (), // impossible
                 },
                 3 => {
                     flag = 2;
                     result.push(ch.to_ascii_uppercase());
-                },
+                }
                 _ => {
                     flag = 4;
                     result.push(ch);
-                },
+                }
             }
         } else if ch.is_ascii_digit() {
             match flag {
