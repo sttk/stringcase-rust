@@ -7,3 +7,4 @@ Cargo.lock
 /target/
 /benches/*
 !/benches/*.rs
+!/benches/*.md

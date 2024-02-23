@@ -16,7 +16,8 @@
 ///     assert_eq!(kebab, "foo-bar-baz");
 /// ```
 pub fn kebab_case(input: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -81,7 +82,8 @@ pub fn kebab_case(input: &str) -> String {
 ///     assert_eq!(kebab, "foo-bar100%-baz");
 /// ```
 pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -155,7 +157,8 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
 ///     assert_eq!(kebab, "foo-bar100%-baz");
 /// ```
 pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char

@@ -16,7 +16,8 @@
 ///     assert_eq!(pascal, "FooBarBaz");
 /// ```
 pub fn pascal_case(input: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -91,7 +92,8 @@ pub fn pascal_case(input: &str) -> String {
 ///     assert_eq!(pascal, "FooBar100%Baz");
 /// ```
 pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
@@ -170,7 +172,8 @@ pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
 ///     assert_eq!(pascal, "FooBar100%Baz");
 /// ```
 pub fn pascal_case_with_keep(input: &str, keeped: &str) -> String {
-    let mut result = String::from("");
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
 
     let mut flag: u8 = 0;
     // 0: first char
