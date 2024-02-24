@@ -1,4 +1,4 @@
-use stringcase::{train_case, train_case_with_sep, train_case_with_keep};
+use stringcase::{train_case, train_case_with_keep, train_case_with_sep};
 
 #[test]
 fn it_should_convert_to_train_case() {

@@ -20,11 +20,11 @@ pub fn camel_case(input: &str) -> String {
     // .len returns byte count but ok in this case!
 
     enum ChIs {
-      FirstOfStr,
-      InFirstWord,
-      NextOfUpper,
-      NextOfMark,
-      Others,
+        FirstOfStr,
+        InFirstWord,
+        NextOfUpper,
+        NextOfMark,
+        Others,
     }
 
     let mut flag = ChIs::FirstOfStr;
@@ -100,11 +100,11 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
     // .len returns byte count but ok in this case!
 
     enum ChIs {
-      FirstOfStr,
-      InFirstWord,
-      NextOfUpper,
-      NextOfMark,
-      Others,
+        FirstOfStr,
+        InFirstWord,
+        NextOfUpper,
+        NextOfMark,
+        Others,
     }
     let mut flag = ChIs::FirstOfStr;
 

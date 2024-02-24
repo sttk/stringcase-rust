@@ -1,4 +1,4 @@
-use stringcase::{snake_case, snake_case_with_sep, snake_case_with_keep};
+use stringcase::{snake_case, snake_case_with_keep, snake_case_with_sep};
 
 #[test]
 fn it_should_convert_to_snake_case() {

@@ -2,7 +2,7 @@
 
 extern crate test;
 
-use stringcase::{cobol_case, cobol_case_with_sep, cobol_case_with_keep};
+use stringcase::{cobol_case, cobol_case_with_keep, cobol_case_with_sep};
 use test::Bencher;
 
 #[bench]

@@ -1,4 +1,4 @@
-use stringcase::{camel_case, camel_case_with_sep, camel_case_with_keep};
+use stringcase::{camel_case, camel_case_with_keep, camel_case_with_sep};
 
 #[test]
 fn it_should_convert_to_camel_case() {

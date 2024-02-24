@@ -2,7 +2,7 @@
 
 extern crate test;
 
-use stringcase::{train_case, train_case_with_sep, train_case_with_keep};
+use stringcase::{train_case, train_case_with_keep, train_case_with_sep};
 use test::Bencher;
 
 #[bench]

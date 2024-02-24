@@ -1,4 +1,4 @@
-use stringcase::{kebab_case, kebab_case_with_sep, kebab_case_with_keep};
+use stringcase::{kebab_case, kebab_case_with_keep, kebab_case_with_sep};
 
 #[test]
 fn it_should_convert_to_kebab_case() {

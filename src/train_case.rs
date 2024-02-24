@@ -34,11 +34,11 @@ pub fn train_case(input: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch.to_ascii_lowercase());
                     flag = ChIs::NextOfContdUpper;
-                },
+                }
                 _ => {
                     result.push('-');
                     result.push(ch);
@@ -96,8 +96,8 @@ pub fn train_case(input: &str) -> String {
             }
         } else {
             match flag {
-              ChIs::FirstOfStr => (),
-              _ => flag = ChIs::NextOfMark,
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfMark,
             }
         }
     }
@@ -124,11 +124,11 @@ pub fn train_case_with_sep(input: &str, seps: &str) -> String {
     // .len returns byte count but ok in this case!
 
     enum ChIs {
-      FirstOfStr,
-      NextOfUpper,
-      NextOfContdUpper,
-      NextOfMark,
-      Others,
+        FirstOfStr,
+        NextOfUpper,
+        NextOfContdUpper,
+        NextOfMark,
+        Others,
     }
     let mut flag = ChIs::FirstOfStr;
 
@@ -143,11 +143,11 @@ pub fn train_case_with_sep(input: &str, seps: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch.to_ascii_lowercase());
                     flag = ChIs::NextOfContdUpper;
-                },
+                }
                 _ => {
                     result.push('-');
                     result.push(ch);
@@ -246,7 +246,7 @@ pub fn train_case_with_keep(input: &str, keeped: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch.to_ascii_lowercase());
                     flag = ChIs::NextOfContdUpper;
@@ -311,8 +311,8 @@ pub fn train_case_with_keep(input: &str, keeped: &str) -> String {
             flag = ChIs::NextOfMark;
         } else {
             match flag {
-              ChIs::FirstOfStr => (),
-              _ => flag = ChIs::NextOfMark,
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfMark,
             }
         }
     }

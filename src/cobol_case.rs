@@ -20,11 +20,11 @@ pub fn cobol_case(input: &str) -> String {
     // .len returns byte count but ok in this case!
 
     enum ChIs {
-      FirstOfStr,
-      NextOfUpper,
-      NextOfContdUpper,
-      NextOfMark,
-      Others,
+        FirstOfStr,
+        NextOfUpper,
+        NextOfContdUpper,
+        NextOfMark,
+        Others,
     }
     let mut flag = ChIs::FirstOfStr;
 
@@ -34,11 +34,11 @@ pub fn cobol_case(input: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch);
                     flag = ChIs::NextOfContdUpper;
-                },
+                }
                 _ => {
                     result.push('-');
                     result.push(ch);
@@ -61,15 +61,15 @@ pub fn cobol_case(input: &str) -> String {
             flag = ChIs::Others;
         } else if ch.is_ascii_digit() {
             match flag {
-              ChIs::NextOfMark => result.push('-'),
-              _ => (),
+                ChIs::NextOfMark => result.push('-'),
+                _ => (),
             }
             result.push(ch);
             flag = ChIs::Others;
         } else {
             match flag {
-              ChIs::FirstOfStr => (),
-              _ => flag = ChIs::NextOfMark,
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfMark,
             }
         }
     }
@@ -96,12 +96,12 @@ pub fn cobol_case_with_sep(input: &str, seps: &str) -> String {
     // .len returns byte count but ok in this case!
 
     enum ChIs {
-      FirstOfStr,
-      NextOfUpper,
-      NextOfContdUpper,
-      NextOfSepMark,
-      NextOfKeepedMark,
-      Others,
+        FirstOfStr,
+        NextOfUpper,
+        NextOfContdUpper,
+        NextOfSepMark,
+        NextOfKeepedMark,
+        Others,
     }
     let mut flag = ChIs::FirstOfStr;
 
@@ -116,11 +116,11 @@ pub fn cobol_case_with_sep(input: &str, seps: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch);
                     flag = ChIs::NextOfContdUpper;
-                },
+                }
                 _ => {
                     result.push('-');
                     result.push(ch);
@@ -138,7 +138,7 @@ pub fn cobol_case_with_sep(input: &str, seps: &str) -> String {
                 },
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('-');
-                },
+                }
                 _ => (),
             }
             result.push(ch.to_ascii_uppercase());
@@ -147,7 +147,7 @@ pub fn cobol_case_with_sep(input: &str, seps: &str) -> String {
             match flag {
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('-');
-                },
+                }
                 _ => (),
             }
             result.push(ch);
@@ -185,12 +185,12 @@ pub fn cobol_case_with_keep(input: &str, keeped: &str) -> String {
     // .len returns byte count but ok in this case!
 
     enum ChIs {
-      FirstOfStr,
-      NextOfUpper,
-      NextOfContdUpper,
-      NextOfSepMark,
-      NextOfKeepedMark,
-      Others,
+        FirstOfStr,
+        NextOfUpper,
+        NextOfContdUpper,
+        NextOfSepMark,
+        NextOfKeepedMark,
+        Others,
     }
     let mut flag = ChIs::FirstOfStr;
 
@@ -200,16 +200,16 @@ pub fn cobol_case_with_keep(input: &str, keeped: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch);
                     flag = ChIs::NextOfContdUpper;
-                },
+                }
                 _ => {
                     result.push('-');
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
@@ -220,9 +220,9 @@ pub fn cobol_case_with_keep(input: &str, keeped: &str) -> String {
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark  => {
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('-');
-                },
+                }
                 _ => (),
             }
             result.push(ch.to_ascii_uppercase());
@@ -231,7 +231,7 @@ pub fn cobol_case_with_keep(input: &str, keeped: &str) -> String {
             match flag {
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('-');
-                },
+                }
                 _ => (),
             }
             result.push(ch);

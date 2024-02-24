@@ -99,10 +99,10 @@ pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
     // .len returns byte count but ok in this case!
 
     enum ChIs {
-      FirstOfStr,
-      NextOfUpper,
-      NextOfMark,
-      Others,
+        FirstOfStr,
+        NextOfUpper,
+        NextOfMark,
+        Others,
     }
     let mut flag = ChIs::FirstOfStr;
 

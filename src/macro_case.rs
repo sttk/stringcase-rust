@@ -34,16 +34,16 @@ pub fn macro_case(input: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch);
                     flag = ChIs::NextOfContdUpper;
-                },
+                }
                 _ => {
                     result.push('_');
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
@@ -116,11 +116,11 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch);
                     flag = ChIs::NextOfContdUpper;
-                },
+                }
                 _ => {
                     result.push('_');
                     result.push(ch);
@@ -138,7 +138,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
                 },
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('_');
-                },
+                }
                 _ => (),
             }
             result.push(ch.to_ascii_uppercase());
@@ -147,7 +147,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
             match flag {
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('_');
-                },
+                }
                 _ => (),
             }
             result.push(ch);
@@ -200,11 +200,11 @@ pub fn macro_case_with_keep(input: &str, keeped: &str) -> String {
                 ChIs::FirstOfStr => {
                     result.push(ch);
                     flag = ChIs::NextOfUpper;
-                },
+                }
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
                     result.push(ch);
                     flag = ChIs::NextOfContdUpper;
-                },
+                }
                 _ => {
                     result.push('_');
                     result.push(ch);
@@ -222,7 +222,7 @@ pub fn macro_case_with_keep(input: &str, keeped: &str) -> String {
                 },
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('_');
-                },
+                }
                 _ => (),
             }
             result.push(ch.to_ascii_uppercase());
@@ -231,7 +231,7 @@ pub fn macro_case_with_keep(input: &str, keeped: &str) -> String {
             match flag {
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('_');
-                },
+                }
                 _ => (),
             }
             result.push(ch);
