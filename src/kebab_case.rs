@@ -197,16 +197,20 @@ pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
     for ch in input.chars() {
         if ch.is_ascii_uppercase() {
             match flag {
-                ChIs::FirstOfStr => flag = ChIs::NextOfUpper,
+                ChIs::FirstOfStr => {
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfUpper;
+                },
                 ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
+                    result.push(ch.to_ascii_lowercase());
                     flag = ChIs::NextOfContdUpper;
                 },
                 _ => {
-                    flag = ChIs::NextOfUpper;
                     result.push('-');
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfUpper;
                 }
             }
-            result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
             match flag {
                 ChIs::NextOfContdUpper => match result.pop() {

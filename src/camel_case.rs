@@ -140,7 +140,7 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
                     None => (), // impossible
                 },
                 ChIs::NextOfMark => {
-                    result.push(ch);
+                    result.push(ch.to_ascii_uppercase());
                     flag = ChIs::NextOfUpper;
                 }
                 _ => {
