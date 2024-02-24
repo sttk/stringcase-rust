@@ -19,47 +19,57 @@ pub fn kebab_case(input: &str) -> String {
     let mut result = String::with_capacity(input.len() + input.len() / 2);
     // .len returns byte count but ok in this case!
 
-    let mut flag: u8 = 0;
-    // 0: first char
-    // 1: previous char is upper
-    // 2: one and two chars before are upper
-    // 3: previous char is mark
-    // 4: other
+    enum ChIs {
+      FirstOfStr,
+      NextOfUpper,
+      NextOfContdUpper,
+      NextOfMark,
+      Others,
+    }
+    let mut flag = ChIs::FirstOfStr;
 
     for ch in input.chars() {
         if ch.is_ascii_uppercase() {
             match flag {
-                0 => flag = 1,
-                1 | 2 => flag = 2,
+                ChIs::FirstOfStr => {
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfUpper;
+                },
+                ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfContdUpper;
+                },
                 _ => {
-                    flag = 1;
                     result.push('-');
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfUpper;
                 }
             }
-            result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
             match flag {
-                2 => match result.pop() {
+                ChIs::NextOfContdUpper => match result.pop() {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
                     }
                     None => (), // impossible
                 },
-                3 => result.push('-'),
+                ChIs::NextOfMark => result.push('-'),
                 _ => (),
             }
-            flag = 4;
             result.push(ch);
+            flag = ChIs::Others;
         } else if ch.is_ascii_digit() {
-            if flag == 3 {
-                result.push('-');
+            match flag {
+                ChIs::NextOfMark => result.push('-'),
+                _ => (),
             }
-            flag = 4;
             result.push(ch);
+            flag = ChIs::Others;
         } else {
-            if flag != 0 {
-                flag = 3;
+            match flag {
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfMark,
             }
         }
     }
@@ -85,56 +95,70 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
     let mut result = String::with_capacity(input.len() + input.len() / 2);
     // .len returns byte count but ok in this case!
 
-    let mut flag: u8 = 0;
-    // 0: first char
-    // 1: previous char is upper
-    // 2: one an two chars before are upper
-    // 3: previous char is mark (separator)
-    // 4: previous char is mark (keeped)
-    // 5: other
+    enum ChIs {
+      FirstOfStr,
+      NextOfUpper,
+      NextOfContdUpper,
+      NextOfSepMark,
+      NextOfKeepedMark,
+      Others,
+    }
+    let mut flag = ChIs::FirstOfStr;
 
     for ch in input.chars() {
         if seps.contains(ch) {
-            if flag != 0 {
-                flag = 3;
+            match flag {
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfSepMark,
             }
         } else if ch.is_ascii_uppercase() {
             match flag {
-                0 => flag = 1,
-                1 | 2 => flag = 2,
+                ChIs::FirstOfStr => {
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfUpper;
+                },
+                ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfContdUpper;
+                },
                 _ => {
-                    flag = 1;
                     result.push('-');
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfUpper;
                 }
             }
-            result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
             match flag {
-                2 => match result.pop() {
+                ChIs::NextOfContdUpper => match result.pop() {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
                     }
                     None => (), // impossible
                 },
-                3 | 4 => result.push('-'),
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
+                    result.push('-');
+                },
                 _ => (),
             }
-            flag = 5;
+            flag = ChIs::Others;
             result.push(ch);
         } else if ch.is_ascii_digit() {
             match flag {
-                3 | 4 => result.push('-'),
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
+                    result.push('-');
+                },
                 _ => (),
             }
-            flag = 5;
+            flag = ChIs::Others;
             result.push(ch);
         } else {
-            if flag == 3 {
-                result.push('-');
+            match flag {
+                ChIs::NextOfSepMark => result.push('-'),
+                _ => (),
             }
-            flag = 4;
             result.push(ch);
+            flag = ChIs::NextOfKeepedMark;
         }
     }
 
@@ -160,55 +184,65 @@ pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
     let mut result = String::with_capacity(input.len() + input.len() / 2);
     // .len returns byte count but ok in this case!
 
-    let mut flag: u8 = 0;
-    // 0: first char
-    // 1: previous char is upper
-    // 2: one and two chars before are upper
-    // 3: previous char is mark (separator)
-    // 4: previous char is mark (keeped)
-    // 5: other
+    enum ChIs {
+      FirstOfStr,
+      NextOfUpper,
+      NextOfContdUpper,
+      NextOfSepMark,
+      NextOfKeepedMark,
+      Others,
+    }
+    let mut flag = ChIs::FirstOfStr;
 
     for ch in input.chars() {
         if ch.is_ascii_uppercase() {
             match flag {
-                0 => flag = 1,
-                1 | 2 => flag = 2,
+                ChIs::FirstOfStr => flag = ChIs::NextOfUpper,
+                ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
+                    flag = ChIs::NextOfContdUpper;
+                },
                 _ => {
-                    flag = 1;
+                    flag = ChIs::NextOfUpper;
                     result.push('-');
                 }
             }
             result.push(ch.to_ascii_lowercase());
         } else if ch.is_ascii_lowercase() {
             match flag {
-                2 => match result.pop() {
+                ChIs::NextOfContdUpper => match result.pop() {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev);
                     }
                     None => (), // impossible
                 },
-                3 | 4 => result.push('-'),
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
+                    result.push('-');
+                },
                 _ => (),
             }
-            flag = 5;
             result.push(ch);
+            flag = ChIs::Others;
         } else if ch.is_ascii_digit() {
             match flag {
-                3 | 4 => result.push('-'),
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
+                    result.push('-');
+                },
                 _ => (),
             }
-            flag = 5;
             result.push(ch);
+            flag = ChIs::Others;
         } else if keeped.contains(ch) {
-            if flag == 3 {
-                result.push('-');
+            match flag {
+                ChIs::NextOfSepMark => result.push('-'),
+                _ => (),
             }
-            flag = 4;
             result.push(ch);
+            flag = ChIs::NextOfKeepedMark;
         } else {
-            if flag != 0 {
-                flag = 3;
+            match flag {
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfSepMark,
             }
         }
     }

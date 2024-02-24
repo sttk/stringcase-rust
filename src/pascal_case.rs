@@ -19,57 +19,60 @@ pub fn pascal_case(input: &str) -> String {
     let mut result = String::with_capacity(input.len());
     // .len returns byte count but ok in this case!
 
-    let mut flag: u8 = 0;
-    // 0: first char
-    // 1: previous char is upper
-    // 2: previous char is mark
-    // 3: other
+    enum ChIs {
+        FirstOfStr,
+        NextOfUpper,
+        NextOfMark,
+        Others,
+    }
+    let mut flag = ChIs::FirstOfStr;
 
     for ch in input.chars() {
         if ch.is_ascii_uppercase() {
             match flag {
-                1 => {
-                    flag = 1;
+                ChIs::NextOfUpper => {
                     result.push(ch.to_ascii_lowercase());
+                    //flag = ChIs::nextOfUpper;
                 }
                 _ => {
-                    flag = 1;
                     result.push(ch);
+                    flag = ChIs::NextOfUpper;
                 }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
-                1 => match result.pop() {
+                ChIs::NextOfUpper => match result.pop() {
                     Some(prev) => {
-                        flag = 3;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
+                        flag = ChIs::Others;
                     }
                     None => (), // impossible
                 },
-                0 | 2 => {
-                    flag = 1;
+                ChIs::FirstOfStr | ChIs::NextOfMark => {
                     result.push(ch.to_ascii_uppercase());
+                    flag = ChIs::NextOfUpper;
                 }
                 _ => {
-                    flag = 3;
                     result.push(ch);
+                    flag = ChIs::Others;
                 }
             }
         } else if ch.is_ascii_digit() {
             match flag {
-                0 | 2 => {
-                    flag = 1;
+                ChIs::FirstOfStr | ChIs::NextOfMark => {
                     result.push(ch);
+                    flag = ChIs::NextOfUpper;
                 }
                 _ => {
-                    flag = 3;
                     result.push(ch);
+                    flag = ChIs::Others;
                 }
             }
         } else {
-            if flag != 0 {
-                flag = 2;
+            match flag {
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfMark,
             }
         }
     }
@@ -95,61 +98,64 @@ pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
     let mut result = String::with_capacity(input.len());
     // .len returns byte count but ok in this case!
 
-    let mut flag: u8 = 0;
-    // 0: first char
-    // 1: previous char is upper
-    // 2: previous char is mark
-    // 3: other
+    enum ChIs {
+      FirstOfStr,
+      NextOfUpper,
+      NextOfMark,
+      Others,
+    }
+    let mut flag = ChIs::FirstOfStr;
 
     for ch in input.chars() {
         if seps.contains(ch) {
-            if flag != 0 {
-                flag = 2;
+            match flag {
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfMark,
             }
         } else if ch.is_ascii_uppercase() {
             match flag {
-                1 => {
-                    flag = 1;
+                ChIs::NextOfUpper => {
                     result.push(ch.to_ascii_lowercase());
+                    //flag = ChIs::NextOfUpper;
                 }
                 _ => {
-                    flag = 1;
                     result.push(ch);
+                    flag = ChIs::NextOfUpper;
                 }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
-                1 => match result.pop() {
+                ChIs::NextOfUpper => match result.pop() {
                     Some(prev) => {
-                        flag = 3;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
+                        flag = ChIs::Others;
                     }
                     None => (), // impossible
                 },
-                0 | 2 => {
-                    flag = 1;
+                ChIs::FirstOfStr | ChIs::NextOfMark => {
+                    flag = ChIs::NextOfUpper;
                     result.push(ch.to_ascii_uppercase());
                 }
                 _ => {
-                    flag = 3;
                     result.push(ch);
+                    flag = ChIs::Others;
                 }
             }
         } else if ch.is_ascii_digit() {
             match flag {
-                0 | 2 => {
-                    flag = 1;
+                ChIs::FirstOfStr | ChIs::NextOfMark => {
                     result.push(ch);
+                    flag = ChIs::NextOfUpper;
                 }
                 _ => {
-                    flag = 3;
                     result.push(ch);
+                    flag = ChIs::Others;
                 }
             }
         } else {
-            flag = 2;
             result.push(ch);
+            flag = ChIs::NextOfMark;
         }
     }
 
@@ -175,60 +181,63 @@ pub fn pascal_case_with_keep(input: &str, keeped: &str) -> String {
     let mut result = String::with_capacity(input.len());
     // .len returns byte count but ok in this case!
 
-    let mut flag: u8 = 0;
-    // 0: first char
-    // 1: previous char is upper
-    // 2: previous char is mark
-    // 3: other
+    enum ChIs {
+        FirstOfStr,
+        NextOfUpper,
+        NextOfMark,
+        Others,
+    }
+    let mut flag = ChIs::FirstOfStr;
 
     for ch in input.chars() {
         if ch.is_ascii_uppercase() {
             match flag {
-                1 => {
-                    flag = 1;
+                ChIs::NextOfUpper => {
                     result.push(ch.to_ascii_lowercase());
+                    //flag = ChIs::NextOfUpper;
                 }
                 _ => {
-                    flag = 1;
                     result.push(ch);
+                    flag = ChIs::NextOfUpper;
                 }
             }
         } else if ch.is_ascii_lowercase() {
             match flag {
-                1 => match result.pop() {
+                ChIs::NextOfUpper => match result.pop() {
                     Some(prev) => {
-                        flag = 3;
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
+                        flag = ChIs::Others;
                     }
                     None => (), // impossible
                 },
-                0 | 2 => {
-                    flag = 1;
+                ChIs::FirstOfStr | ChIs::NextOfMark => {
                     result.push(ch.to_ascii_uppercase());
+                    flag = ChIs::NextOfUpper;
                 }
                 _ => {
-                    flag = 3;
                     result.push(ch);
+                    flag = ChIs::Others;
                 }
             }
         } else if ch.is_ascii_digit() {
             match flag {
-                0 | 2 => {
-                    flag = 1;
+                ChIs::FirstOfStr | ChIs::NextOfMark => {
                     result.push(ch);
+                    flag = ChIs::NextOfUpper;
                 }
                 _ => {
-                    flag = 3;
                     result.push(ch);
+                    flag = ChIs::Others;
                 }
             }
         } else if keeped.contains(ch) {
-            flag = 2;
             result.push(ch);
+            flag = ChIs::NextOfMark;
         } else {
-            if flag != 0 {
-                flag = 2;
+            match flag {
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfMark,
             }
         }
     }
