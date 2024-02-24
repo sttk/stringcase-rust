@@ -1,4 +1,4 @@
-use stringcase::{macro_case, macro_case_with_sep, macro_case_with_keep};
+use stringcase::{macro_case, macro_case_with_keep, macro_case_with_sep};
 
 #[test]
 fn it_should_convert_to_macro_case() {

@@ -1,4 +1,4 @@
-use stringcase::{cobol_case, cobol_case_with_sep, cobol_case_with_keep};
+use stringcase::{cobol_case, cobol_case_with_keep, cobol_case_with_sep};
 
 #[test]
 fn it_should_convert_to_cobol_case() {

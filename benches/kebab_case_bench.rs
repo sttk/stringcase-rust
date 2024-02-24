@@ -2,7 +2,7 @@
 
 extern crate test;
 
-use stringcase::{kebab_case, kebab_case_with_sep, kebab_case_with_keep};
+use stringcase::{kebab_case, kebab_case_with_keep, kebab_case_with_sep};
 use test::Bencher;
 
 #[bench]

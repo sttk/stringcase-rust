@@ -2,7 +2,7 @@
 
 extern crate test;
 
-use stringcase::{macro_case, macro_case_with_sep, macro_case_with_keep};
+use stringcase::{macro_case, macro_case_with_keep, macro_case_with_sep};
 use test::Bencher;
 
 #[bench]

@@ -1,4 +1,4 @@
-use stringcase::{pascal_case, pascal_case_with_sep, pascal_case_with_keep};
+use stringcase::{pascal_case, pascal_case_with_keep, pascal_case_with_sep};
 
 #[test]
 fn it_should_convert_to_pascal_case() {
