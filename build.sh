@@ -33,12 +33,12 @@ unit() {
 }
 
 cover() {
-  cargo llvm-cov
+  cargo llvm-cov --html
   errcheck $?
 }
 
 bench() {
-  cargo bench --quiet -- $1
+  cargo +nightly bench --quiet -- $1
   errcheck $?
 }
 
