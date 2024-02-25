@@ -23,7 +23,8 @@ pub fn snake_case(input: &str) -> String {
         FirstOfStr,
         NextOfUpper,
         NextOfContdUpper,
-        NextOfMark,
+        NextOfSepMark,
+        NextOfKeepedMark,
         Others,
     }
     let mut flag = ChIs::FirstOfStr;
@@ -54,22 +55,22 @@ pub fn snake_case(input: &str) -> String {
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfMark => result.push('_'),
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => result.push('_'),
                 _ => (),
             }
             result.push(ch);
             flag = ChIs::Others;
         } else if ch.is_ascii_digit() {
             match flag {
-                ChIs::NextOfMark => result.push('_'),
+                ChIs::NextOfSepMark => result.push('_'),
                 _ => (),
             }
             result.push(ch);
-            flag = ChIs::Others;
+            flag = ChIs::NextOfKeepedMark;
         } else {
             match flag {
                 ChIs::FirstOfStr => (),
-                _ => flag = ChIs::NextOfMark,
+                _ => flag = ChIs::NextOfSepMark,
             }
         }
     }
@@ -136,15 +137,6 @@ pub fn snake_case_with_sep(input: &str, seps: &str) -> String {
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
-                    result.push('_');
-                }
-                _ => (),
-            }
-            result.push(ch);
-            flag = ChIs::Others;
-        } else if ch.is_ascii_digit() {
-            match flag {
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('_');
                 }
@@ -227,16 +219,7 @@ pub fn snake_case_with_keep(input: &str, keeped: &str) -> String {
             }
             result.push(ch);
             flag = ChIs::Others;
-        } else if ch.is_ascii_digit() {
-            match flag {
-                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
-                    result.push('_');
-                }
-                _ => (),
-            }
-            result.push(ch);
-            flag = ChIs::Others;
-        } else if keeped.contains(ch) {
+        } else if ch.is_ascii_digit() || keeped.contains(ch) {
             match flag {
                 ChIs::NextOfSepMark => result.push('_'),
                 _ => (),
@@ -303,7 +286,16 @@ mod tests_of_snake_case {
     #[test]
     fn it_should_keep_digits() {
         let result = snake_case("abc123-456defG789HIJklMN12");
-        assert_eq!(result, "abc123_456def_g789_hi_jkl_mn12");
+        assert_eq!(result, "abc123_456_def_g789_hi_jkl_mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = snake_case("123abc456def");
+        assert_eq!(result, "123_abc456_def");
+
+        let result = snake_case("123ABC456DEF");
+        assert_eq!(result, "123_abc456_def");
     }
 
     #[test]
@@ -374,10 +366,19 @@ mod tests_of_snake_case_with_sep {
     #[test]
     fn it_should_keep_digits() {
         let result = snake_case_with_sep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "abc123_456def_g789_hi_jkl_mn12");
+        assert_eq!(result, "abc123_456_def_g789_hi_jkl_mn12");
 
         let result = snake_case_with_sep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "abc123-_456def_g789_hi_jkl_mn12");
+        assert_eq!(result, "abc123-456_def_g789_hi_jkl_mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = snake_case_with_sep("123abc456def", "-");
+        assert_eq!(result, "123_abc456_def");
+
+        let result = snake_case_with_sep("123ABC456DEF", "_");
+        assert_eq!(result, "123_abc456_def");
     }
 
     #[test]
@@ -448,10 +449,19 @@ mod tests_of_snake_case_with_keep {
     #[test]
     fn it_should_keep_digits() {
         let result = snake_case_with_keep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "abc123_456def_g789_hi_jkl_mn12");
+        assert_eq!(result, "abc123_456_def_g789_hi_jkl_mn12");
 
         let result = snake_case_with_keep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "abc123-_456def_g789_hi_jkl_mn12");
+        assert_eq!(result, "abc123-456_def_g789_hi_jkl_mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = snake_case_with_keep("123abc456def", "-");
+        assert_eq!(result, "123_abc456_def");
+
+        let result = snake_case_with_keep("123ABC456DEF", "_");
+        assert_eq!(result, "123_abc456_def");
     }
 
     #[test]

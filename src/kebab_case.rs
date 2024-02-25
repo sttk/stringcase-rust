@@ -23,7 +23,8 @@ pub fn kebab_case(input: &str) -> String {
         FirstOfStr,
         NextOfUpper,
         NextOfContdUpper,
-        NextOfMark,
+        NextOfSepMark,
+        NextOfKeepedMark,
         Others,
     }
     let mut flag = ChIs::FirstOfStr;
@@ -54,22 +55,24 @@ pub fn kebab_case(input: &str) -> String {
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfMark => result.push('-'),
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
+                    result.push('-');
+                }
                 _ => (),
             }
             result.push(ch);
             flag = ChIs::Others;
         } else if ch.is_ascii_digit() {
             match flag {
-                ChIs::NextOfMark => result.push('-'),
+                ChIs::NextOfSepMark => result.push('-'),
                 _ => (),
             }
             result.push(ch);
-            flag = ChIs::Others;
+            flag = ChIs::NextOfKeepedMark;
         } else {
             match flag {
                 ChIs::FirstOfStr => (),
-                _ => flag = ChIs::NextOfMark,
+                _ => flag = ChIs::NextOfSepMark,
             }
         }
     }
@@ -136,15 +139,6 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
-                    result.push('-');
-                }
-                _ => (),
-            }
-            flag = ChIs::Others;
-            result.push(ch);
-        } else if ch.is_ascii_digit() {
-            match flag {
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('-');
                 }
@@ -227,16 +221,7 @@ pub fn kebab_case_with_keep(input: &str, keeped: &str) -> String {
             }
             result.push(ch);
             flag = ChIs::Others;
-        } else if ch.is_ascii_digit() {
-            match flag {
-                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
-                    result.push('-');
-                }
-                _ => (),
-            }
-            result.push(ch);
-            flag = ChIs::Others;
-        } else if keeped.contains(ch) {
+        } else if ch.is_ascii_digit() || keeped.contains(ch) {
             match flag {
                 ChIs::NextOfSepMark => result.push('-'),
                 _ => (),
@@ -303,7 +288,16 @@ mod tests_of_kebab_case {
     #[test]
     fn it_should_keep_digits() {
         let result = kebab_case("abc123-456defG789HIJklMN12");
-        assert_eq!(result, "abc123-456def-g789-hi-jkl-mn12");
+        assert_eq!(result, "abc123-456-def-g789-hi-jkl-mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = kebab_case("123abc456def");
+        assert_eq!(result, "123-abc456-def");
+
+        let result = kebab_case("123ABC456DEF");
+        assert_eq!(result, "123-abc456-def");
     }
 
     #[test]
@@ -383,10 +377,19 @@ mod tests_of_kebab_case_with_sep {
     #[test]
     fn it_should_keep_digits() {
         let result = kebab_case_with_sep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "abc123-456def-g789-hi-jkl-mn12");
+        assert_eq!(result, "abc123-456-def-g789-hi-jkl-mn12");
 
         let result = kebab_case_with_sep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "abc123--456def-g789-hi-jkl-mn12");
+        assert_eq!(result, "abc123-456-def-g789-hi-jkl-mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = kebab_case_with_sep("123abc456def", "-");
+        assert_eq!(result, "123-abc456-def");
+
+        let result = kebab_case_with_sep("123ABC456DEF", "-");
+        assert_eq!(result, "123-abc456-def");
     }
 
     #[test]
@@ -466,10 +469,19 @@ mod tests_of_kebab_case_with_keep {
     #[test]
     fn it_should_keep_digits() {
         let result = kebab_case_with_keep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "abc123-456def-g789-hi-jkl-mn12");
+        assert_eq!(result, "abc123-456-def-g789-hi-jkl-mn12");
 
         let result = kebab_case_with_keep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "abc123--456def-g789-hi-jkl-mn12");
+        assert_eq!(result, "abc123-456-def-g789-hi-jkl-mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = kebab_case_with_keep("123abc456def", "-");
+        assert_eq!(result, "123-abc456-def");
+
+        let result = kebab_case_with_keep("123ABC456DEF", "-");
+        assert_eq!(result, "123-abc456-def");
     }
 
     #[test]

@@ -79,21 +79,8 @@ pub fn train_case(input: &str) -> String {
                 }
             }
         } else if ch.is_ascii_digit() {
-            match flag {
-                ChIs::FirstOfStr => {
-                    result.push(ch);
-                    flag = ChIs::NextOfUpper;
-                }
-                ChIs::NextOfMark => {
-                    result.push('-');
-                    result.push(ch);
-                    flag = ChIs::NextOfUpper;
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::Others;
-                }
-            }
+            result.push(ch);
+            flag = ChIs::NextOfMark;
         } else {
             match flag {
                 ChIs::FirstOfStr => (),
@@ -180,22 +167,6 @@ pub fn train_case_with_sep(input: &str, seps: &str) -> String {
                 ChIs::NextOfMark => {
                     result.push('-');
                     result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::Others;
-                }
-            }
-        } else if ch.is_ascii_digit() {
-            match flag {
-                ChIs::FirstOfStr => {
-                    result.push(ch);
-                    flag = ChIs::NextOfUpper;
-                }
-                ChIs::NextOfMark => {
-                    result.push('-');
-                    result.push(ch);
                     flag = ChIs::NextOfUpper;
                 }
                 _ => {
@@ -290,23 +261,7 @@ pub fn train_case_with_keep(input: &str, keeped: &str) -> String {
                     flag = ChIs::Others;
                 }
             }
-        } else if ch.is_ascii_digit() {
-            match flag {
-                ChIs::FirstOfStr => {
-                    result.push(ch);
-                    flag = ChIs::NextOfUpper;
-                }
-                ChIs::NextOfMark => {
-                    result.push('-');
-                    result.push(ch);
-                    flag = ChIs::NextOfUpper;
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::Others;
-                }
-            }
-        } else if keeped.contains(ch) {
+        } else if ch.is_ascii_digit() || keeped.contains(ch) {
             result.push(ch);
             flag = ChIs::NextOfMark;
         } else {
@@ -369,7 +324,16 @@ mod tests_of_train_case {
     #[test]
     fn it_should_keep_digits() {
         let result = train_case("abc123-456defG789HIJklMN12");
-        assert_eq!(result, "Abc123-456def-G789-Hi-Jkl-Mn12");
+        assert_eq!(result, "Abc123456-Def-G789-Hi-Jkl-Mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = train_case("123abc456def");
+        assert_eq!(result, "123-Abc456-Def");
+
+        let result = train_case("123ABC456DEF");
+        assert_eq!(result, "123-Abc456-Def");
     }
 
     #[test]
@@ -449,10 +413,19 @@ mod tests_of_train_case_with_sep {
     #[test]
     fn it_should_keep_digits() {
         let result = train_case_with_sep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "Abc123-456def-G789-Hi-Jkl-Mn12");
+        assert_eq!(result, "Abc123456-Def-G789-Hi-Jkl-Mn12");
 
         let result = train_case_with_sep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "Abc123--456def-G789-Hi-Jkl-Mn12");
+        assert_eq!(result, "Abc123-456-Def-G789-Hi-Jkl-Mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = train_case_with_sep("123abc456def", "-");
+        assert_eq!(result, "123-Abc456-Def");
+
+        let result = train_case_with_keep("123ABC456DEF", "_");
+        assert_eq!(result, "123-Abc456-Def");
     }
 
     #[test]
@@ -532,10 +505,19 @@ mod tests_of_train_case_with_keep {
     #[test]
     fn it_should_keep_digits() {
         let result = train_case_with_keep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "Abc123-456def-G789-Hi-Jkl-Mn12");
+        assert_eq!(result, "Abc123456-Def-G789-Hi-Jkl-Mn12");
 
         let result = train_case_with_keep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "Abc123--456def-G789-Hi-Jkl-Mn12");
+        assert_eq!(result, "Abc123-456-Def-G789-Hi-Jkl-Mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = train_case_with_keep("123abc456def", "-");
+        assert_eq!(result, "123-Abc456-Def");
+
+        let result = train_case_with_keep("123ABC456DEF", "_");
+        assert_eq!(result, "123-Abc456-Def");
     }
 
     #[test]
