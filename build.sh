@@ -33,7 +33,9 @@ unit() {
 }
 
 cover() {
-  cargo llvm-cov --html
+  cargo llvm-cov clean
+  cargo llvm-cov --html --quiet
+  cargo llvm-cov report
   errcheck $?
 }
 
