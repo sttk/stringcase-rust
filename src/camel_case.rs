@@ -26,7 +26,6 @@ pub fn camel_case(input: &str) -> String {
         NextOfMark,
         Others,
     }
-
     let mut flag = ChIs::FirstOfStr;
 
     for ch in input.chars() {
@@ -66,10 +65,7 @@ pub fn camel_case(input: &str) -> String {
             }
         } else if ch.is_ascii_digit() {
             result.push(ch);
-            match flag {
-                ChIs::NextOfMark => flag = ChIs::NextOfUpper,
-                _ => flag = ChIs::Others,
-            }
+            flag = ChIs::NextOfMark;
         } else {
             match flag {
                 ChIs::FirstOfStr => (),
@@ -148,12 +144,6 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
                     flag = ChIs::Others;
                 }
             }
-        } else if ch.is_ascii_digit() {
-            result.push(ch);
-            match flag {
-                ChIs::NextOfMark => flag = ChIs::NextOfUpper,
-                _ => flag = ChIs::Others,
-            }
         } else {
             result.push(ch);
             flag = ChIs::NextOfMark;
@@ -226,13 +216,7 @@ pub fn camel_case_with_keep(input: &str, keeped: &str) -> String {
                     flag = ChIs::Others;
                 }
             }
-        } else if ch.is_ascii_digit() {
-            result.push(ch);
-            match flag {
-                ChIs::NextOfMark => flag = ChIs::NextOfUpper,
-                _ => flag = ChIs::Others,
-            }
-        } else if keeped.contains(ch) {
+        } else if ch.is_ascii_digit() || keeped.contains(ch) {
             result.push(ch);
             flag = ChIs::NextOfMark;
         } else {
@@ -295,11 +279,20 @@ mod tests_of_camel_case {
     #[test]
     fn it_should_keep_digits() {
         let result = camel_case("abc123-456defG789HIJklMN12");
-        assert_eq!(result, "abc123456defG789HiJklMn12");
+        assert_eq!(result, "abc123456DefG789HiJklMn12");
     }
 
     #[test]
-    fn is_should_treat_marks_as_separators() {
+    fn it_should_convert_when_starting_with_digit() {
+        let result = camel_case("123abc456def");
+        assert_eq!(result, "123Abc456Def");
+
+        let result = camel_case("123ABC456DEF");
+        assert_eq!(result, "123Abc456Def");
+    }
+
+    #[test]
+    fn it_should_treat_marks_as_separators() {
         let result = camel_case(":.abc~!@def#$ghi%&jk(lm)no/?");
         assert_eq!(result, "abcDefGhiJkLmNo");
     }
@@ -375,14 +368,23 @@ mod tests_of_camel_case_with_sep {
     #[test]
     fn it_should_keep_digits() {
         let result = camel_case_with_sep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "abc123-456defG789HiJklMn12");
+        assert_eq!(result, "abc123-456DefG789HiJklMn12");
 
         let result = camel_case_with_sep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "abc123456defG789HiJklMn12");
+        assert_eq!(result, "abc123456DefG789HiJklMn12");
     }
 
     #[test]
-    fn is_should_treat_marks_as_separators() {
+    fn it_should_convert_when_starting_with_digit() {
+        let result = camel_case_with_sep("123abc456def", "-_");
+        assert_eq!(result, "123Abc456Def");
+
+        let result = camel_case_with_sep("123ABC456DEF", "-_");
+        assert_eq!(result, "123Abc456Def");
+    }
+
+    #[test]
+    fn it_should_treat_marks_as_separators() {
         let result = camel_case_with_sep(":.abc~!@def#$ghi%&jk(lm)no/?", ":@$&()/");
         assert_eq!(result, ".Abc~!Def#Ghi%JkLmNo?");
     }
@@ -458,14 +460,23 @@ mod tests_of_camel_case_with_keep {
     #[test]
     fn it_should_keep_digits() {
         let result = camel_case_with_keep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "abc123456defG789HiJklMn12");
+        assert_eq!(result, "abc123456DefG789HiJklMn12");
 
         let result = camel_case_with_keep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "abc123-456defG789HiJklMn12");
+        assert_eq!(result, "abc123-456DefG789HiJklMn12");
     }
 
     #[test]
-    fn is_should_treat_marks_as_separators() {
+    fn it_should_convert_when_starting_with_digit() {
+        let result = camel_case_with_keep("123abc456def", "_");
+        assert_eq!(result, "123Abc456Def");
+
+        let result = camel_case_with_keep("123ABC456DEF", "-");
+        assert_eq!(result, "123Abc456Def");
+    }
+
+    #[test]
+    fn it_should_treat_marks_as_separators() {
         let result = camel_case_with_keep(":.abc~!@def#$ghi%&jk(lm)no/?", ".~!#%?");
         assert_eq!(result, ".Abc~!Def#Ghi%JkLmNo?");
     }
