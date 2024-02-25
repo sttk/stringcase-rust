@@ -1,4 +1,73 @@
-## v0.1.1
+## 0.2.0
+
+```
+% ./build.sh bench
+
+running 248 tests
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 88/248
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 176/248
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+test result: ok. 0 passed; 0 failed; 248 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test bench_camel_case           ... bench:          78 ns/iter (+/- 3)
+test bench_camel_case_with_keep ... bench:          88 ns/iter (+/- 6)
+test bench_camel_case_with_sep  ... bench:         149 ns/iter (+/- 12)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 0.91s
+
+
+running 3 tests
+test bench_cobol_case           ... bench:         108 ns/iter (+/- 21)
+test bench_cobol_case_with_keep ... bench:         103 ns/iter (+/- 8)
+test bench_cobol_case_with_sep  ... bench:         146 ns/iter (+/- 12)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 0.94s
+
+
+running 3 tests
+test bench_kebab_case           ... bench:          82 ns/iter (+/- 24)
+test bench_kebab_case_with_keep ... bench:          87 ns/iter (+/- 2)
+test bench_kebab_case_with_sep  ... bench:         155 ns/iter (+/- 12)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 9.63s
+
+
+running 3 tests
+test bench_macro_case           ... bench:          78 ns/iter (+/- 4)
+test bench_macro_case_with_keep ... bench:          90 ns/iter (+/- 2)
+test bench_macro_case_with_sep  ... bench:         144 ns/iter (+/- 8)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 9.58s
+
+
+running 3 tests
+test bench_pascal_case           ... bench:          77 ns/iter (+/- 3)
+test bench_pascal_case_with_keep ... bench:          93 ns/iter (+/- 12)
+test bench_pascal_case_with_sep  ... bench:         145 ns/iter (+/- 9)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 4.26s
+
+
+running 3 tests
+test bench_snake_case           ... bench:          80 ns/iter (+/- 7)
+test bench_snake_case_with_keep ... bench:          89 ns/iter (+/- 27)
+test bench_snake_case_with_sep  ... bench:         151 ns/iter (+/- 11)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 0.78s
+
+
+running 3 tests
+test bench_train_case           ... bench:          82 ns/iter (+/- 6)
+test bench_train_case_with_keep ... bench:          86 ns/iter (+/- 8)
+test bench_train_case_with_sep  ... bench:         142 ns/iter (+/- 14)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 1.40s
+```
+
+
+## 0.1.1
 
 ```
 % ./build.sh bench
@@ -66,7 +135,7 @@ test bench_train_case_with_sep  ... bench:         134 ns/iter (+/- 8)
 test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 10.44s
 ```
 
-## v0.1.0
+## 0.1.0
 
 ```
 % ./build.sh bench
