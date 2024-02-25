@@ -34,7 +34,9 @@ unit() {
 
 cover() {
   cargo llvm-cov clean
+  errcheck $?
   cargo llvm-cov --html --quiet
+  errcheck $?
   cargo llvm-cov report
   errcheck $?
 }

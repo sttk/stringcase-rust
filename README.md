@@ -1,6 +1,7 @@
 # [stringcase-rust][repo-url] [![crate.io][crateio-img]][crateio-url] [![doc.rs][docrs-img]][docrs-url] [![CI Status][ci-img]][ci-url] [![MIT License][mit-img]][mit-url]
 
 This library provides some functions that convert string cases between camelCase, COBOL-CASE, kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
+And this library also provides a trait `Caser` which makes strings enable to convert their cases by their own methods.
 
 Basically, these functions targets the upper and lower cases of only ASCII alphabets for capitalization, and all characters except ASCII alphabets and ASCII numbers are eliminated as word separators.
 
@@ -17,7 +18,7 @@ stringcase = "0.1.1"
 
 ## Usage
 
-The function contained in this crate are executed as follows:
+The function contained in this crate can be executed as follows:
 
 ```rust
 use stringcase::camel_case;
@@ -25,6 +26,19 @@ use stringcase::camel_case;
 fn main() {
     let input = "foo-bar-baz";
     let camel = camel_case(input);
+    assert_eq!(camel, "fooBarBaz");
+}
+```
+
+And by bringing `Caser` with `use` declaration, it will be able to execute methods of
+strings, `String` or `&str`, to convert their cases.
+
+```rust
+use stringcase::Caser;
+
+func main() {
+    let input = "foo-bar-baz";
+    let camel = input.to_camel_case();
     assert_eq!(camel, "fooBarBaz");
 }
 ```
@@ -43,7 +57,7 @@ Check for toolchain '1.61.0-x86_64-apple-darwin' succeeded
 Check for toolchain '1.58.1-x86_64-apple-darwin' succeeded
 Check for toolchain '1.57.0-x86_64-apple-darwin' succeeded
 Check for toolchain '1.56.1-x86_64-apple-darwin' succeeded
-   Finished The MSRV is: 1.56.1   ████████████████████████████████████████████████████████████████ 00:02:42
+   Finished The MSRV is: 1.56.1   █████████████████████████████████████ 00:00:20
 ```
 
 ## License
