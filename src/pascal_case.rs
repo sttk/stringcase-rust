@@ -277,7 +277,7 @@ mod tests_of_pascal_case {
     }
 
     #[test]
-    fn is_should_treat_marks_as_separators() {
+    fn it_should_treat_marks_as_separators() {
         let result = pascal_case(":.abc~!@def#$ghi%&jk(lm)no/?");
         assert_eq!(result, "AbcDefGhiJkLmNo");
     }
