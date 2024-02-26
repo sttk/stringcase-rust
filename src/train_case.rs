@@ -241,8 +241,8 @@ pub fn train_case_with_keep(input: &str, keeped: &str) -> String {
             flag = ChIs::Others;
         } else if ch.is_ascii_digit() || keeped.contains(ch) {
             match flag {
-              ChIs::NextOfSepMark => result.push('-'),
-              _ => (),
+                ChIs::NextOfSepMark => result.push('-'),
+                _ => (),
             }
             result.push(ch);
             flag = ChIs::NextOfKeepedMark;

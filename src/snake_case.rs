@@ -57,7 +57,7 @@ pub fn snake_case(input: &str) -> String {
                 },
                 ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('_');
-                },
+                }
                 _ => (),
             }
             result.push(ch);

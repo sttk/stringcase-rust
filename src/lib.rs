@@ -22,7 +22,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! stringcase = "0.1.0"
+//! stringcase = "0.2.1"
 //! ```
 //!
 //! ## Usage
