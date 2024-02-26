@@ -55,7 +55,9 @@ pub fn snake_case(input: &str) -> String {
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => result.push('_'),
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
+                    result.push('_');
+                },
                 _ => (),
             }
             result.push(ch);

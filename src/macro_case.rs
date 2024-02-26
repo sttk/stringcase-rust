@@ -64,9 +64,7 @@ pub fn macro_case(input: &str) -> String {
             flag = ChIs::Others;
         } else if ch.is_ascii_digit() {
             match flag {
-                ChIs::NextOfSepMark => {
-                    result.push('_');
-                }
+                ChIs::NextOfSepMark => result.push('_'),
                 _ => (),
             }
             result.push(ch);
