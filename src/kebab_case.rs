@@ -144,8 +144,8 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
                 }
                 _ => (),
             }
-            flag = ChIs::Others;
             result.push(ch);
+            flag = ChIs::Others;
         } else {
             match flag {
                 ChIs::NextOfSepMark => result.push('-'),

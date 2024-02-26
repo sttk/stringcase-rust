@@ -23,7 +23,8 @@ pub fn train_case(input: &str) -> String {
         FirstOfStr,
         NextOfUpper,
         NextOfContdUpper,
-        NextOfMark,
+        NextOfSepMark,
+        NextOfKeepedMark,
         Others,
     }
     let mut flag = ChIs::FirstOfStr;
@@ -49,42 +50,35 @@ pub fn train_case(input: &str) -> String {
             match flag {
                 ChIs::FirstOfStr => {
                     result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
                 }
-                ChIs::NextOfUpper => match result.pop() {
-                    Some(prev) => {
-                        result.push(prev.to_ascii_uppercase());
-                        result.push(ch);
-                        flag = ChIs::Others;
-                    }
-                    None => (), // impossible
-                },
                 ChIs::NextOfContdUpper => match result.pop() {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                        flag = ChIs::Others;
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfMark => {
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('-');
                     result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
                 }
                 _ => {
                     result.push(ch);
-                    flag = ChIs::Others;
                 }
             }
+            flag = ChIs::Others;
         } else if ch.is_ascii_digit() {
+            match flag {
+                ChIs::NextOfSepMark => result.push('-'),
+                _ => (),
+            }
             result.push(ch);
-            flag = ChIs::NextOfMark;
+            flag = ChIs::NextOfKeepedMark;
         } else {
             match flag {
                 ChIs::FirstOfStr => (),
-                _ => flag = ChIs::NextOfMark,
+                _ => flag = ChIs::NextOfSepMark,
             }
         }
     }
@@ -114,7 +108,8 @@ pub fn train_case_with_sep(input: &str, seps: &str) -> String {
         FirstOfStr,
         NextOfUpper,
         NextOfContdUpper,
-        NextOfMark,
+        NextOfSepMark,
+        NextOfKeepedMark,
         Others,
     }
     let mut flag = ChIs::FirstOfStr;
@@ -123,7 +118,7 @@ pub fn train_case_with_sep(input: &str, seps: &str) -> String {
         if seps.contains(ch) {
             match flag {
                 ChIs::FirstOfStr => (),
-                _ => flag = ChIs::NextOfMark,
+                _ => flag = ChIs::NextOfSepMark,
             }
         } else if ch.is_ascii_uppercase() {
             match flag {
@@ -145,38 +140,31 @@ pub fn train_case_with_sep(input: &str, seps: &str) -> String {
             match flag {
                 ChIs::FirstOfStr => {
                     result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
                 }
-                ChIs::NextOfUpper => match result.pop() {
-                    Some(prev) => {
-                        result.push(prev.to_ascii_uppercase());
-                        result.push(ch);
-                        flag = ChIs::Others;
-                    }
-                    None => (), // impossible
-                },
                 ChIs::NextOfContdUpper => match result.pop() {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                        flag = ChIs::Others;
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfMark => {
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('-');
                     result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
                 }
                 _ => {
                     result.push(ch);
-                    flag = ChIs::Others;
                 }
             }
+            flag = ChIs::Others;
         } else {
+            match flag {
+                ChIs::NextOfSepMark => result.push('-'),
+                _ => (),
+            }
             result.push(ch);
-            flag = ChIs::NextOfMark;
+            flag = ChIs::NextOfKeepedMark;
         }
     }
 
@@ -206,7 +194,8 @@ pub fn train_case_with_keep(input: &str, keeped: &str) -> String {
         FirstOfStr,
         NextOfUpper,
         NextOfContdUpper,
-        NextOfMark,
+        NextOfSepMark,
+        NextOfKeepedMark,
         Others,
     }
     let mut flag = ChIs::FirstOfStr;
@@ -232,42 +221,35 @@ pub fn train_case_with_keep(input: &str, keeped: &str) -> String {
             match flag {
                 ChIs::FirstOfStr => {
                     result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
                 }
-                ChIs::NextOfUpper => match result.pop() {
-                    Some(prev) => {
-                        result.push(prev.to_ascii_uppercase());
-                        result.push(ch);
-                        flag = ChIs::Others;
-                    }
-                    None => (), // impossible
-                },
                 ChIs::NextOfContdUpper => match result.pop() {
                     Some(prev) => {
                         result.push('-');
                         result.push(prev.to_ascii_uppercase());
                         result.push(ch);
-                        flag = ChIs::Others;
                     }
                     None => (), // impossible
                 },
-                ChIs::NextOfMark => {
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
                     result.push('-');
                     result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
                 }
                 _ => {
                     result.push(ch);
-                    flag = ChIs::Others;
                 }
             }
+            flag = ChIs::Others;
         } else if ch.is_ascii_digit() || keeped.contains(ch) {
+            match flag {
+              ChIs::NextOfSepMark => result.push('-'),
+              _ => (),
+            }
             result.push(ch);
-            flag = ChIs::NextOfMark;
+            flag = ChIs::NextOfKeepedMark;
         } else {
             match flag {
                 ChIs::FirstOfStr => (),
-                _ => flag = ChIs::NextOfMark,
+                _ => flag = ChIs::NextOfSepMark,
             }
         }
     }
@@ -324,7 +306,7 @@ mod tests_of_train_case {
     #[test]
     fn it_should_keep_digits() {
         let result = train_case("abc123-456defG789HIJklMN12");
-        assert_eq!(result, "Abc123456-Def-G789-Hi-Jkl-Mn12");
+        assert_eq!(result, "Abc123-456-Def-G789-Hi-Jkl-Mn12");
     }
 
     #[test]
@@ -413,7 +395,7 @@ mod tests_of_train_case_with_sep {
     #[test]
     fn it_should_keep_digits() {
         let result = train_case_with_sep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "Abc123456-Def-G789-Hi-Jkl-Mn12");
+        assert_eq!(result, "Abc123-456-Def-G789-Hi-Jkl-Mn12");
 
         let result = train_case_with_sep("abc123-456defG789HIJklMN12", "_");
         assert_eq!(result, "Abc123-456-Def-G789-Hi-Jkl-Mn12");
@@ -431,7 +413,7 @@ mod tests_of_train_case_with_sep {
     #[test]
     fn it_should_treat_marks_as_separators() {
         let result = train_case_with_sep(":.abc~!@def#$ghi%&jk(lm)no/?", ":@$&()/");
-        assert_eq!(result, ".-Abc~!-Def#-Ghi%-Jk-Lm-No?");
+        assert_eq!(result, ".-Abc~!-Def#-Ghi%-Jk-Lm-No-?");
     }
 
     #[test]
@@ -505,7 +487,7 @@ mod tests_of_train_case_with_keep {
     #[test]
     fn it_should_keep_digits() {
         let result = train_case_with_keep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "Abc123456-Def-G789-Hi-Jkl-Mn12");
+        assert_eq!(result, "Abc123-456-Def-G789-Hi-Jkl-Mn12");
 
         let result = train_case_with_keep("abc123-456defG789HIJklMN12", "-");
         assert_eq!(result, "Abc123-456-Def-G789-Hi-Jkl-Mn12");
@@ -523,7 +505,7 @@ mod tests_of_train_case_with_keep {
     #[test]
     fn it_should_treat_marks_as_separators() {
         let result = train_case_with_keep(":.abc~!@def#$ghi%&jk(lm)no/?", ".~!#%?");
-        assert_eq!(result, ".-Abc~!-Def#-Ghi%-Jk-Lm-No?");
+        assert_eq!(result, ".-Abc~!-Def#-Ghi%-Jk-Lm-No-?");
     }
 
     #[test]
