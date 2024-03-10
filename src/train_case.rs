@@ -385,11 +385,11 @@ mod tests_of_train_case_with_sep {
 
     #[test]
     fn it_should_convert_cobol_case() {
-        let result = train_case_with_sep("ABC_DEF_GHI", "_");
+        let result = train_case_with_sep("ABC-DEF-GHI", "-");
         assert_eq!(result, "Abc-Def-Ghi");
 
-        let result = train_case_with_sep("ABC_DEF_GHI", "-");
-        assert_eq!(result, "Abc_-Def_-Ghi");
+        let result = train_case_with_sep("ABC-DEF-GHI", "_");
+        assert_eq!(result, "Abc--Def--Ghi");
     }
 
     #[test]
