@@ -16,6 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.rustver }}
       - run: cargo test
 
   cover:
@@ -30,6 +32,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
+          toolchain: ${{ matrix.rustver }}
           components: llvm-tools-preview
       - run: cargo install cargo-llvm-cov
       - run: cargo llvm-cov
