@@ -74,10 +74,24 @@ pub trait Caser<T: AsRef<str>> {
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let cobol = "foo_bar_baz".to_cobol_case();
-    ///     assert_eq!(cobol, "FOO-BAR-BAZ");
+    ///     let cobol = "fooBar100Baz".to_cobol_case();
+    ///     assert_eq!(cobol, "FOO-BAR100-BAZ");
     /// ```
     fn to_cobol_case(&self) -> String;
+
+    /// Converts a string to cobol case.
+    ///
+    /// This method targets the upper and lower cases of ASCII alphabets and
+    /// ASCII numbers for capitalization, and all characters except ASCII
+    /// alphabets and ASCII numbers are replaced to hyphens as word separators.
+    ///
+    /// ```rust
+    ///     use stringcase::Caser;
+    ///
+    ///     let cobol = "fooBar100Baz".to_cobol_case_with_nums_as_word();
+    ///     assert_eq!(cobol, "FOO-BAR-100-BAZ");
+    /// ```
+    fn to_cobol_case_with_nums_as_word(&self) -> String;
 
     /// Converts a string to cobol case using the specified characters as
     /// separators.
@@ -117,7 +131,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// This method targets the upper and lower cases of ASCII alphabets for
     /// capitalization, and all characters except ASCII alphabets and ASCII numbers
-    /// are eliminated as word separators.
+    /// are replaced to hyphens as word separators.
     ///
     /// ```rust
     ///     use stringcase::Caser;
@@ -126,6 +140,20 @@ pub trait Caser<T: AsRef<str>> {
     ///     assert_eq!(kebab, "foo-bar100-baz");
     /// ```
     fn to_kebab_case(&self) -> String;
+
+    /// Converts a string to kebab case.
+    ///
+    /// This method targets the upper and lower cases of ASCII alphabets and
+    /// ASCII numbers for capitalization, and all characters except ASCII
+    /// alphabets and ASCII numbers are replaced to hyphens as word separators.
+    ///
+    /// ```rust
+    ///     use stringcase::Caser;
+    ///
+    ///     let kebab = "foo-bar100%baz".to_kebab_case_with_nums_as_word();
+    ///     assert_eq!(kebab, "foo-bar-100-baz");
+    /// ```
+    fn to_kebab_case_with_nums_as_word(&self) -> String;
 
     /// Converts a string to kebab case using the specified characters as
     /// separators.
@@ -164,7 +192,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// This method targets the upper and lower cases of ASCII alphabets for
     /// capitalization, and all characters except ASCII alphabets and ASCII numbers
-    /// are eliminated as word separators.
+    /// are replaced to underscores as word separators.
     ///
     /// ```rust
     ///     use stringcase::Caser;
@@ -173,6 +201,20 @@ pub trait Caser<T: AsRef<str>> {
     ///     assert_eq!(macro_, "FOO_BAR100_BAZ");
     /// ```
     fn to_macro_case(&self) -> String;
+
+    /// Converts a string to macro case.
+    ///
+    /// This method targets the upper and lower cases of ASCII alphabets and
+    /// ASCII numbers for capitalization, and all characters except ASCII
+    /// alphabets and ASCII numbers are replaced to underscores as word separators.
+    ///
+    /// ```rust
+    ///     use stringcase::Caser;
+    ///
+    ///     let macro_ = "foo-bar100%baz".to_macro_case_with_nums_as_word();
+    ///     assert_eq!(macro_, "FOO_BAR_100_BAZ");
+    /// ```
+    fn to_macro_case_with_nums_as_word(&self) -> String;
 
     /// Converts a string to macro case using the specified characters as
     /// separators.
@@ -258,7 +300,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// This method targets the upper and lower cases of ASCII alphabets for
     /// capitalization, and all characters except ASCII alphabets and ASCII numbers
-    /// are eliminated as word separators.
+    /// are replaced to underscores as word separators.
     ///
     /// ```rust
     ///     use stringcase::Caser;
@@ -267,6 +309,20 @@ pub trait Caser<T: AsRef<str>> {
     ///     assert_eq!(snake, "foo_bar100_baz");
     /// ```
     fn to_snake_case(&self) -> String;
+
+    /// Converts a string to snake case.
+    ///
+    /// This method targets the upper and lower cases of ASCII alphabets and
+    /// ASCII numbers for capitalization, and all characters except ASCII
+    /// alphabets and ASCII numbers are replaced to underscores as word separators.
+    ///
+    /// ```rust
+    ///     use stringcase::Caser;
+    ///
+    ///     let snake = "foo-bar100%baz".to_snake_case_with_nums_as_word();
+    ///     assert_eq!(snake, "foo_bar_100_baz");
+    /// ```
+    fn to_snake_case_with_nums_as_word(&self) -> String;
 
     /// Converts a string to snake case using the specified characters as
     /// separators.
@@ -305,7 +361,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// This method targets the upper and lower cases of ASCII alphabets for
     /// capitalization, and all characters except ASCII alphabets and ASCII numbers
-    /// are eliminated as word separators.
+    /// are replaced to hyphens as word separators.
     ///
     /// ```rust
     ///     use stringcase::Caser;
@@ -314,6 +370,20 @@ pub trait Caser<T: AsRef<str>> {
     ///     assert_eq!(train, "Foo-Bar100-Baz");
     /// ```
     fn to_train_case(&self) -> String;
+
+    /// Converts a string to train case.
+    ///
+    /// This method targets the upper and lower cases of ASCII alphabets and
+    /// ASCII numbers for capitalization, and all characters except ASCII alphabets
+    /// and ASCII numbers are replaced to hyphens as word separators.
+    ///
+    /// ```rust
+    ///     use stringcase::Caser;
+    ///
+    ///     let train = "foo-bar100%baz".to_train_case_with_nums_as_word();
+    ///     assert_eq!(train, "Foo-Bar-100-Baz");
+    /// ```
+    fn to_train_case_with_nums_as_word(&self) -> String;
 
     /// Converts a string to train case using the specified characters as
     /// separators.
@@ -368,6 +438,10 @@ impl<T: AsRef<str>> Caser<T> for T {
         cobol_case(&self.as_ref())
     }
 
+    fn to_cobol_case_with_nums_as_word(&self) -> String {
+        cobol_case_with_nums_as_word(&self.as_ref())
+    }
+
     fn to_cobol_case_with_sep(&self, seps: &str) -> String {
         cobol_case_with_sep(&self.as_ref(), seps)
     }
@@ -382,6 +456,10 @@ impl<T: AsRef<str>> Caser<T> for T {
         kebab_case(&self.as_ref())
     }
 
+    fn to_kebab_case_with_nums_as_word(&self) -> String {
+        kebab_case_with_nums_as_word(&self.as_ref())
+    }
+
     fn to_kebab_case_with_sep(&self, seps: &str) -> String {
         kebab_case_with_sep(&self.as_ref(), seps)
     }
@@ -394,6 +472,10 @@ impl<T: AsRef<str>> Caser<T> for T {
 
     fn to_macro_case(&self) -> String {
         macro_case(&self.as_ref())
+    }
+
+    fn to_macro_case_with_nums_as_word(&self) -> String {
+        macro_case_with_nums_as_word(&self.as_ref())
     }
 
     fn to_macro_case_with_sep(&self, seps: &str) -> String {
@@ -424,6 +506,10 @@ impl<T: AsRef<str>> Caser<T> for T {
         snake_case(&self.as_ref())
     }
 
+    fn to_snake_case_with_nums_as_word(&self) -> String {
+        snake_case_with_nums_as_word(&self.as_ref())
+    }
+
     fn to_snake_case_with_sep(&self, seps: &str) -> String {
         snake_case_with_sep(&self.as_ref(), seps)
     }
@@ -436,6 +522,10 @@ impl<T: AsRef<str>> Caser<T> for T {
 
     fn to_train_case(&self) -> String {
         train_case(&self.as_ref())
+    }
+
+    fn to_train_case_with_nums_as_word(&self) -> String {
+        train_case_with_nums_as_word(&self.as_ref())
     }
 
     fn to_train_case_with_sep(&self, seps: &str) -> String {
@@ -496,6 +586,16 @@ mod tests_of_caser {
     }
 
     #[test]
+    fn it_should_convert_to_cobol_case_with_nums_as_word() {
+        let result = "foo_bar100%BAZQux".to_cobol_case_with_nums_as_word();
+        assert_eq!(result, "FOO-BAR-100-BAZ-QUX");
+
+        let string = String::from("foo_bar100%BAZQux");
+        let result = string.to_cobol_case_with_nums_as_word();
+        assert_eq!(result, "FOO-BAR-100-BAZ-QUX");
+    }
+
+    #[test]
     fn it_should_convert_to_cobol_case_with_sep() {
         let result = "foo_bar100%BAZQux".to_cobol_case_with_sep("_");
         assert_eq!(result, "FOO-BAR100%-BAZ-QUX");
@@ -528,6 +628,16 @@ mod tests_of_caser {
     }
 
     #[test]
+    fn it_should_convert_to_kebab_case_with_nums_as_word() {
+        let result = "foo_bar100%BAZQux".to_kebab_case_with_nums_as_word();
+        assert_eq!(result, "foo-bar-100-baz-qux");
+
+        let string = String::from("foo_bar100%BAZQux");
+        let result = string.to_kebab_case_with_nums_as_word();
+        assert_eq!(result, "foo-bar-100-baz-qux");
+    }
+
+    #[test]
     fn it_should_convert_to_kebab_case_with_sep() {
         let result = "foo_bar100%BAZQux".to_kebab_case_with_sep("_");
         assert_eq!(result, "foo-bar100%-baz-qux");
@@ -557,6 +667,16 @@ mod tests_of_caser {
         let string = String::from("foo_bar100%BAZQux");
         let result = string.to_macro_case();
         assert_eq!(result, "FOO_BAR100_BAZ_QUX");
+    }
+
+    #[test]
+    fn it_should_convert_to_macro_case_with_nums_as_word() {
+        let result = "foo_bar100%BAZQux".to_macro_case_with_nums_as_word();
+        assert_eq!(result, "FOO_BAR_100_BAZ_QUX");
+
+        let string = String::from("foo_bar100%BAZQux");
+        let result = string.to_macro_case_with_nums_as_word();
+        assert_eq!(result, "FOO_BAR_100_BAZ_QUX");
     }
 
     #[test]
@@ -624,6 +744,16 @@ mod tests_of_caser {
     }
 
     #[test]
+    fn it_should_convert_to_snake_case_with_nums_as_word() {
+        let result = "foo_bar100%BAZQux".to_snake_case_with_nums_as_word();
+        assert_eq!(result, "foo_bar_100_baz_qux");
+
+        let string = String::from("foo_bar100%BAZQux");
+        let result = string.to_snake_case_with_nums_as_word();
+        assert_eq!(result, "foo_bar_100_baz_qux");
+    }
+
+    #[test]
     fn it_should_convert_to_snake_case_with_sep() {
         let result = "foo_bar100%BAZQux".to_snake_case_with_sep("_");
         assert_eq!(result, "foo_bar100%_baz_qux");
@@ -653,6 +783,16 @@ mod tests_of_caser {
         let string = String::from("foo_bar100%BAZQux");
         let result = string.to_train_case();
         assert_eq!(result, "Foo-Bar100-Baz-Qux");
+    }
+
+    #[test]
+    fn it_should_convert_to_train_case_with_nums_as_word() {
+        let result = "foo_bar100%BAZQux".to_train_case_with_nums_as_word();
+        assert_eq!(result, "Foo-Bar-100-Baz-Qux");
+
+        let string = String::from("foo_bar100%BAZQux");
+        let result = string.to_train_case_with_nums_as_word();
+        assert_eq!(result, "Foo-Bar-100-Baz-Qux");
     }
 
     #[test]
