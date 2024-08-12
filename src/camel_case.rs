@@ -302,6 +302,60 @@ mod tests_of_camel_case {
         let result = camel_case("");
         assert_eq!(result, "");
     }
+
+    #[test]
+    fn it_should_treat_number_sequence_by_default() {
+        let result = camel_case("abc123Def456#Ghi789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("ABC123-DEF456#GHI789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("abc123-def456#ghi789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("ABC123_DEF456#GHI789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("Abc123Def456#Ghi789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("abc123_def456#ghi789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("Abc123-Def456#-Ghi789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("000-abc123_def456#ghi789");
+        assert_eq!(result, "000Abc123Def456Ghi789");
+    }
+
+    #[test]
+    fn it_should_treat_number_sequence_as_word() {
+        let result = camel_case("abc123Def456#Ghi789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("ABC-123-DEF-456#GHI-789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("abc-123-def-456#ghi-789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("ABC_123_DEF_456#GHI_789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("Abc123Def456#Ghi789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("abc_123_def_456#ghi_789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("Abc-123-Def-456#Ghi-789");
+        assert_eq!(result, "abc123Def456Ghi789");
+
+        let result = camel_case("000_abc_123_def_456#ghi_789");
+        assert_eq!(result, "000Abc123Def456Ghi789");
+    }
 }
 
 #[cfg(test)]
