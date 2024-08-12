@@ -16,6 +16,14 @@
 //! `*_with_sep` are provided, and to keep specified characters, the functions
 //! named like `*_with_keep` are provided.
 //!
+//! In this crate, the default behavior of the conversion functions is to insert
+//! a separator after a sequence of numbers and symbols, but not before them.
+//! (For example, `snake_case("abc123def") ==> "abc123_def"`)
+//! However, for cases where you want to insert a separator before the sequence
+//! as well, the functions names like `*_with_nums_as_word` are provided.
+//! (For example, `snake_case_with_nums_as_word("abc123def") ==> "abc_123_def"`)
+//!
+//!
 //! ## Install
 //!
 //! In `Cargo.toml`, write this crate as a dependency.
