@@ -21,6 +21,7 @@
 //! (For example, `snake_case("abc123def") ==> "abc123_def"`)
 //! However, for cases where you want to insert a separator before the sequence
 //! as well, the functions names like `*_with_nums_as_word` are provided.
+//! (For example, `snake_case_with_nums_as_word("abc123def") ==> "abc_123_def"`)
 //!
 //!
 //! ## Install
