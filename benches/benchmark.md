@@ -2,6 +2,8 @@
 
 > - Date: 2024/08/12
 > - rustc 1.80.1 (3f5fd8dd4 2024-08-06)
+> - macOS 14.5 (23F79)
+> - Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
 
 ```
 % ./build.sh bench
@@ -15,141 +17,70 @@ test result: ok. 0 passed; 0 failed; 320 ignored; 0 measured; 0 filtered out; fi
 
 
 running 3 tests
-test bench_camel_case           ... bench:         117.95 ns/iter (+/- 5.98)
-test bench_camel_case_with_keep ... bench:         130.06 ns/iter (+/- 1.95)
-test bench_camel_case_with_sep  ... bench:         219.25 ns/iter (+/- 3.74)
+test bench_camel_case           ... bench:          74.57 ns/iter (+/- 5.88)
+test bench_camel_case_with_keep ... bench:          81.65 ns/iter (+/- 8.80)
+test bench_camel_case_with_sep  ... bench:         136.92 ns/iter (+/- 7.96)
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 0.61s
-
-
-running 4 tests
-test bench_cobol_case                   ... bench:         128.08 ns/iter (+/- 5.10)
-test bench_cobol_case_with_keep         ... bench:         145.26 ns/iter (+/- 3.27)
-test bench_cobol_case_with_nums_as_word ... bench:         125.37 ns/iter (+/- 3.79)
-test bench_cobol_case_with_sep          ... bench:         224.37 ns/iter (+/- 5.25)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 11.18s
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 5.36s
 
 
 running 4 tests
-test bench_kebab_case                   ... bench:         114.68 ns/iter (+/- 5.19)
-test bench_kebab_case_with_keep         ... bench:         141.48 ns/iter (+/- 3.79)
-test bench_kebab_case_with_nums_as_word ... bench:         127.85 ns/iter (+/- 6.08)
-test bench_kebab_case_with_sep          ... bench:         209.53 ns/iter (+/- 10.48)
+test bench_cobol_case                   ... bench:          81.12 ns/iter (+/- 22.88)
+test bench_cobol_case_with_keep         ... bench:          90.14 ns/iter (+/- 3.47)
+test bench_cobol_case_with_nums_as_word ... bench:          81.17 ns/iter (+/- 16.95)
+test bench_cobol_case_with_sep          ... bench:         139.23 ns/iter (+/- 10.61)
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 1.85s
-
-
-running 4 tests
-test bench_macro_case                   ... bench:         128.51 ns/iter (+/- 5.29)
-test bench_macro_case_with_keep         ... bench:         144.81 ns/iter (+/- 5.90)
-test bench_macro_case_with_nums_as_word ... bench:         126.36 ns/iter (+/- 4.99)
-test bench_macro_case_with_sep          ... bench:         222.56 ns/iter (+/- 6.66)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 3.71s
-
-
-running 3 tests
-test bench_pascal_case           ... bench:         127.49 ns/iter (+/- 6.61)
-test bench_pascal_case_with_keep ... bench:         140.21 ns/iter (+/- 5.25)
-test bench_pascal_case_with_sep  ... bench:         237.46 ns/iter (+/- 6.03)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 4.37s
+test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 10.17s
 
 
 running 4 tests
-test bench_snake_case                   ... bench:         115.38 ns/iter (+/- 4.57)
-test bench_snake_case_with_keep         ... bench:         142.41 ns/iter (+/- 5.35)
-test bench_snake_case_with_nums_as_word ... bench:         126.88 ns/iter (+/- 4.01)
-test bench_snake_case_with_sep          ... bench:         211.74 ns/iter (+/- 8.32)
+test bench_kebab_case                   ... bench:          73.24 ns/iter (+/- 8.60)
+test bench_kebab_case_with_keep         ... bench:          88.79 ns/iter (+/- 6.19)
+test bench_kebab_case_with_nums_as_word ... bench:          79.29 ns/iter (+/- 7.69)
+test bench_kebab_case_with_sep          ... bench:         132.55 ns/iter (+/- 11.43)
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 5.14s
+test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 8.44s
 
 
 running 4 tests
-test bench_train_case                   ... bench:         118.75 ns/iter (+/- 2.79)
-test bench_train_case_with_keep         ... bench:         136.30 ns/iter (+/- 8.72)
-test bench_train_case_with_nums_as_word ... bench:         118.41 ns/iter (+/- 2.57)
-test bench_train_case_with_sep          ... bench:         182.70 ns/iter (+/- 5.04)
+test bench_macro_case                   ... bench:          81.61 ns/iter (+/- 15.01)
+test bench_macro_case_with_keep         ... bench:          90.84 ns/iter (+/- 5.38)
+test bench_macro_case_with_nums_as_word ... bench:          78.95 ns/iter (+/- 5.14)
+test bench_macro_case_with_sep          ... bench:         139.27 ns/iter (+/- 4.86)
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 11.13s
-```
-
-## 0.2.1
-
-> - Date: 2024/08/12
-> - rustc 1.80.1 (3f5fd8dd4 2024-08-06)
-
-```
-% ./build.sh bench
-
-running 248 tests
-iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 87/248
-iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 174/248
-iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-test result: ok. 0 passed; 0 failed; 248 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 21.07s
 
 
 running 3 tests
-test bench_camel_case           ... bench:         119.61 ns/iter (+/- 5.54)
-test bench_camel_case_with_keep ... bench:         133.05 ns/iter (+/- 5.09)
-test bench_camel_case_with_sep  ... bench:         220.75 ns/iter (+/- 5.18)
+test bench_pascal_case           ... bench:          79.22 ns/iter (+/- 4.66)
+test bench_pascal_case_with_keep ... bench:          86.73 ns/iter (+/- 3.84)
+test bench_pascal_case_with_sep  ... bench:         147.03 ns/iter (+/- 7.23)
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 1.96s
-
-
-running 3 tests
-test bench_cobol_case           ... bench:         126.28 ns/iter (+/- 3.90)
-test bench_cobol_case_with_keep ... bench:         144.03 ns/iter (+/- 4.27)
-test bench_cobol_case_with_sep  ... bench:         220.31 ns/iter (+/- 5.63)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 3.77s
+test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 11.00s
 
 
-running 3 tests
-test bench_kebab_case           ... bench:         125.43 ns/iter (+/- 6.52)
-test bench_kebab_case_with_keep ... bench:         140.52 ns/iter (+/- 6.26)
-test bench_kebab_case_with_sep  ... bench:         213.29 ns/iter (+/- 8.70)
+running 4 tests
+test bench_snake_case                   ... bench:          71.92 ns/iter (+/- 7.66)
+test bench_snake_case_with_keep         ... bench:          87.70 ns/iter (+/- 6.03)
+test bench_snake_case_with_nums_as_word ... bench:          78.77 ns/iter (+/- 7.22)
+test bench_snake_case_with_sep          ... bench:         130.50 ns/iter (+/- 6.55)
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 0.68s
-
-
-running 3 tests
-test bench_macro_case           ... bench:         124.57 ns/iter (+/- 4.52)
-test bench_macro_case_with_keep ... bench:         145.26 ns/iter (+/- 4.05)
-test bench_macro_case_with_sep  ... bench:         226.62 ns/iter (+/- 5.38)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 4.33s
+test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 8.48s
 
 
-running 3 tests
-test bench_pascal_case           ... bench:         124.71 ns/iter (+/- 4.41)
-test bench_pascal_case_with_keep ... bench:         137.41 ns/iter (+/- 3.87)
-test bench_pascal_case_with_sep  ... bench:         190.97 ns/iter (+/- 7.21)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 6.78s
-
-
-running 3 tests
-test bench_snake_case           ... bench:         156.07 ns/iter (+/- 4.29)
-test bench_snake_case_with_keep ... bench:         167.70 ns/iter (+/- 4.13)
-test bench_snake_case_with_sep  ... bench:         242.15 ns/iter (+/- 5.27)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 1.13s
-
-
-running 3 tests
-test bench_train_case           ... bench:         121.08 ns/iter (+/- 1.64)
-test bench_train_case_with_keep ... bench:         134.10 ns/iter (+/- 3.67)
-test bench_train_case_with_sep  ... bench:         212.42 ns/iter (+/- 5.32)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; finished in 5.62s
+running 4 tests
+test bench_train_case                   ... bench:          74.39 ns/iter (+/- 4.34)
+test bench_train_case_with_keep         ... bench:          88.30 ns/iter (+/- 21.66)
+test bench_train_case_with_nums_as_word ... bench:          74.07 ns/iter (+/- 5.50)
+test bench_train_case_with_sep          ... bench:         117.55 ns/iter (+/- 13.56)
 ```
 
 ## 0.2.1 
 
 > - Date: 2024/02/26
 > - Rust: 1.76.0 (c84b36747 2024-01-18)
+> - macOS
+> - Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
 
 ```
 % ./build.sh bench
@@ -218,6 +149,11 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; fini
 ```
 
 ## 0.2.0
+
+> - Date: 2024/02/25
+> - Rust: 1.76.0 (c84b36747 2024-01-18)
+> - macOS
+> - Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
 
 ```
 % ./build.sh bench
@@ -288,6 +224,11 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; fini
 
 ## 0.1.1
 
+> - Date: 2024/02/23
+> - Rust: 1.76.0 (c84b36747 2024-01-18)
+> - macOS
+> - Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+
 ```
 % ./build.sh bench
 
@@ -355,6 +296,11 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 3 measured; 0 filtered out; fini
 ```
 
 ## 0.1.0
+
+> - Date: 2024/01/18
+> - Rust: 1.76.0 (c84b36747 2024-01-18)
+> - macOS
+> - Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
 
 ```
 % ./build.sh bench
