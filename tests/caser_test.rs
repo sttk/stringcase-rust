@@ -1,4 +1,4 @@
-use stringcase::Caser;
+use stringcase::{Caser, Options};
 
 #[test]
 fn it_should_convert_to_camel_case_by_method_of_string() {
@@ -8,13 +8,25 @@ fn it_should_convert_to_camel_case_by_method_of_string() {
 
 #[test]
 fn it_should_convert_to_camel_case_with_sep_by_method_of_string() {
-    let converted = "foo_bar100BAZQux".to_camel_case_with_sep("_");
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: "_",
+        keep: "",
+    };
+    let converted = "foo_bar100BAZQux".to_camel_case_with_options(&opts);
     assert_eq!(converted, "fooBar100BazQux");
 }
 
 #[test]
 fn it_should_convert_to_camel_case_with_keep_by_method_of_string() {
-    let converted = "foo_bar100BAZQux".to_camel_case_with_keep("#");
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: "",
+        keep: "#",
+    };
+    let converted = "foo_bar100BAZQux".to_camel_case_with_options(&opts);
     assert_eq!(converted, "fooBar100BazQux");
 }
 

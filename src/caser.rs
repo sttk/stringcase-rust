@@ -6,6 +6,7 @@ use crate::camel_case::*;
 use crate::cobol_case::*;
 use crate::kebab_case::*;
 use crate::macro_case::*;
+use crate::options::Options;
 use crate::pascal_case::*;
 use crate::snake_case::*;
 use crate::train_case::*;
@@ -18,11 +19,10 @@ use crate::train_case::*;
 pub trait Caser<T: AsRef<str>> {
     // camel case
 
-    /// Converts a string to camel case.
+    /// Converts the input string to camel case.
     ///
-    /// This method targets only the upper and lower cases of ASCII alphabets
-    /// for capitalization, and all characters except ASCII alphabets and ASCII
-    /// numbers are eliminated as word separators.
+    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// but not the beginning.
     ///
     /// ```rust
     ///     use stringcase::Caser;
@@ -32,35 +32,32 @@ pub trait Caser<T: AsRef<str>> {
     /// ```
     fn to_camel_case(&self) -> String;
 
-    /// Converts a string to camel case using the specified characters as
-    /// separators.
-    ///
-    /// This method targets only the upper and lower cases of ASCII alphabets
-    /// for capitalization, and the characters specified as the second argument
-    /// of this mthod are regarded as word separators and are eliminated.
+    /// Converts the input string to camel case with the specified options.
     ///
     /// ```rust
-    ///     use stringcase::Caser;
-    ///
-    ///     let camel = "foo-bar100%baz".to_camel_case_with_sep("- ");
-    ///     assert_eq!(camel, "fooBar100%Baz");
+    ///     let opts = stringcase::Options{
+    ///       separate_before_non_alphabets: true,
+    ///       separate_after_non_alphabets: true,
+    ///       separators: "",
+    ///       keep: "",
+    ///     };
+    ///     let camel = stringcase::camel_case_with_options("foo_bar_100_baz", &opts);
+    ///     assert_eq!(camel, "fooBar100Baz");
     /// ```
+    fn to_camel_case_with_options(&self, opts: &Options) -> String;
+
+    /// Converts the input string to camel case with the specified separator characters.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_camel_case_with_options instead"
+    )]
     fn to_camel_case_with_sep(&self, seps: &str) -> String;
 
-    /// Converts a string to camel case using characters other than the
-    /// specified characters as separators.
-    ///
-    /// This method targets only the upper and lower cases of ASCII alphabets
-    /// for capitalization, and the characters other than the specified
-    /// characters as the second argument of this method are regarded as word
-    /// separators and are eliminated.
-    ///
-    /// ```rust
-    ///     use stringcase::Caser;
-    ///
-    ///     let camel = "foo-bar100%baz".to_camel_case_with_keep("%");
-    ///     assert_eq!(camel, "fooBar100%Baz");
-    /// ```
+    /// Converts the input string to camel case with the specified characters to be kept.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_camel_case_with_options instead"
+    )]
     fn to_camel_case_with_keep(&self, keeped: &str) -> String;
 
     // cobol case
@@ -424,12 +421,28 @@ impl<T: AsRef<str>> Caser<T> for T {
         camel_case(&self.as_ref())
     }
 
-    fn to_camel_case_with_sep(&self, seps: &str) -> String {
-        camel_case_with_sep(&self.as_ref(), seps)
+    fn to_camel_case_with_options(&self, opts: &Options) -> String {
+        camel_case_with_options(&self.as_ref(), opts)
     }
 
-    fn to_camel_case_with_keep(&self, keeped: &str) -> String {
-        camel_case_with_keep(&self.as_ref(), keeped)
+    fn to_camel_case_with_sep(&self, seps: &str) -> String {
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: seps,
+            keep: "",
+        };
+        camel_case_with_options(&self.as_ref(), &opts)
+    }
+
+    fn to_camel_case_with_keep(&self, kept: &str) -> String {
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: kept,
+        };
+        camel_case_with_options(&self.as_ref(), &opts)
     }
 
     // cobol case
@@ -555,21 +568,35 @@ mod tests_of_caser {
 
     #[test]
     fn it_should_convert_to_camel_case_with_sep() {
-        let result = "foo_bar100%BAZQux".to_camel_case_with_sep("_");
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "_",
+            keep: "",
+        };
+
+        let result = "foo_bar100%BAZQux".to_camel_case_with_options(&opts);
         assert_eq!(result, "fooBar100%BazQux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_camel_case_with_sep("_");
+        let result = string.to_camel_case_with_options(&opts);
         assert_eq!(result, "fooBar100%BazQux");
     }
 
     #[test]
     fn it_should_convert_to_camel_case_with_keep() {
-        let result = "foo_bar100%BAZQux".to_camel_case_with_keep("%");
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "%",
+        };
+
+        let result = "foo_bar100%BAZQux".to_camel_case_with_options(&opts);
         assert_eq!(result, "fooBar100%BazQux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_camel_case_with_keep("%");
+        let result = string.to_camel_case_with_options(&opts);
         assert_eq!(result, "fooBar100%BazQux");
     }
 
