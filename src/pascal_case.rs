@@ -283,7 +283,7 @@ mod tests_of_pascal_case {
     }
 
     #[test]
-    fn it_should_convert_emtpy() {
+    fn it_should_convert_empty() {
         let result = pascal_case("");
         assert_eq!(result, "");
     }
