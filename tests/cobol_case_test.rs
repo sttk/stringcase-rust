@@ -1,4 +1,4 @@
-use stringcase::{cobol_case, cobol_case_with_keep, cobol_case_with_sep};
+use stringcase::{cobol_case, cobol_case_with_options, Options};
 
 #[test]
 fn it_should_convert_to_cobol_case() {
@@ -8,20 +8,36 @@ fn it_should_convert_to_cobol_case() {
 
 #[test]
 fn it_should_convert_to_cobol_case_with_sep() {
-    let converted = cobol_case_with_sep("foo_bar100%BAZQux", "_");
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: "_",
+        keep: "",
+    };
+    let converted = cobol_case_with_options("foo_bar100%BAZQux", &opts);
     assert_eq!(converted, "FOO-BAR100%-BAZ-QUX");
 }
 
 #[test]
 fn it_should_convert_to_cobol_case_with_keep() {
-    let converted = cobol_case_with_keep("foo_bar100%BAZQux", "%");
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: "",
+        keep: "%",
+    };
+    let converted = cobol_case_with_options("foo_bar100%BAZQux", &opts);
     assert_eq!(converted, "FOO-BAR100%-BAZ-QUX");
 }
 
 #[test]
 fn it_should_convert_to_cobol_case_with_nums_as_word() {
-    use stringcase::cobol_case_with_nums_as_word as cobol_case;
-
-    let converted = cobol_case("foo_bar100%BAZQux");
+    let opts = Options {
+        separate_before_non_alphabets: true,
+        separate_after_non_alphabets: true,
+        separators: "",
+        keep: "",
+    };
+    let converted = cobol_case_with_options("foo_bar100%BAZQux", &opts);
     assert_eq!(converted, "FOO-BAR-100-BAZ-QUX");
 }
