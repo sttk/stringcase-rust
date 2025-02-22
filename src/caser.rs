@@ -58,7 +58,7 @@ pub trait Caser<T: AsRef<str>> {
         since = "0.4.0",
         note = "Should use to_camel_case_with_options instead"
     )]
-    fn to_camel_case_with_keep(&self, keeped: &str) -> String;
+    fn to_camel_case_with_keep(&self, kept: &str) -> String;
 
     // cobol case
 
@@ -113,7 +113,7 @@ pub trait Caser<T: AsRef<str>> {
         since = "0.4.0",
         note = "Should use to_cobol_case_with_options instead"
     )]
-    fn to_cobol_case_with_keep(&self, keeped: &str) -> String;
+    fn to_cobol_case_with_keep(&self, kept: &str) -> String;
 
     // kebab case
 
@@ -168,7 +168,7 @@ pub trait Caser<T: AsRef<str>> {
         since = "0.4.0",
         note = "Should use to_kebab_case_with_options instead"
     )]
-    fn to_kebab_case_with_keep(&self, keeped: &str) -> String;
+    fn to_kebab_case_with_keep(&self, kept: &str) -> String;
 
     // macro case
 
@@ -229,7 +229,7 @@ pub trait Caser<T: AsRef<str>> {
     ///     let macro_ = "foo-bar100%baz".to_macro_case_with_keep("%");
     ///     assert_eq!(macro_, "FOO_BAR100%_BAZ");
     /// ```
-    fn to_macro_case_with_keep(&self, keeped: &str) -> String;
+    fn to_macro_case_with_keep(&self, kept: &str) -> String;
 
     // pascal case
 
@@ -276,7 +276,7 @@ pub trait Caser<T: AsRef<str>> {
     ///     let pascal = "foo-bar100%baz".to_pascal_case_with_keep("%");
     ///     assert_eq!(pascal, "FooBar100%Baz");
     /// ```
-    fn to_pascal_case_with_keep(&self, keeped: &str) -> String;
+    fn to_pascal_case_with_keep(&self, kept: &str) -> String;
 
     // snake case
 
@@ -337,7 +337,7 @@ pub trait Caser<T: AsRef<str>> {
     ///     let snake = "foo-bar100%baz".to_snake_case_with_keep("%");
     ///     assert_eq!(snake, "foo_bar100%_baz");
     /// ```
-    fn to_snake_case_with_keep(&self, keeped: &str) -> String;
+    fn to_snake_case_with_keep(&self, kept: &str) -> String;
 
     // train case
 
@@ -398,7 +398,7 @@ pub trait Caser<T: AsRef<str>> {
     ///     let train = "foo-bar100%baz".to_train_case_with_keep("%");
     ///     assert_eq!(train, "Foo-Bar100%-Baz");
     /// ```
-    fn to_train_case_with_keep(&self, keeped: &str) -> String;
+    fn to_train_case_with_keep(&self, kept: &str) -> String;
 }
 
 impl<T: AsRef<str>> Caser<T> for T {
@@ -544,8 +544,8 @@ impl<T: AsRef<str>> Caser<T> for T {
         macro_case_with_sep(&self.as_ref(), seps)
     }
 
-    fn to_macro_case_with_keep(&self, keeped: &str) -> String {
-        macro_case_with_keep(&self.as_ref(), keeped)
+    fn to_macro_case_with_keep(&self, kept: &str) -> String {
+        macro_case_with_keep(&self.as_ref(), kept)
     }
 
     // pascal case
@@ -558,8 +558,8 @@ impl<T: AsRef<str>> Caser<T> for T {
         pascal_case_with_sep(&self.as_ref(), seps)
     }
 
-    fn to_pascal_case_with_keep(&self, keeped: &str) -> String {
-        pascal_case_with_keep(&self.as_ref(), keeped)
+    fn to_pascal_case_with_keep(&self, kept: &str) -> String {
+        pascal_case_with_keep(&self.as_ref(), kept)
     }
 
     // snake case
@@ -576,8 +576,8 @@ impl<T: AsRef<str>> Caser<T> for T {
         snake_case_with_sep(&self.as_ref(), seps)
     }
 
-    fn to_snake_case_with_keep(&self, keeped: &str) -> String {
-        snake_case_with_keep(&self.as_ref(), keeped)
+    fn to_snake_case_with_keep(&self, kept: &str) -> String {
+        snake_case_with_keep(&self.as_ref(), kept)
     }
 
     // train case
@@ -594,8 +594,8 @@ impl<T: AsRef<str>> Caser<T> for T {
         train_case_with_sep(&self.as_ref(), seps)
     }
 
-    fn to_train_case_with_keep(&self, keeped: &str) -> String {
-        train_case_with_keep(&self.as_ref(), keeped)
+    fn to_train_case_with_keep(&self, kept: &str) -> String {
+        train_case_with_keep(&self.as_ref(), kept)
     }
 }
 
