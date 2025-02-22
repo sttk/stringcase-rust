@@ -78,13 +78,15 @@ pub trait Caser<T: AsRef<str>> {
     /// Converts the input string to cobol case with the specified options.
     ///
     /// ```rust
+    ///     use stringcase::Caser;
+    ///
     ///     let opts = stringcase::Options{
     ///       separate_before_non_alphabets: true,
     ///       separate_after_non_alphabets: true,
     ///       separators: "",
     ///       keep: "",
     ///     };
-    ///     let cobol = stringcase::cobol_case_with_options("foo_bar_100_baz", &opts);
+    ///     let cobol = "foo_bar_100_baz".to_cobol_case_with_options(&opts);
     ///     assert_eq!(cobol, "FOO-BAR-100-BAZ");
     /// ```
     fn to_cobol_case_with_options(&self, opts: &Options) -> String;
@@ -115,63 +117,57 @@ pub trait Caser<T: AsRef<str>> {
 
     // kebab case
 
-    /// Converts a string to kebab case.
+    /// Converts the input string to kebab case.
     ///
-    /// This method targets the upper and lower cases of ASCII alphabets for
-    /// capitalization, and all characters except ASCII alphabets and ASCII numbers
-    /// are replaced to hyphens as word separators.
+    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// but not the beginning.
     ///
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let kebab = "foo-bar100%baz".to_kebab_case();
-    ///     assert_eq!(kebab, "foo-bar100-baz");
+    ///     let kebab = "fooBarBaz".to_kebab_case();
+    ///     assert_eq!(kebab, "foo-bar-baz");
     /// ```
     fn to_kebab_case(&self) -> String;
 
-    /// Converts a string to kebab case.
-    ///
-    /// This method targets the upper and lower cases of ASCII alphabets and
-    /// ASCII numbers for capitalization, and all characters except ASCII
-    /// alphabets and ASCII numbers are replaced to hyphens as word separators.
+    /// Converts the input string to kebab case with the specified options.
     ///
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let kebab = "foo-bar100%baz".to_kebab_case_with_nums_as_word();
+    ///     let opts = stringcase::Options{
+    ///       separate_before_non_alphabets: true,
+    ///       separate_after_non_alphabets: true,
+    ///       separators: "",
+    ///       keep: "",
+    ///     };
+    ///     let kebab = "foo_bar_100_baz".to_kebab_case_with_options(&opts);
     ///     assert_eq!(kebab, "foo-bar-100-baz");
     /// ```
+    fn to_kebab_case_with_options(&self, opts: &Options) -> String;
+
+    /// Converts the input string to kebab case.
+    ///
+    /// It treats the begin and the end of a sequence of non-alphabetical characters as a word
+    /// boundary.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_kebab_case_with_options instead"
+    )]
     fn to_kebab_case_with_nums_as_word(&self) -> String;
 
-    /// Converts a string to kebab case using the specified characters as
-    /// separators.
-    ///
-    /// This method targets only the upper and lower cases of ASCII alphabets for
-    /// capitalization, and the characters specified as the second argument of this
-    /// method are regarded as word separators and are replaced to hyphens.
-    ///
-    /// ```rust
-    ///     use stringcase::Caser;
-    ///
-    ///     let kebab = "foo-bar100%baz".to_kebab_case_with_sep("- ");
-    ///     assert_eq!(kebab, "foo-bar100%-baz");
-    /// ```
+    /// Converts the input string to kebab case with the specified separator characters.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_kebab_case_with_options instead"
+    )]
     fn to_kebab_case_with_sep(&self, seps: &str) -> String;
 
-    /// Converts a string to kebab case using characters other than the specified
-    /// characters as separators.
-    ///
-    /// This method targets only the upper and lower cases of ASCII alphabets for
-    /// capitalization, and the characters other than the specified characters as
-    /// the second argument of this method are regarded as word separators and are
-    /// replaced to hyphens.
-    ///
-    /// ```rust
-    ///     use stringcase::Caser;
-    ///
-    ///     let kebab = "foo-bar100%baz".to_kebab_case_with_keep("%");
-    ///     assert_eq!(kebab, "foo-bar100%-baz");
-    /// ```
+    /// Converts the input string to kebab case with the specified characters to be kept.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_kebab_case_with_options instead"
+    )]
     fn to_kebab_case_with_keep(&self, keeped: &str) -> String;
 
     // macro case
@@ -491,19 +487,47 @@ impl<T: AsRef<str>> Caser<T> for T {
     // kebab case
 
     fn to_kebab_case(&self) -> String {
-        kebab_case(&self.as_ref())
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "",
+        };
+        kebab_case_with_options(&self.as_ref(), &opts)
+    }
+
+    fn to_kebab_case_with_options(&self, opts: &Options) -> String {
+        kebab_case_with_options(&self.as_ref(), opts)
     }
 
     fn to_kebab_case_with_nums_as_word(&self) -> String {
-        kebab_case_with_nums_as_word(&self.as_ref())
+        let opts = Options {
+            separate_before_non_alphabets: true,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "",
+        };
+        kebab_case_with_options(&self.as_ref(), &opts)
     }
 
     fn to_kebab_case_with_sep(&self, seps: &str) -> String {
-        kebab_case_with_sep(&self.as_ref(), seps)
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: seps,
+            keep: "",
+        };
+        kebab_case_with_options(&self.as_ref(), &opts)
     }
 
-    fn to_kebab_case_with_keep(&self, keeped: &str) -> String {
-        kebab_case_with_keep(&self.as_ref(), keeped)
+    fn to_kebab_case_with_keep(&self, kept: &str) -> String {
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: kept,
+        };
+        kebab_case_with_options(&self.as_ref(), &opts)
     }
 
     // macro case
@@ -702,31 +726,52 @@ mod tests_of_caser {
 
     #[test]
     fn it_should_convert_to_kebab_case_with_nums_as_word() {
-        let result = "foo_bar100%BAZQux".to_kebab_case_with_nums_as_word();
+        let opts = Options {
+            separate_before_non_alphabets: true,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "",
+        };
+
+        let result = "foo_bar100%BAZQux".to_kebab_case_with_options(&opts);
         assert_eq!(result, "foo-bar-100-baz-qux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_kebab_case_with_nums_as_word();
+        let result = string.to_kebab_case_with_options(&opts);
         assert_eq!(result, "foo-bar-100-baz-qux");
     }
 
     #[test]
     fn it_should_convert_to_kebab_case_with_sep() {
-        let result = "foo_bar100%BAZQux".to_kebab_case_with_sep("_");
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "_",
+            keep: "",
+        };
+
+        let result = "foo_bar100%BAZQux".to_kebab_case_with_options(&opts);
         assert_eq!(result, "foo-bar100%-baz-qux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_kebab_case_with_sep("_");
+        let result = string.to_kebab_case_with_options(&opts);
         assert_eq!(result, "foo-bar100%-baz-qux");
     }
 
     #[test]
     fn it_should_convert_to_kebab_case_with_keep() {
-        let result = "foo_bar100%BAZQux".to_kebab_case_with_keep("%");
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "%",
+        };
+
+        let result = "foo_bar100%BAZQux".to_kebab_case_with_options(&opts);
         assert_eq!(result, "foo-bar100%-baz-qux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_kebab_case_with_keep("%");
+        let result = string.to_kebab_case_with_options(&opts);
         assert_eq!(result, "foo-bar100%-baz-qux");
     }
 
