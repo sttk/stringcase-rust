@@ -1,4 +1,4 @@
-use stringcase::{macro_case, macro_case_with_keep, macro_case_with_sep};
+use stringcase::{macro_case, macro_case_with_options, Options};
 
 #[test]
 fn it_should_convert_to_macro_case() {
@@ -8,20 +8,38 @@ fn it_should_convert_to_macro_case() {
 
 #[test]
 fn it_should_convert_to_macro_case_with_sep() {
-    let converted = macro_case_with_sep("foo_bar100%BAZQux", "_");
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: "_",
+        keep: "",
+    };
+    let converted = macro_case_with_options("foo_bar100%BAZQux", &opts);
     assert_eq!(converted, "FOO_BAR100%_BAZ_QUX");
 }
 
 #[test]
 fn it_should_convert_to_macro_case_with_keep() {
-    let converted = macro_case_with_keep("foo_bar100%BAZQux", "%");
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: "",
+        keep: "%",
+    };
+
+    let converted = macro_case_with_options("foo_bar100%BAZQux", &opts);
     assert_eq!(converted, "FOO_BAR100%_BAZ_QUX");
 }
 
 #[test]
 fn it_should_convert_to_macro_case_with_nums_as_word() {
-    use stringcase::macro_case_with_nums_as_word as macro_case;
+    let opts = Options {
+        separate_before_non_alphabets: true,
+        separate_after_non_alphabets: true,
+        separators: "",
+        keep: "",
+    };
 
-    let converted = macro_case("foo-bar100%-baz-qux");
+    let converted = macro_case_with_options("foo-bar100%-baz-qux", &opts);
     assert_eq!(converted, "FOO_BAR_100_BAZ_QUX");
 }
