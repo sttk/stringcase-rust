@@ -1,218 +1,130 @@
-// Copyright (C) 2024 Takayuki Sato. All Rights Reserved.
+// Copyright (C) 2024-2025 Takayuki Sato. All Rights Reserved.
 // This program is free software under MIT License.
 // See the file LICENSE in this distribution for more details.
 
-/// Converts a string to pascal case.
+use crate::options::Options;
+
+/// Converts the input string to pascal case with the specified options.
 ///
-/// This function takes a string slice as its argument, then returns a `String`
-/// of which the case style is pascal case.
+/// ```rust
+///     let opts = stringcase::Options{
+///       separate_before_non_alphabets: true,
+///       separate_after_non_alphabets: true,
+///       separators: "",
+///       keep: "",
+///     };
+///     let pascal = stringcase::pascal_case_with_options("foo_bar_100_baz", &opts);
+///     assert_eq!(pascal, "FooBar100Baz");
+/// ```
+pub fn pascal_case_with_options(input: &str, opts: &Options) -> String {
+    let mut result = String::with_capacity(input.len());
+    // .len returns byte count but ok in this case!
+
+    #[derive(PartialEq)]
+    enum ChIs {
+        FirstOfStr,
+        NextOfUpper,
+        NextOfContdUpper,
+        NextOfSepMark,
+        NextOfKeptMark,
+        Other,
+    }
+
+    let mut flag = ChIs::FirstOfStr;
+
+    for ch in input.chars() {
+        if ch.is_ascii_uppercase() {
+            if flag == ChIs::NextOfUpper
+                || flag == ChIs::NextOfContdUpper
+                || (!opts.separate_after_non_alphabets && flag == ChIs::NextOfKeptMark)
+            {
+                result.push(ch.to_ascii_lowercase());
+                flag = ChIs::NextOfContdUpper;
+            } else {
+                result.push(ch);
+                flag = ChIs::NextOfUpper;
+            }
+        } else if ch.is_ascii_lowercase() {
+            if flag == ChIs::NextOfContdUpper {
+                if let Some(prev) = result.pop() {
+                    result.push(prev.to_ascii_uppercase());
+                    result.push(ch);
+                }
+            } else if flag == ChIs::NextOfSepMark
+                || flag == ChIs::FirstOfStr
+                || (opts.separate_after_non_alphabets && flag == ChIs::NextOfKeptMark)
+            {
+                result.push(ch.to_ascii_uppercase());
+            } else {
+                result.push(ch);
+            }
+            flag = ChIs::Other;
+        } else if ch.is_ascii_digit() {
+            result.push(ch);
+            flag = ChIs::NextOfKeptMark;
+        } else if !opts.separators.is_empty() {
+            if !opts.separators.contains(ch) {
+                result.push(ch);
+                flag = ChIs::NextOfKeptMark;
+            } else if flag != ChIs::FirstOfStr {
+                flag = ChIs::NextOfSepMark;
+            }
+        } else if !opts.keep.is_empty() {
+            if opts.keep.contains(ch) {
+                result.push(ch);
+                flag = ChIs::NextOfKeptMark;
+            } else if flag != ChIs::FirstOfStr {
+                flag = ChIs::NextOfSepMark;
+            }
+        } else if flag != ChIs::FirstOfStr {
+            flag = ChIs::NextOfSepMark;
+        }
+    }
+
+    result
+}
+
+/// Converts the input string to pascal case.
 ///
-/// This function targets the upper and lower cases of ASCII alphabets for
-/// capitalization, and all characters except ASCII alphabets and ASCII numbers
-/// are eliminated as word separators.
+/// It treats the end of a sequence of non-alphabetical characters as a word boundary, but not
+/// the beginning.
 ///
 /// ```rust
 ///     let pascal = stringcase::pascal_case("foo_bar_baz");
 ///     assert_eq!(pascal, "FooBarBaz");
 /// ```
 pub fn pascal_case(input: &str) -> String {
-    let mut result = String::with_capacity(input.len());
-    // .len returns byte count but ok in this case!
-
-    enum ChIs {
-        FirstOfStr,
-        NextOfUpper,
-        NextOfMark,
-        Others,
-    }
-    let mut flag = ChIs::FirstOfStr;
-
-    for ch in input.chars() {
-        if ch.is_ascii_uppercase() {
-            match flag {
-                ChIs::NextOfUpper => {
-                    result.push(ch.to_ascii_lowercase());
-                    //flag = ChIs::nextOfUpper;
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::NextOfUpper;
-                }
-            }
-        } else if ch.is_ascii_lowercase() {
-            match flag {
-                ChIs::NextOfUpper => match result.pop() {
-                    Some(prev) => {
-                        result.push(prev.to_ascii_uppercase());
-                        result.push(ch);
-                        flag = ChIs::Others;
-                    }
-                    None => (), // impossible
-                },
-                ChIs::FirstOfStr | ChIs::NextOfMark => {
-                    result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::Others;
-                }
-            }
-        } else if ch.is_ascii_digit() {
-            result.push(ch);
-            flag = ChIs::NextOfMark;
-        } else {
-            match flag {
-                ChIs::FirstOfStr => (),
-                _ => flag = ChIs::NextOfMark,
-            }
-        }
-    }
-
-    result
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: "",
+        keep: "",
+    };
+    pascal_case_with_options(input, &opts)
 }
 
-/// Converts a string to pascal case using the specified characters as
-/// separators.
-///
-/// This function takes a string slice as its argument, then returns a `String`
-/// of which the case style is pascal case.
-///
-/// This function targets only the upper and lower cases of ASCII alphabets for
-/// capitalization, and the characters specified as the second argument of this
-/// function are regarded as word separators and are eliminated.
-///
-/// ```rust
-///     let pascal = stringcase::pascal_case_with_sep("foo-Bar100%Baz", "- ");
-///     assert_eq!(pascal, "FooBar100%Baz");
-/// ```
+/// Converts the input string to pascal case with the specified separator characters.
+#[deprecated(since = "0.4.0", note = "Should use pascal_case_with_options instead")]
 pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
-    let mut result = String::with_capacity(input.len());
-    // .len returns byte count but ok in this case!
-
-    enum ChIs {
-        FirstOfStr,
-        NextOfUpper,
-        NextOfMark,
-        Others,
-    }
-    let mut flag = ChIs::FirstOfStr;
-
-    for ch in input.chars() {
-        if seps.contains(ch) {
-            match flag {
-                ChIs::FirstOfStr => (),
-                _ => flag = ChIs::NextOfMark,
-            }
-        } else if ch.is_ascii_uppercase() {
-            match flag {
-                ChIs::NextOfUpper => {
-                    result.push(ch.to_ascii_lowercase());
-                    //flag = ChIs::NextOfUpper;
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::NextOfUpper;
-                }
-            }
-        } else if ch.is_ascii_lowercase() {
-            match flag {
-                ChIs::NextOfUpper => match result.pop() {
-                    Some(prev) => {
-                        result.push(prev.to_ascii_uppercase());
-                        result.push(ch);
-                        flag = ChIs::Others;
-                    }
-                    None => (), // impossible
-                },
-                ChIs::FirstOfStr | ChIs::NextOfMark => {
-                    flag = ChIs::NextOfUpper;
-                    result.push(ch.to_ascii_uppercase());
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::Others;
-                }
-            }
-        } else {
-            result.push(ch);
-            flag = ChIs::NextOfMark;
-        }
-    }
-
-    result
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: seps,
+        keep: "",
+    };
+    pascal_case_with_options(input, &opts)
 }
 
-/// Converts a string to pascal case using characters other than the specified
-/// characters as separators.
-///
-/// This function takes a string slice as its argument, then returns a `String`
-/// of which the case style is pascal case.
-///
-/// This function targets only the upper and lower cases of ASCII alphabets for
-/// capitalization, and the characters other than the specified characters as
-/// the second argument of this function are regarded as word separators and
-/// are eliminated.
-///
-/// ```rust
-///     let pascal = stringcase::pascal_case_with_keep("foo-bar100%baz", "%");
-///     assert_eq!(pascal, "FooBar100%Baz");
-/// ```
-pub fn pascal_case_with_keep(input: &str, keeped: &str) -> String {
-    let mut result = String::with_capacity(input.len());
-    // .len returns byte count but ok in this case!
-
-    enum ChIs {
-        FirstOfStr,
-        NextOfUpper,
-        NextOfMark,
-        Others,
-    }
-    let mut flag = ChIs::FirstOfStr;
-
-    for ch in input.chars() {
-        if ch.is_ascii_uppercase() {
-            match flag {
-                ChIs::NextOfUpper => {
-                    result.push(ch.to_ascii_lowercase());
-                    //flag = ChIs::NextOfUpper;
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::NextOfUpper;
-                }
-            }
-        } else if ch.is_ascii_lowercase() {
-            match flag {
-                ChIs::NextOfUpper => match result.pop() {
-                    Some(prev) => {
-                        result.push(prev.to_ascii_uppercase());
-                        result.push(ch);
-                        flag = ChIs::Others;
-                    }
-                    None => (), // impossible
-                },
-                ChIs::FirstOfStr | ChIs::NextOfMark => {
-                    result.push(ch.to_ascii_uppercase());
-                    flag = ChIs::NextOfUpper;
-                }
-                _ => {
-                    result.push(ch);
-                    flag = ChIs::Others;
-                }
-            }
-        } else if ch.is_ascii_digit() || keeped.contains(ch) {
-            result.push(ch);
-            flag = ChIs::NextOfMark;
-        } else {
-            match flag {
-                ChIs::FirstOfStr => (),
-                _ => flag = ChIs::NextOfMark,
-            }
-        }
-    }
-
-    result
+/// Converts the input string to pascal case with the specified characters to be kept.
+#[deprecated(since = "0.4.0", note = "Should use pascal_case_with_options instead")]
+pub fn pascal_case_with_keep(input: &str, kept: &str) -> String {
+    let opts = Options {
+        separate_before_non_alphabets: false,
+        separate_after_non_alphabets: true,
+        separators: "",
+        keep: kept,
+    };
+    pascal_case_with_options(input, &opts)
 }
 
 #[cfg(test)]
@@ -220,309 +132,2079 @@ mod tests_of_pascal_case {
     use super::*;
 
     #[test]
-    fn it_should_convert_camel_case() {
+    fn convert_camel_case() {
         let result = pascal_case("abcDefGHIjk");
         assert_eq!(result, "AbcDefGhIjk");
     }
 
     #[test]
-    fn it_should_convert_pascal_case() {
+    fn convert_pascal_case() {
         let result = pascal_case("AbcDefGHIjk");
         assert_eq!(result, "AbcDefGhIjk");
     }
 
     #[test]
-    fn it_should_convert_snake_case() {
+    fn convert_snake_case() {
         let result = pascal_case("abc_def_ghi");
         assert_eq!(result, "AbcDefGhi");
     }
 
     #[test]
-    fn it_should_convert_kebab_case() {
+    fn convert_kebab_case() {
         let result = pascal_case("abc-def-ghi");
         assert_eq!(result, "AbcDefGhi");
     }
 
     #[test]
-    fn it_should_convert_train_case() {
+    fn convert_train_case() {
         let result = pascal_case("Abc-Def-Ghi");
         assert_eq!(result, "AbcDefGhi");
     }
 
     #[test]
-    fn it_should_convert_macro_case() {
+    fn convert_macro_case() {
         let result = pascal_case("ABC_DEF_GHI");
         assert_eq!(result, "AbcDefGhi");
     }
 
     #[test]
-    fn it_should_convert_cobol_case() {
+    fn convert_cobol_case() {
         let result = pascal_case("ABC-DEF-GHI");
         assert_eq!(result, "AbcDefGhi");
     }
 
     #[test]
-    fn it_should_keep_digits() {
-        let result = pascal_case("abc123-456defG789HIJklMN12");
-        assert_eq!(result, "Abc123456DefG789HiJklMn12");
+    fn convert_with_keeping_digits() {
+        let result = pascal_case("abc123-456defG89HIJklMN12");
+        assert_eq!(result, "Abc123456DefG89HiJklMn12");
     }
 
     #[test]
-    fn it_should_convert_when_starting_with_digit() {
-        let result = pascal_case("123abc456def");
-        assert_eq!(result, "123Abc456Def");
-
-        let result = pascal_case("123ABC456DEF");
-        assert_eq!(result, "123Abc456Def");
-    }
-
-    #[test]
-    fn it_should_treat_marks_as_separators() {
+    fn convert_with_symbols_as_separators() {
         let result = pascal_case(":.abc~!@def#$ghi%&jk(lm)no/?");
         assert_eq!(result, "AbcDefGhiJkLmNo");
     }
 
     #[test]
-    fn it_should_convert_empty() {
+    fn convert_when_starting_with_digit() {
+        let result = pascal_case("123abc456def");
+        assert_eq!(result, "123Abc456Def");
+
+        let result = pascal_case("123ABC456DEF");
+        assert_eq!(result, "123Abc456Def");
+
+        let result = pascal_case("123Abc456Def");
+        assert_eq!(result, "123Abc456Def");
+    }
+
+    #[test]
+    fn convert_empty_string() {
         let result = pascal_case("");
         assert_eq!(result, "");
     }
-
-    #[test]
-    fn it_should_treat_number_sequence_by_default() {
-        let result = pascal_case("abc123Def456#Ghi789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("ABC123-DEF456#GHI789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("abc123-def456#ghi789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("ABC123_DEF456#GHI789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("Abc123Def456#Ghi789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("abc123_def456#ghi789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("Abc123-Def456#-Ghi789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("000-abc123_def456#ghi789");
-        assert_eq!(result, "000Abc123Def456Ghi789");
-    }
-
-    #[test]
-    fn it_should_treat_number_sequence_as_word() {
-        let result = pascal_case("abc123Def456#Ghi789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("ABC-123-DEF-456#GHI-789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("abc-123-def-456#ghi-789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("ABC_123_DEF_456#GHI_789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("Abc123Def456#Ghi789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("abc_123_def_456#ghi_789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("Abc-123-Def-456#Ghi-789");
-        assert_eq!(result, "Abc123Def456Ghi789");
-
-        let result = pascal_case("000_abc_123_def_456#ghi_789");
-        assert_eq!(result, "000Abc123Def456Ghi789");
-    }
 }
 
 #[cfg(test)]
-mod tests_of_pascal_case_with_sep {
+mod tests_of_pascal_case_with_options {
     use super::*;
 
-    #[test]
-    fn it_should_convert_camel_case() {
-        let result = pascal_case_with_sep("abcDefGHIjk", "-_");
-        assert_eq!(result, "AbcDefGhIjk");
+    mod non_alphabets_as_head_of_a_word {
+        use super::*;
+
+        #[test]
+        fn convert_camel_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_kebab_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_train_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_macro_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_cobol_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456defG89hiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, "AbcDefGhiJkLmNo");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
     }
 
-    #[test]
-    fn it_should_convert_pascal_case() {
-        let result = pascal_case_with_sep("AbcDefGHIjk", "-_");
-        assert_eq!(result, "AbcDefGhIjk");
+    mod non_alphabets_as_tail_of_a_word {
+        use super::*;
+
+        #[test]
+        fn convert_camel_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_kebab_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_train_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_macro_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_cobol_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456DefG89HiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, "AbcDefGhiJkLmNo");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
     }
 
-    #[test]
-    fn it_should_convert_snake_case() {
-        let result = pascal_case_with_sep("abc_def_ghi", "_");
-        assert_eq!(result, "AbcDefGhi");
+    mod non_alphabets_as_a_word {
+        use super::*;
 
-        let result = pascal_case_with_sep("abc_def_ghi", "-");
-        assert_eq!(result, "Abc_Def_Ghi");
+        #[test]
+        fn convert_camel_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_kebab_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_train_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_macro_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_cobol_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456DefG89HiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, "AbcDefGhiJkLmNo");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
     }
 
-    #[test]
-    fn it_should_convert_kebab_case() {
-        let result = pascal_case_with_sep("abc-def-ghi", "-");
-        assert_eq!(result, "AbcDefGhi");
+    mod non_alphabets_as_part_a_word {
+        use super::*;
 
-        let result = pascal_case_with_sep("abc-def-ghi", "_");
-        assert_eq!(result, "Abc-Def-Ghi");
+        #[test]
+        fn convert_camel_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_kebab_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_train_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_macro_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_cobol_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456defG89hiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, "AbcDefGhiJkLmNo");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
     }
 
-    #[test]
-    fn it_should_convert_train_case() {
-        let result = pascal_case_with_sep("Abc-Def-Ghi", "-");
-        assert_eq!(result, "AbcDefGhi");
+    mod non_alphabets_as_head_a_word_with_separators {
+        use super::*;
 
-        let result = pascal_case_with_sep("Abc-Def-Ghi", "_");
-        assert_eq!(result, "Abc-Def-Ghi");
+        #[test]
+        fn convert_camel_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-_",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-_",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case_with_options() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "_",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "-";
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "Abc_def_ghi");
+        }
+
+        #[test]
+        fn convert_kebab_case_with_options() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "Abc-def-ghi");
+        }
+
+        #[test]
+        fn convert_train_case_with_options() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_macro_case_with_options() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "_",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "-";
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "Abc_def_ghi");
+        }
+
+        #[test]
+        fn convert_cobol_case_with_options() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "Abc-def-ghi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits_with_options() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456defG89hiJklMn12");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123-456defG89hiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: ":@$&()/",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, ".abc~!Def#Ghi%JkLmNo?");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string_with_options() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-_",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
+
+        #[test]
+        fn alphabets_and_numbers_in_separators_are_no_effect() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "-b2",
+                keep: "",
+            };
+
+            let result = pascal_case_with_options("abc123def", &opts);
+            assert_eq!(result, "Abc123def");
+        }
     }
 
-    #[test]
-    fn it_should_convert_macro_case() {
-        let result = pascal_case_with_sep("ABC_DEF_GHI", "_");
-        assert_eq!(result, "AbcDefGhi");
+    mod non_alphabets_as_tail_a_word_with_separators {
+        use super::*;
 
-        let result = pascal_case_with_sep("ABC_DEF_GHI", "-");
-        assert_eq!(result, "Abc_Def_Ghi");
+        #[test]
+        fn convert_camel_case() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "-";
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "Abc_Def_Ghi");
+        }
+
+        #[test]
+        fn convert_kebab_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_train_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_macro_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "-";
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "Abc_Def_Ghi");
+        }
+
+        #[test]
+        fn convert_cobol_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456DefG89HiJklMn12");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123-456DefG89HiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: ":@$&()/",
+                keep: "",
+            };
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, ".Abc~!Def#Ghi%JkLmNo?");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
+
+        #[test]
+        fn alphabets_and_numbers_in_separators_have_no_effect() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-b2",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc123def", &opts);
+            assert_eq!(result, "Abc123Def");
+        }
     }
 
-    #[test]
-    fn it_should_convert_cobol_case() {
-        let result = pascal_case_with_sep("ABC_DEF_GHI", "_");
-        assert_eq!(result, "AbcDefGhi");
+    mod non_alphabets_as_a_word_with_separators {
+        use super::*;
 
-        let result = pascal_case_with_sep("ABC_DEF_GHI", "-");
-        assert_eq!(result, "Abc_Def_Ghi");
+        #[test]
+        fn convert_camel_case() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "-";
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "Abc_Def_Ghi");
+        }
+
+        #[test]
+        fn convert_kebab_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_train_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_macro_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "-";
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "Abc_Def_Ghi");
+        }
+
+        #[test]
+        fn convert_cobol_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456DefG89HiJklMn12");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123-456DefG89HiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: ":@$&()/",
+                keep: "",
+            };
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, ".Abc~!Def#Ghi%JkLmNo?");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
+
+        #[test]
+        fn alphabets_and_numbers_in_separators_have_no_effect() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "-b2",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc123def", &opts);
+            assert_eq!(result, "Abc123Def");
+        }
     }
 
-    #[test]
-    fn it_should_keep_digits() {
-        let result = pascal_case_with_sep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "Abc123456DefG789HiJklMn12");
+    mod non_alphabets_as_part_a_word_with_separators {
+        use super::*;
 
-        let result = pascal_case_with_sep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "Abc123-456DefG789HiJklMn12");
+        #[test]
+        fn convert_camel_case() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "-";
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "Abc_def_ghi");
+        }
+
+        #[test]
+        fn convert_kebab_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "Abc-def-ghi");
+        }
+
+        #[test]
+        fn convert_train_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_macro_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "-";
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "Abc_def_ghi");
+        }
+
+        #[test]
+        fn convert_cobol_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "Abc-def-ghi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456defG89hiJklMn12");
+
+            opts.separators = "_";
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123-456defG89hiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: ":@$&()/",
+                keep: "",
+            };
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, ".abc~!Def#Ghi%JkLmNo?");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
+
+        #[test]
+        fn alphabets_and_numbers_in_separators_have_no_effect() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "-b2",
+                keep: "",
+            };
+            let result = pascal_case_with_options("abc123def", &opts);
+            assert_eq!(result, "Abc123def");
+        }
     }
 
-    #[test]
-    fn it_should_convert_when_starting_with_digit() {
-        let result = pascal_case_with_sep("123abc456def", "_");
-        assert_eq!(result, "123Abc456Def");
+    mod non_alphabets_as_head_a_word_with_kept_characters {
+        use super::*;
 
-        let result = pascal_case_with_sep("123ABC456DEF", "_");
-        assert_eq!(result, "123Abc456Def");
+        #[test]
+        fn convert_camel_case() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "_";
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "Abc_def_ghi");
+        }
+
+        #[test]
+        fn convert_kebab_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "Abc-def-ghi");
+        }
+
+        #[test]
+        fn convert_train_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_macro_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "_";
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "Abc_def_ghi");
+        }
+
+        #[test]
+        fn convert_cobol_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "Abc-def-ghi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456defG89hiJklMn12");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123-456defG89hiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: ".~!#%?",
+            };
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, ".abc~!Def#Ghi%JkLmNo?");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123abc456def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
     }
 
-    #[test]
-    fn it_should_treat_marks_as_separators() {
-        let result = pascal_case_with_sep(":.abc~!@def#$ghi%&jk(lm)no/?", ":@$&()/");
-        assert_eq!(result, ".Abc~!Def#Ghi%JkLmNo?");
+    mod non_alphabets_as_tail_a_word_with_kept_characters {
+        use super::*;
+
+        #[test]
+        fn convert_camel_case() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "_";
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "Abc_Def_Ghi");
+        }
+
+        #[test]
+        fn convert_kebab_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_train_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_macro_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "_";
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "Abc_Def_Ghi");
+        }
+
+        #[test]
+        fn convert_cobol_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456DefG89HiJklMn12");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123-456DefG89HiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: ".~!#%?",
+            };
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, ".Abc~!Def#Ghi%JkLmNo?");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: true,
+                separators: "-_",
+                keep: "",
+            };
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
     }
 
-    #[test]
-    fn it_should_convert_empty() {
-        let result = pascal_case_with_sep("", "-_");
-        assert_eq!(result, "");
+    mod non_alphabets_as_a_word_with_kept_characters {
+        use super::*;
+
+        #[test]
+        fn convert_camel_case() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_pascal_case() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
+
+        #[test]
+        fn convert_snake_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "_";
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "Abc_Def_Ghi");
+        }
+
+        #[test]
+        fn convert_kebab_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_train_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_macro_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "_";
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "Abc_Def_Ghi");
+        }
+
+        #[test]
+        fn convert_cobol_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
+
+        #[test]
+        fn convert_with_keeping_digits() {
+            let mut opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456DefG89HiJklMn12");
+
+            opts.keep = "-";
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123-456DefG89HiJklMn12");
+        }
+
+        #[test]
+        fn convert_with_symbols_as_separators() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: ".~!#%?",
+            };
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, ".Abc~!Def#Ghi%JkLmNo?");
+        }
+
+        #[test]
+        fn convert_when_starting_with_digit() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123Abc456Def");
+
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_an_empty_string() {
+            let opts = Options {
+                separate_before_non_alphabets: true,
+                separate_after_non_alphabets: true,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
     }
-}
 
-#[cfg(test)]
-mod tests_of_pascal_case_with_keep {
-    use super::*;
+    mod non_alphabets_as_part_a_word_with_kept_characters {
+        use super::*;
 
-    #[test]
-    fn it_should_convert_camel_case() {
-        let result = pascal_case_with_keep("abcDefGHIjk", "-_");
-        assert_eq!(result, "AbcDefGhIjk");
-    }
+        #[test]
+        fn convert_camel_case() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("abcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
 
-    #[test]
-    fn it_should_convert_pascal_case() {
-        let result = pascal_case_with_keep("AbcDefGHIjk", "-_");
-        assert_eq!(result, "AbcDefGhIjk");
-    }
+        #[test]
+        fn convert_pascal_case() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("AbcDefGHIjk", &opts);
+            assert_eq!(result, "AbcDefGhIjk");
+        }
 
-    #[test]
-    fn it_should_convert_snake_case() {
-        let result = pascal_case_with_keep("abc_def_ghi", "-");
-        assert_eq!(result, "AbcDefGhi");
+        #[test]
+        fn convert_snake_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
 
-        let result = pascal_case_with_keep("abc_def_ghi", "_");
-        assert_eq!(result, "Abc_Def_Ghi");
-    }
+            opts.keep = "_";
+            let result = pascal_case_with_options("abc_def_ghi", &opts);
+            assert_eq!(result, "Abc_def_ghi");
+        }
 
-    #[test]
-    fn it_should_convert_kebab_case() {
-        let result = pascal_case_with_keep("abc-def-ghi", "_");
-        assert_eq!(result, "AbcDefGhi");
+        #[test]
+        fn convert_kebab_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
 
-        let result = pascal_case_with_keep("abc-def-ghi", "-");
-        assert_eq!(result, "Abc-Def-Ghi");
-    }
+            opts.keep = "-";
+            let result = pascal_case_with_options("abc-def-ghi", &opts);
+            assert_eq!(result, "Abc-def-ghi");
+        }
 
-    #[test]
-    fn it_should_convert_train_case() {
-        let result = pascal_case_with_keep("Abc-Def-Ghi", "_");
-        assert_eq!(result, "AbcDefGhi");
+        #[test]
+        fn convert_train_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "AbcDefGhi");
 
-        let result = pascal_case_with_keep("Abc-Def-Ghi", "-");
-        assert_eq!(result, "Abc-Def-Ghi");
-    }
+            opts.keep = "-";
+            let result = pascal_case_with_options("Abc-Def-Ghi", &opts);
+            assert_eq!(result, "Abc-Def-Ghi");
+        }
 
-    #[test]
-    fn it_should_convert_macro_case() {
-        let result = pascal_case_with_keep("ABC_DEF_GHI", "-");
-        assert_eq!(result, "AbcDefGhi");
+        #[test]
+        fn convert_macro_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-",
+            };
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
 
-        let result = pascal_case_with_keep("ABC_DEF_GHI", "_");
-        assert_eq!(result, "Abc_Def_Ghi");
-    }
+            opts.keep = "_";
+            let result = pascal_case_with_options("ABC_DEF_GHI", &opts);
+            assert_eq!(result, "Abc_def_ghi");
+        }
 
-    #[test]
-    fn it_should_convert_cobol_case() {
-        let result = pascal_case_with_keep("ABC-DEF-GHI", "_");
-        assert_eq!(result, "AbcDefGhi");
+        #[test]
+        fn convert_cobol_case() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "AbcDefGhi");
 
-        let result = pascal_case_with_keep("ABC-DEF-GHI", "-");
-        assert_eq!(result, "Abc-Def-Ghi");
-    }
+            opts.keep = "-";
+            let result = pascal_case_with_options("ABC-DEF-GHI", &opts);
+            assert_eq!(result, "Abc-def-ghi");
+        }
 
-    #[test]
-    fn it_should_keep_digits() {
-        let result = pascal_case_with_keep("abc123-456defG789HIJklMN12", "_");
-        assert_eq!(result, "Abc123456DefG789HiJklMn12");
+        #[test]
+        fn convert_with_keeping_digits() {
+            let mut opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "_",
+            };
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123456defG89hiJklMn12");
 
-        let result = pascal_case_with_keep("abc123-456defG789HIJklMN12", "-");
-        assert_eq!(result, "Abc123-456DefG789HiJklMn12");
-    }
+            opts.keep = "-";
+            let result = pascal_case_with_options("abc123-456defG89HIJklMN12", &opts);
+            assert_eq!(result, "Abc123-456defG89hiJklMn12");
+        }
 
-    #[test]
-    fn it_should_convert_when_starting_with_digit() {
-        let result = pascal_case_with_keep("123abc456def", "_");
-        assert_eq!(result, "123Abc456Def");
+        #[test]
+        fn convert_with_symbols_as_separators() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: ".~!#%?",
+            };
+            let result = pascal_case_with_options(":.abc~!@def#$ghi%&jk(lm)no/?", &opts);
+            assert_eq!(result, ".abc~!Def#Ghi%JkLmNo?");
+        }
 
-        let result = pascal_case_with_keep("123ABC456DEF", "_");
-        assert_eq!(result, "123Abc456Def");
-    }
+        #[test]
+        fn convert_when_starting_with_digit() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("123abc456def", &opts);
+            assert_eq!(result, "123abc456def");
 
-    #[test]
-    fn it_should_treat_marks_as_separators() {
-        let result = pascal_case_with_keep(":.abc~!@def#$ghi%&jk(lm)no/?", ".~!#%?");
-        assert_eq!(result, ".Abc~!Def#Ghi%JkLmNo?");
-    }
+            let result = pascal_case_with_options("123ABC456DEF", &opts);
+            assert_eq!(result, "123abc456def");
 
-    #[test]
-    fn it_should_convert_empty() {
-        let result = pascal_case_with_keep("", "-_");
-        assert_eq!(result, "");
+            let result = pascal_case_with_options("123Abc456Def", &opts);
+            assert_eq!(result, "123Abc456Def");
+        }
+
+        #[test]
+        fn convert_empty_string() {
+            let opts = Options {
+                separate_before_non_alphabets: false,
+                separate_after_non_alphabets: false,
+                separators: "",
+                keep: "-_",
+            };
+            let result = pascal_case_with_options("", &opts);
+            assert_eq!(result, "");
+        }
     }
 }
