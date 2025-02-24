@@ -227,49 +227,45 @@ pub trait Caser<T: AsRef<str>> {
 
     // pascal case
 
-    /// Converts a string to pascal case.
+    /// Converts the input string to pascal case.
     ///
-    /// This method targets the upper and lower cases of ASCII alphabets for
-    /// capitalization, and all characters except ASCII alphabets and ASCII numbers
-    /// are eliminated as word separators.
+    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// but not the beginning.
     ///
     /// ```rust
     ///     use stringcase::Caser;
-    ///
-    ///     let pascal = "foo-bar100%baz".to_pascal_case();
-    ///     assert_eq!(pascal, "FooBar100Baz");
-    /// ```
+    ///     
+    ///     let pascal = "foo_bar_baz".to_pascal_case();
+    ///     assert_eq!(pascal, "FooBarBaz");
+    /// ```     
     fn to_pascal_case(&self) -> String;
 
-    /// Converts a string to pascal case using the specified characters as
-    /// separators.
-    ///
-    /// This method targets only the upper and lower cases of ASCII alphabets for
-    /// capitalization, and the characters specified as the second argument of this
-    /// method are regarded as word separators and are eliminated.
+    /// Converts the input string to pascal case with the specified options.
     ///
     /// ```rust
-    ///     use stringcase::Caser;
-    ///
-    ///     let pascal = "foo-bar100%baz".to_pascal_case_with_sep("- ");
-    ///     assert_eq!(pascal, "FooBar100%Baz");
+    ///     let opts = stringcase::Options{
+    ///       separate_before_non_alphabets: true,
+    ///       separate_after_non_alphabets: true,
+    ///       separators: "",
+    ///       keep: "",
+    ///     };
+    ///     let pascal = stringcase::pascal_case_with_options("foo_bar_100_baz", &opts);
+    ///     assert_eq!(pascal, "FooBar100Baz");
     /// ```
+    fn to_pascal_case_with_options(&self, opts: &Options) -> String;
+
+    /// Converts the input string to pascal case with the specified separator characters.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_pascal_case_with_options instead"
+    )]
     fn to_pascal_case_with_sep(&self, seps: &str) -> String;
 
-    /// Converts a string to pascal case using characters other than the specified
-    /// characters as separators.
-    ///
-    /// This method targets only the upper and lower cases of ASCII alphabets for
-    /// capitalization, and the characters other than the specified characters as
-    /// the second argument of this method are regarded as word separators and are
-    /// eliminated.
-    ///
-    /// ```rust
-    ///     use stringcase::Caser;
-    ///
-    ///     let pascal = "foo-bar100%baz".to_pascal_case_with_keep("%");
-    ///     assert_eq!(pascal, "FooBar100%Baz");
-    /// ```
+    /// Converts the input string to pascal case with the specified characters to be kept.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_pascal_case_with_options instead"
+    )]
     fn to_pascal_case_with_keep(&self, kept: &str) -> String;
 
     // snake case
@@ -573,15 +569,37 @@ impl<T: AsRef<str>> Caser<T> for T {
     // pascal case
 
     fn to_pascal_case(&self) -> String {
-        pascal_case(&self.as_ref())
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "",
+        };
+        pascal_case_with_options(&self.as_ref(), &opts)
+    }
+
+    fn to_pascal_case_with_options(&self, opts: &Options) -> String {
+        pascal_case_with_options(&self.as_ref(), opts)
     }
 
     fn to_pascal_case_with_sep(&self, seps: &str) -> String {
-        pascal_case_with_sep(&self.as_ref(), seps)
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: seps,
+            keep: "",
+        };
+        pascal_case_with_options(&self.as_ref(), &opts)
     }
 
     fn to_pascal_case_with_keep(&self, kept: &str) -> String {
-        pascal_case_with_keep(&self.as_ref(), kept)
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: kept,
+        };
+        pascal_case_with_options(&self.as_ref(), &opts)
     }
 
     // snake case
@@ -873,22 +891,53 @@ mod tests_of_caser {
     }
 
     #[test]
+    fn it_should_convert_to_pascal_case_with_nums_as_word() {
+        let opts = Options {
+            separate_before_non_alphabets: true,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "",
+        };
+
+        let result = "foo_bar100%BAZQux".to_pascal_case_with_options(&opts);
+        assert_eq!(result, "FooBar100BazQux");
+
+        let string = String::from("foo_bar100%BAZQux");
+        let result = string.to_pascal_case_with_options(&opts);
+        assert_eq!(result, "FooBar100BazQux");
+    }
+
+    #[test]
     fn it_should_convert_to_pascal_case_with_sep() {
-        let result = "foo_bar100%BAZQux".to_pascal_case_with_sep("_");
+        let opts = Options {
+            separate_before_non_alphabets: true,
+            separate_after_non_alphabets: true,
+            separators: "_",
+            keep: "",
+        };
+
+        let result = "foo_bar100%BAZQux".to_pascal_case_with_options(&opts);
         assert_eq!(result, "FooBar100%BazQux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_pascal_case_with_sep("_");
+        let result = string.to_pascal_case_with_options(&opts);
         assert_eq!(result, "FooBar100%BazQux");
     }
 
     #[test]
     fn it_should_convert_to_pascal_case_with_keep() {
-        let result = "foo_bar100%BAZQux".to_pascal_case_with_keep("%");
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "%",
+        };
+
+        let result = "foo_bar100%BAZQux".to_pascal_case_with_options(&opts);
         assert_eq!(result, "FooBar100%BazQux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_pascal_case_with_keep("%");
+        let result = string.to_pascal_case_with_options(&opts);
         assert_eq!(result, "FooBar100%BazQux");
     }
 
