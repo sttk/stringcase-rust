@@ -90,8 +90,8 @@ pub fn pascal_case_with_options(input: &str, opts: &Options) -> String {
 /// the beginning.
 ///
 /// ```rust
-///     let pascal = stringcase::pascal_case("foo_bar_baz");
-///     assert_eq!(pascal, "FooBarBaz");
+///     let pascal = stringcase::pascal_case("foo_bar100_baz");
+///     assert_eq!(pascal, "FooBar100Baz");
 /// ```
 pub fn pascal_case(input: &str) -> String {
     let opts = Options {

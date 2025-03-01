@@ -92,8 +92,8 @@ pub fn camel_case_with_options(input: &str, opts: &Options) -> String {
 /// the beginning.
 ///
 /// ```rust
-///     let camel = stringcase::camel_case("foo_bar_baz");
-///     assert_eq!(camel, "fooBarBaz");
+///     let camel = stringcase::camel_case("foo_bar100_baz");
+///     assert_eq!(camel, "fooBar100Baz");
 /// ```
 pub fn camel_case(input: &str) -> String {
     let opts = Options {
