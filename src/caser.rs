@@ -325,63 +325,57 @@ pub trait Caser<T: AsRef<str>> {
 
     // train case
 
-    /// Converts a string to train case.
+    /// Converts the input string to train case.
     ///
-    /// This method targets the upper and lower cases of ASCII alphabets for
-    /// capitalization, and all characters except ASCII alphabets and ASCII numbers
-    /// are replaced to hyphens as word separators.
+    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// but not the beginning.
     ///
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let train = "foo-bar100%baz".to_train_case();
-    ///     assert_eq!(train, "Foo-Bar100-Baz");
+    ///     let train = "fooBarBaz".to_train_case();
+    ///     assert_eq!(train, "Foo-Bar-Baz");
     /// ```
     fn to_train_case(&self) -> String;
 
-    /// Converts a string to train case.
-    ///
-    /// This method targets the upper and lower cases of ASCII alphabets and
-    /// ASCII numbers for capitalization, and all characters except ASCII alphabets
-    /// and ASCII numbers are replaced to hyphens as word separators.
+    /// Converts the input string to train case with the specified options.
     ///
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let train = "foo-bar100%baz".to_train_case_with_nums_as_word();
+    ///     let opts = stringcase::Options{
+    ///       separate_before_non_alphabets: true,
+    ///       separate_after_non_alphabets: true,
+    ///       separators: "",
+    ///       keep: "",
+    ///     };
+    ///     let train = "foo_bar_100_baz".to_train_case_with_options(&opts);
     ///     assert_eq!(train, "Foo-Bar-100-Baz");
     /// ```
+    fn to_train_case_with_options(&self, opts: &Options) -> String;
+
+    /// Converts the input string to train case.
+    ///
+    /// It treats the begin and the end of a sequence of non-alphabetical characters as a word
+    /// boundary.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_train_case_with_options instead"
+    )]
     fn to_train_case_with_nums_as_word(&self) -> String;
 
-    /// Converts a string to train case using the specified characters as
-    /// separators.
-    ///
-    /// This method targets only the upper and lower cases of ASCII alphabets for
-    /// capitalization, and the characters specified as the second argument of this
-    /// method are regarded as word separators and are replaced to hyphens.
-    ///
-    /// ```rust
-    ///     use stringcase::Caser;
-    ///
-    ///     let train = "foo-bar100%baz".to_train_case_with_sep("- ");
-    ///     assert_eq!(train, "Foo-Bar100%-Baz");
-    /// ```
+    /// Converts the input string to train case with the specified separator characters.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_train_case_with_options instead"
+    )]
     fn to_train_case_with_sep(&self, seps: &str) -> String;
 
-    /// Converts a string to train case using characters other than the specified
-    /// characters as separators.
-    ///
-    /// This method targets only the upper and lower cases of ASCII alphabets for
-    /// capitalization, and the characters other than the specified characters as
-    /// the second argument of this method are regarded as word separators and are
-    /// replaced to hyphens.
-    ///
-    /// ```rust
-    ///     use stringcase::Caser;
-    ///
-    ///     let train = "foo-bar100%baz".to_train_case_with_keep("%");
-    ///     assert_eq!(train, "Foo-Bar100%-Baz");
-    /// ```
+    /// Converts the input string to train case with the specified characters to be kept.
+    #[deprecated(
+        since = "0.4.0",
+        note = "Should use to_train_case_with_options instead"
+    )]
     fn to_train_case_with_keep(&self, kept: &str) -> String;
 }
 
@@ -645,19 +639,47 @@ impl<T: AsRef<str>> Caser<T> for T {
     // train case
 
     fn to_train_case(&self) -> String {
-        train_case(&self.as_ref())
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "",
+        };
+        train_case_with_options(&self.as_ref(), &opts)
+    }
+
+    fn to_train_case_with_options(&self, opts: &Options) -> String {
+        train_case_with_options(&self.as_ref(), opts)
     }
 
     fn to_train_case_with_nums_as_word(&self) -> String {
-        train_case_with_nums_as_word(&self.as_ref())
+        let opts = Options {
+            separate_before_non_alphabets: true,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "",
+        };
+        train_case_with_options(&self.as_ref(), &opts)
     }
 
     fn to_train_case_with_sep(&self, seps: &str) -> String {
-        train_case_with_sep(&self.as_ref(), seps)
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: seps,
+            keep: "",
+        };
+        train_case_with_options(&self.as_ref(), &opts)
     }
 
     fn to_train_case_with_keep(&self, kept: &str) -> String {
-        train_case_with_keep(&self.as_ref(), kept)
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: kept,
+        };
+        train_case_with_options(&self.as_ref(), &opts)
     }
 }
 
@@ -1040,31 +1062,52 @@ mod tests_of_caser {
 
     #[test]
     fn it_should_convert_to_train_case_with_nums_as_word() {
-        let result = "foo_bar100%BAZQux".to_train_case_with_nums_as_word();
+        let opts = Options {
+            separate_before_non_alphabets: true,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "",
+        };
+
+        let result = "foo_bar100%BAZQux".to_train_case_with_options(&opts);
         assert_eq!(result, "Foo-Bar-100-Baz-Qux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_train_case_with_nums_as_word();
+        let result = string.to_train_case_with_options(&opts);
         assert_eq!(result, "Foo-Bar-100-Baz-Qux");
     }
 
     #[test]
     fn it_should_convert_to_train_case_with_sep() {
-        let result = "foo_bar100%BAZQux".to_train_case_with_sep("_");
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "_",
+            keep: "",
+        };
+
+        let result = "foo_bar100%BAZQux".to_train_case_with_options(&opts);
         assert_eq!(result, "Foo-Bar100%-Baz-Qux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_train_case_with_sep("_");
+        let result = string.to_train_case_with_options(&opts);
         assert_eq!(result, "Foo-Bar100%-Baz-Qux");
     }
 
     #[test]
     fn it_should_convert_to_train_case_with_keep() {
-        let result = "foo_bar100%BAZQux".to_train_case_with_keep("%");
+        let opts = Options {
+            separate_before_non_alphabets: false,
+            separate_after_non_alphabets: true,
+            separators: "",
+            keep: "%",
+        };
+
+        let result = "foo_bar100%BAZQux".to_train_case_with_options(&opts);
         assert_eq!(result, "Foo-Bar100%-Baz-Qux");
 
         let string = String::from("foo_bar100%BAZQux");
-        let result = string.to_train_case_with_keep("%");
+        let result = string.to_train_case_with_options(&opts);
         assert_eq!(result, "Foo-Bar100%-Baz-Qux");
     }
 }
