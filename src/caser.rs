@@ -27,8 +27,8 @@ pub trait Caser<T: AsRef<str>> {
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let camel = "foo_bar_baz".to_camel_case();
-    ///     assert_eq!(camel, "fooBarBaz");
+    ///     let camel = "foo_bar100_baz".to_camel_case();
+    ///     assert_eq!(camel, "fooBar100Baz");
     /// ```
     fn to_camel_case(&self) -> String;
 
@@ -70,8 +70,8 @@ pub trait Caser<T: AsRef<str>> {
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let cobol = "foo_bar_baz".to_cobol_case();
-    ///     assert_eq!(cobol, "FOO-BAR-BAZ");
+    ///     let cobol = "fooBar100Baz".to_cobol_case();
+    ///     assert_eq!(cobol, "FOO-BAR100-BAZ");
     /// ```
     fn to_cobol_case(&self) -> String;
 
@@ -86,7 +86,7 @@ pub trait Caser<T: AsRef<str>> {
     ///       separators: "",
     ///       keep: "",
     ///     };
-    ///     let cobol = "foo_bar_100_baz".to_cobol_case_with_options(&opts);
+    ///     let cobol = "fooBar100Baz".to_cobol_case_with_options(&opts);
     ///     assert_eq!(cobol, "FOO-BAR-100-BAZ");
     /// ```
     fn to_cobol_case_with_options(&self, opts: &Options) -> String;
@@ -125,8 +125,8 @@ pub trait Caser<T: AsRef<str>> {
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let kebab = "fooBarBaz".to_kebab_case();
-    ///     assert_eq!(kebab, "foo-bar-baz");
+    ///     let kebab = "fooBar100Baz".to_kebab_case();
+    ///     assert_eq!(kebab, "foo-bar100-baz");
     /// ```
     fn to_kebab_case(&self) -> String;
 
@@ -141,7 +141,7 @@ pub trait Caser<T: AsRef<str>> {
     ///       separators: "",
     ///       keep: "",
     ///     };
-    ///     let kebab = "foo_bar_100_baz".to_kebab_case_with_options(&opts);
+    ///     let kebab = "fooBar100Baz".to_kebab_case_with_options(&opts);
     ///     assert_eq!(kebab, "foo-bar-100-baz");
     /// ```
     fn to_kebab_case_with_options(&self, opts: &Options) -> String;
@@ -180,8 +180,8 @@ pub trait Caser<T: AsRef<str>> {
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let result = "foo_bar_baz".to_macro_case();
-    ///     assert_eq!(result, "FOO_BAR_BAZ");
+    ///     let result = "fooBar100Baz".to_macro_case();
+    ///     assert_eq!(result, "FOO_BAR100_BAZ");
     /// ```
     fn to_macro_case(&self) -> String;
 
@@ -196,7 +196,7 @@ pub trait Caser<T: AsRef<str>> {
     ///       separators: "",
     ///       keep: "",
     ///     };
-    ///     let result = "foo_bar_100_baz".to_macro_case_with_options(&opts);
+    ///     let result = "fooBar100Baz".to_macro_case_with_options(&opts);
     ///     assert_eq!(result, "FOO_BAR_100_BAZ");
     /// ```
     fn to_macro_case_with_options(&self, opts: &Options) -> String;
@@ -235,21 +235,23 @@ pub trait Caser<T: AsRef<str>> {
     /// ```rust
     ///     use stringcase::Caser;
     ///     
-    ///     let pascal = "foo_bar_baz".to_pascal_case();
-    ///     assert_eq!(pascal, "FooBarBaz");
+    ///     let pascal = "foo_bar100_baz".to_pascal_case();
+    ///     assert_eq!(pascal, "FooBar100Baz");
     /// ```     
     fn to_pascal_case(&self) -> String;
 
     /// Converts the input string to pascal case with the specified options.
     ///
     /// ```rust
+    ///     use stringcase::{Caser, Options};
+    ///
     ///     let opts = stringcase::Options{
     ///       separate_before_non_alphabets: true,
     ///       separate_after_non_alphabets: true,
     ///       separators: "",
     ///       keep: "",
     ///     };
-    ///     let pascal = stringcase::pascal_case_with_options("foo_bar_100_baz", &opts);
+    ///     let pascal = "foo_bar_100_baz".to_pascal_case_with_options(&opts);
     ///     assert_eq!(pascal, "FooBar100Baz");
     /// ```
     fn to_pascal_case_with_options(&self, opts: &Options) -> String;
@@ -278,8 +280,8 @@ pub trait Caser<T: AsRef<str>> {
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let snake = "fooBarBaz".to_snake_case();
-    ///     assert_eq!(snake, "foo_bar_baz");
+    ///     let snake = "fooBar100Baz".to_snake_case();
+    ///     assert_eq!(snake, "foo_bar100_baz");
     /// ```
     fn to_snake_case(&self) -> String;
 
@@ -294,7 +296,7 @@ pub trait Caser<T: AsRef<str>> {
     ///       separators: "",
     ///       keep: "",
     ///     };
-    ///     let snake = "foo_bar_100_baz".to_snake_case_with_options(&opts);
+    ///     let snake = "fooBar100Baz".to_snake_case_with_options(&opts);
     ///     assert_eq!(snake, "foo_bar_100_baz");
     /// ```
     fn to_snake_case_with_options(&self, opts: &Options) -> String;
@@ -333,8 +335,8 @@ pub trait Caser<T: AsRef<str>> {
     /// ```rust
     ///     use stringcase::Caser;
     ///
-    ///     let train = "fooBarBaz".to_train_case();
-    ///     assert_eq!(train, "Foo-Bar-Baz");
+    ///     let train = "fooBar100Baz".to_train_case();
+    ///     assert_eq!(train, "Foo-Bar100-Baz");
     /// ```
     fn to_train_case(&self) -> String;
 
@@ -349,7 +351,7 @@ pub trait Caser<T: AsRef<str>> {
     ///       separators: "",
     ///       keep: "",
     ///     };
-    ///     let train = "foo_bar_100_baz".to_train_case_with_options(&opts);
+    ///     let train = "fooBar100Baz".to_train_case_with_options(&opts);
     ///     assert_eq!(train, "Foo-Bar-100-Baz");
     /// ```
     fn to_train_case_with_options(&self, opts: &Options) -> String;
