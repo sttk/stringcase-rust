@@ -1,29 +1,18 @@
 # [stringcase-rust][repo-url] [![crate.io][crateio-img]][crateio-url] [![doc.rs][docrs-img]][docrs-url] [![CI Status][ci-img]][ci-url] [![MIT License][mit-img]][mit-url]
 
-This library provides some functions that convert string cases between camelCase, COBOL-CASE,
-kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
-And this library also provides a trait `Caser` which makes strings enable to convert to their
-cases by their own methods.
+This library provides some functions that convert string cases between camelCase, COBOL-CASE, kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
+And this library also provides a trait `Caser` which enables strings to convert themselves to their cases by their own methods.
 
-Essentially, these functions only target ASCII uppercase and lowercase letters for
-capitalization. All characters other than ASCII uppercase and lowercase letters and ASCII
-numbers are removed as word separators.
+Basically, these functions only target ASCII uppercase and lowercase letters for capitalization. All characters other than ASCII uppercase and lowercase letters and ASCII numbers are removed as word separators.
 
-If you want to use some symbols as separators, specify those symbols in the `separators` field
-of `Options` struct and use the `〜case_with_options` function for the desired case.
-If you want to retain certain symbols and use everything else as separators, specify those
-symbols in `keep` field of `Options` struct and use the `〜case_with_options` function for the
-desired case.
+If you want to use some symbols as separators, specify those symbols in the `separators` field of `Options` struct and use the `〜case_with_options` function for the desired case.
+If you want to retain certain symbols and use everything else as separators, specify those symbols in `keep` field of `Options` struct and use the `〜case_with_options` function for the desired case.
 
-Additionally, you can specify whether to place word boundaries before and/or after
-non-alphabetic characters with conversion options.
-This can be set using the `separate_before_non_alphabets` and `separate_after_non_alphabets`
-fields in the `Options` struct.
+Additionally, you can specify whether to place word boundaries before and/or after non-alphabetic characters with conversion options.
+This can be set using the `separate_before_non_alphabets` and `separate_after_non_alphabets` fields in the `Options` struct.
 
-The `〜_case` functions that do not take `Options` as an argument only place word boundaries
-after non-alphabetic characters.
-In other words, they behave as if `separate_before_non_alphabets = false` and
-`separate_after_non_alphabets = true`.
+The `〜_case` functions that do not take `Options` as an argument only place word boundaries after non-alphabetic characters.
+In other words, they behave as if `separate_before_non_alphabets = false` and `separate_after_non_alphabets = true`.
 
 ## Install
 
@@ -36,7 +25,7 @@ stringcase = "0.4.0"
 
 ## Usage
 
-The function contained in this crate can be executed as follows:
+The functions in this crate can be executed as follows:
 
 ```rust
 use stringcase::snake_case;
@@ -61,8 +50,7 @@ fn main() {
 }
 ```
 
-And by bringing `Caser` with `use` declaration, it will be able to execute
-methods of strings, `String` or `&str`, to convert their cases.
+And by bringing `Caser` with `use` declaration, it will be able to execute methods of strings, `String` or `&str`, to convert themselves to their cases.
 
 ```rust
 use stringcase::{Caser, Options};

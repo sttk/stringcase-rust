@@ -4,10 +4,10 @@
 
 //! This library provides some functions that convert string cases between camelCase, COBOL-CASE,
 //! kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
-//! And this library also provides a trait `Caser` which makes strings enable to convert to their
-//! cases by their own methods.
+//! And this library also provides a trait `Caser` which enables strings to convert themselves
+//! to their cases by their own methods.
 //!
-//! Essentially, these functions only target ASCII uppercase and lowercase letters for
+//! Basically, these functions only target ASCII uppercase and lowercase letters for
 //! capitalization. All characters other than ASCII uppercase and lowercase letters and ASCII
 //! numbers are removed as word separators.
 //!
@@ -38,7 +38,7 @@
 //!
 //! ## Usage
 //!
-//! The function contained in this crate are executed as follows:
+//! The functions in this crate can be used as follows:
 //!
 //! ```rust
 //! use stringcase::snake_case;
@@ -64,7 +64,7 @@
 //! ```
 //!
 //! And by bringing `Caser` with `use` declaration, it will be able to execute
-//! methods of strings, `String` or `&str`, to convert their cases.
+//! methods of strings, `String` or `&str`, to convert to their cases.
 //!
 //! ```rust
 //! use stringcase::{Caser, Options};
