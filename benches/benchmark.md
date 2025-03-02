@@ -1,8 +1,103 @@
+## 0.4.0
+
+> - Date: 2025/03/02
+> - rustc 1.85.0 (4d91de4e4 2025-02-17)
+> - macOS 15.3.1
+> - Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+
+```
+% ./build.sh bench
+
+running 1050 tests
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 87/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 174/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 261/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 348/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 435/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 522/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 609/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 696/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 783/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 870/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 957/1050
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1044/1050
+iiiiii
+test result: ok. 0 passed; 0 failed; 1050 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test bench_camel_case              ... bench:          81.64 ns/iter (+/- 3.69)
+test bench_camel_case_with_keep    ... bench:          92.83 ns/iter (+/- 34.81)
+test bench_camel_case_with_options ... bench:          87.87 ns/iter (+/- 3.66)
+test bench_camel_case_with_sep     ... bench:          86.67 ns/iter (+/- 4.49)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 1.89s
+
+
+running 5 tests
+test bench_cobol_case                   ... bench:          88.78 ns/iter (+/- 2.70)
+test bench_cobol_case_with_keep         ... bench:          94.41 ns/iter (+/- 3.06)
+test bench_cobol_case_with_nums_as_word ... bench:          89.05 ns/iter (+/- 3.08)
+test bench_cobol_case_with_options      ... bench:          94.79 ns/iter (+/- 3.06)
+test bench_cobol_case_with_sep          ... bench:          96.23 ns/iter (+/- 3.52)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 3.66s
+
+
+running 5 tests
+test bench_kebab_case                   ... bench:          83.26 ns/iter (+/- 2.16)
+test bench_kebab_case_with_keep         ... bench:          91.18 ns/iter (+/- 2.89)
+test bench_kebab_case_with_nums_as_word ... bench:          82.01 ns/iter (+/- 4.32)
+test bench_kebab_case_with_options      ... bench:          86.66 ns/iter (+/- 4.85)
+test bench_kebab_case_with_sep          ... bench:          90.23 ns/iter (+/- 2.73)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 6.33s
+
+
+running 5 tests
+test bench_macro_case                   ... bench:          87.88 ns/iter (+/- 3.15)
+test bench_macro_case_with_keep         ... bench:          93.46 ns/iter (+/- 2.83)
+test bench_macro_case_with_nums_as_word ... bench:          88.85 ns/iter (+/- 2.64)
+test bench_macro_case_with_options      ... bench:          94.76 ns/iter (+/- 2.52)
+test bench_macro_case_with_sep          ... bench:          95.82 ns/iter (+/- 7.52)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 8.89s
+
+
+running 4 tests
+test bench_pascal_case              ... bench:          76.86 ns/iter (+/- 0.87)
+test bench_pascal_case_with_keep    ... bench:          85.15 ns/iter (+/- 3.81)
+test bench_pascal_case_with_options ... bench:          85.78 ns/iter (+/- 13.36)
+test bench_pascal_case_with_sep     ... bench:          85.32 ns/iter (+/- 2.65)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 4.27s
+
+
+running 5 tests
+test bench_snake_case                   ... bench:          83.10 ns/iter (+/- 2.90)
+test bench_snake_case_with_keep         ... bench:          88.14 ns/iter (+/- 2.99)
+test bench_snake_case_with_nums_as_word ... bench:          81.79 ns/iter (+/- 10.83)
+test bench_snake_case_with_options      ... bench:          91.27 ns/iter (+/- 6.66)
+test bench_snake_case_with_sep          ... bench:          90.01 ns/iter (+/- 2.19)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 11.90s
+
+
+running 5 tests
+test bench_train_case                   ... bench:          88.54 ns/iter (+/- 2.99)
+test bench_train_case_with_keep         ... bench:          96.21 ns/iter (+/- 3.66)
+test bench_train_case_with_nums_as_word ... bench:          89.96 ns/iter (+/- 4.88)
+test bench_train_case_with_options      ... bench:          94.68 ns/iter (+/- 2.90)
+test bench_train_case_with_sep          ... bench:          97.82 ns/iter (+/- 19.20)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 2.24s
+```
+
 ## 0.3.0
 
 > - Date: 2024/08/12
 > - rustc 1.80.1 (3f5fd8dd4 2024-08-06)
-> - macOS 14.5 (23F79)
+> - macOS 14.5
 > - Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
 
 ```
