@@ -97,6 +97,6 @@ See the file LICENSE in this distribution for more details.
 [docrs-img]: https://img.shields.io/badge/doc.rs-stringcase-66c2a5?logo=docs.rs
 [docrs-url]: https://docs.rs/stringcase
 [ci-img]: https://github.com/sttk/stringcase-rust/actions/workflows/rust.yml/badge.svg?branch=main
-[ci-url]: https://github.com/sttk/stringcase-rust/actions
+[ci-url]: https://github.com/sttk/stringcase-rust/actions?query=branch%3Amain
 [mit-img]: https://img.shields.io/badge/license-MIT-green.svg
 [mit-url]: https://opensource.org/licenses/MIT
