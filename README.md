@@ -1,4 +1,4 @@
-# [stringcase-rust][repo-url] [![crate.io][crateio-img]][crateio-url] [![doc.rs][docrs-img]][docrs-url] [![CI Status][ci-img]][ci-url] [![MIT License][mit-img]][mit-url]
+# [stringcase for Rust][repo-url] [![crates.io][cratesio-img]][cratesio-url] [![doc.rs][docrs-img]][docrs-url] [![CI Status][ci-img]][ci-url] [![MIT License][mit-img]][mit-url]
 
 This library provides some functions that convert string cases between camelCase, COBOL-CASE, kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
 And this library also provides a trait `Caser` which enables strings to convert themselves to their cases by their own methods.
@@ -14,7 +14,7 @@ This can be set using the `separate_before_non_alphabets` and `separate_after_no
 The `〜_case` functions that do not take `Options` as an argument only place word boundaries after non-alphabetic characters.
 In other words, they behave as if `separate_before_non_alphabets = false` and `separate_after_non_alphabets = true`.
 
-## Install
+## Installation
 
 In `Cargo.toml`, write this crate as a dependency.
 
@@ -71,16 +71,32 @@ fn main() {
 This library supports Rust 1.56.1 or later.
 
 ```
-% cargo msrv
-Fetching index
-Determining the Minimum Supported Rust Version (MSRV) for toolchain x86_64-apple-darwin
-Using check command cargo check
-Check for toolchain '1.71.1-x86_64-apple-darwin' succeeded
-Check for toolchain '1.63.0-x86_64-apple-darwin' succeeded
-Check for toolchain '1.59.0-x86_64-apple-darwin' succeeded
-Check for toolchain '1.57.0-x86_64-apple-darwin' succeeded
-Check for toolchain '1.56.1-x86_64-apple-darwin' succeeded
-   Finished The MSRV is: 1.56.1   █████████████████████████████████████ 00:00:29
+% ./build.sh msrv
+  [Meta]   cargo-msrv 0.18.4
+
+Compatibility Check #1: Rust 1.73.0
+  [OK]     Is compatible
+
+Compatibility Check #2: Rust 1.64.0
+  [OK]     Is compatible
+
+Compatibility Check #3: Rust 1.60.0
+  [OK]     Is compatible
+
+Compatibility Check #4: Rust 1.58.1
+  [OK]     Is compatible
+
+Compatibility Check #5: Rust 1.57.0
+  [OK]     Is compatible
+
+Compatibility Check #6: Rust 1.56.1
+  [OK]     Is compatible
+
+Result:
+   Considered (min … max):   Rust 1.56.1 … Rust 1.89.0
+   Search method:            bisect
+   MSRV:                     1.56.1
+   Target:                   x86_64-apple-darwin
 ```
 
 ## License
@@ -92,8 +108,8 @@ See the file LICENSE in this distribution for more details.
 
 
 [repo-url]: https://github.com/sttk/stringcase-rust
-[crateio-img]: https://img.shields.io/badge/crate.io-ver.0.4.0-fc8d62?logo=rust
-[crateio-url]: https://crates.io/crates/stringcase
+[cratesio-img]: https://img.shields.io/badge/crates.io-ver.0.4.0-fc8d62?logo=rust
+[cratesio-url]: https://crates.io/crates/stringcase
 [docrs-img]: https://img.shields.io/badge/doc.rs-stringcase-66c2a5?logo=docs.rs
 [docrs-url]: https://docs.rs/stringcase
 [ci-img]: https://github.com/sttk/stringcase-rust/actions/workflows/rust.yml/badge.svg?branch=main
