@@ -7,7 +7,7 @@ use test::Bencher;
 use stringcase::{cobol_case, cobol_case_with_options, Options};
 
 #[allow(deprecated)]
-use stringcase::{cobol_case_with_nums_as_word, cobol_case_with_sep, cobol_case_with_keep};
+use stringcase::{cobol_case_with_keep, cobol_case_with_nums_as_word, cobol_case_with_sep};
 
 #[bench]
 fn bench_cobol_case(b: &mut Bencher) {
