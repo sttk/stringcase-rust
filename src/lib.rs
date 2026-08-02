@@ -4,6 +4,8 @@
 
 //! This library provides some functions that convert string cases between camelCase, COBOL-CASE,
 //! kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
+//! In addition, generic functions `capitalize`, `lowerize`, and `upperize` are provided to convert
+//! string cases with a custom concatenator character.
 //! And this library also provides a trait `Caser` which enables strings to convert themselves
 //! to their cases by their own methods.
 //!
@@ -63,6 +65,26 @@
 //! }
 //! ```
 //!
+//! You can also use the generic functions `capitalize`, `lowerize`, and `upperize` to convert
+//! strings into capitalized, lowercased, or uppercased words joined by a custom concatenator
+//! character:
+//!
+//! ```rust
+//! use stringcase::{capitalize, lowerize, upperize, Options};
+//!
+//! fn main() {
+//!     let opts = Options {
+//!         separate_before_non_alphabets: true,
+//!         separate_after_non_alphabets: true,
+//!         ..Default::default()
+//!     };
+//!     let input = "fooBar123Baz";
+//!     assert_eq!(capitalize::<'.'>(input, &opts), "Foo.Bar.123.Baz");
+//!     assert_eq!(lowerize::<'.'>(input, &opts), "foo.bar.123.baz");
+//!     assert_eq!(upperize::<'.'>(input, &opts), "FOO.BAR.123.BAZ");
+//! }
+//! ```
+//!
 //! And by bringing `Caser` with `use` declaration, it will be able to execute
 //! methods of strings, `String` or `&str`, to convert to their cases.
 //!
@@ -80,22 +102,35 @@
 //! }
 //! ```
 
-mod camel_case;
-mod caser;
-mod cobol_case;
-mod kebab_case;
-mod macro_case;
 mod options;
-mod pascal_case;
-mod snake_case;
-mod train_case;
-
-pub use camel_case::*;
-pub use caser::*;
-pub use cobol_case::*;
-pub use kebab_case::*;
-pub use macro_case::*;
 pub use options::Options;
-pub use pascal_case::*;
+
+mod upperize;
+pub use upperize::upperize;
+
+mod cobol_case;
+mod macro_case;
+pub use cobol_case::*;
+pub use macro_case::*;
+
+mod lowerize;
+pub use lowerize::lowerize;
+
+mod kebab_case;
+mod snake_case;
+pub use kebab_case::*;
 pub use snake_case::*;
+
+mod capitalize;
+pub use capitalize::capitalize;
+
+mod pascal_case;
+mod train_case;
+pub use pascal_case::*;
 pub use train_case::*;
+
+mod camel_case;
+pub use camel_case::*;
+
+mod caser;
+pub use caser::*;
