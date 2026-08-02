@@ -5,30 +5,30 @@
 use crate::options::Options;
 
 /// A generic function that converts string cases into an uppercased format joined by a specified
-/// concatenator character.
+/// joiner character.
 ///
 /// It processes the input string `input`, identifies word boundaries based on character casing and
 /// non-alphabetic character rules defined in `opts`, converts alphabetic characters to uppercase,
-/// and joins the words using the const generic character `CONCATENATOR`.
+/// and joins the words using the const generic character `JOINER`.
 ///
 /// It operates by iterating character by character through `input` using an internal state
 /// machine. It handles ASCII uppercase, ASCII lowercase, and non-alphabetic characters (digits and
 /// symbols) according to options such as `opts.separators`, `opts.keep`,
 /// `opts.separate_before_non_alphabets`, and `opts.separate_after_non_alphabets` to determine
-/// word boundaries, upperizing characters, and insert the `CONCATENATOR` character.
+/// word boundaries, upperizing characters, and insert the `JOINER` character.
 /// If a character is specified in both `opts.separators` and `opts.keep`, the character in
 /// `opts.separators` takes precedence and the character in `opts.keep` is ignored.
 ///
 /// # Parameters
 ///
-/// - `CONCATENATOR`: A const generic `char` used as the delimiter between uppercased words.
+/// - `JOINER`: A const generic `char` used as the delimiter between uppercased words.
 /// - `input`: The target string slice (`&str`) to be uppercased.
 /// - `opts`: A reference to [`Options`] defining separator rules, retained characters, and boundary
 ///   behaviors.
 ///
 /// # Returns
 ///
-/// - Returns a [`String`] with all words uppercased and joined by `CONCATENATOR`.
+/// - Returns a [`String`] with all words uppercased and joined by `JOINER`.
 ///   Returns an empty [`String`] if `input` is empty.
 ///
 /// # Examples
@@ -45,7 +45,7 @@ use crate::options::Options;
 /// let result = upperize::<'.' >("foo_bar_100_baz", &opts);
 /// assert_eq!(result, "FOO.BAR.100.BAZ");
 /// ```
-pub fn upperize<const CONCATENATOR: char>(input: &str, opts: &Options) -> String {
+pub fn upperize<const JOINER: char>(input: &str, opts: &Options) -> String {
     let mut result = String::with_capacity(input.len() + input.len() / 2);
     // .len returns byte count but ok in this case!
 
@@ -73,21 +73,21 @@ pub fn upperize<const CONCATENATOR: char>(input: &str, opts: &Options) -> String
                 result.push(ch);
                 flag = ChIs::NextOfContdUpper;
             } else {
-                result.push(CONCATENATOR);
+                result.push(JOINER);
                 result.push(ch);
                 flag = ChIs::NextOfUpper;
             }
         } else if ch.is_ascii_lowercase() {
             if flag == ChIs::NextOfContdUpper {
                 if let Some(prev) = result.pop() {
-                    result.push(CONCATENATOR);
+                    result.push(JOINER);
                     result.push(prev);
                     result.push(ch.to_ascii_uppercase());
                 }
             } else if flag == ChIs::NextOfSepMark
                 || (opts.separate_after_non_alphabets && flag == ChIs::NextOfKeptMark)
             {
-                result.push(CONCATENATOR);
+                result.push(JOINER);
                 result.push(ch.to_ascii_uppercase());
             } else {
                 result.push(ch.to_ascii_uppercase());
@@ -113,14 +113,14 @@ pub fn upperize<const CONCATENATOR: char>(input: &str, opts: &Options) -> String
                     if flag == ChIs::FirstOfStr || flag == ChIs::NextOfKeptMark {
                         result.push(ch);
                     } else {
-                        result.push(CONCATENATOR);
+                        result.push(JOINER);
                         result.push(ch);
                     }
                 } else {
                     if flag != ChIs::NextOfSepMark {
                         result.push(ch);
                     } else {
-                        result.push(CONCATENATOR);
+                        result.push(JOINER);
                         result.push(ch);
                     }
                 }
