@@ -75,6 +75,7 @@ pub fn train_case_with_options(input: &str, opts: &Options) -> String {
                     is_kept_char = true;
                 }
             } else if !opts.keep.is_empty() {
+                #[allow(clippy::collapsible_if)]
                 if opts.keep.contains(ch) {
                     is_kept_char = true;
                 }

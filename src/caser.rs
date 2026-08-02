@@ -391,11 +391,11 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        camel_case_with_options(&self.as_ref(), &opts)
+        camel_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_camel_case_with_options(&self, opts: &Options) -> String {
-        camel_case_with_options(&self.as_ref(), opts)
+        camel_case_with_options(self.as_ref(), opts)
     }
 
     fn to_camel_case_with_sep(&self, seps: &str) -> String {
@@ -405,7 +405,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: seps,
             keep: "",
         };
-        camel_case_with_options(&self.as_ref(), &opts)
+        camel_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_camel_case_with_keep(&self, kept: &str) -> String {
@@ -415,7 +415,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: kept,
         };
-        camel_case_with_options(&self.as_ref(), &opts)
+        camel_case_with_options(self.as_ref(), &opts)
     }
 
     // cobol case
@@ -427,11 +427,11 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        cobol_case_with_options(&self.as_ref(), &opts)
+        cobol_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_cobol_case_with_options(&self, opts: &Options) -> String {
-        cobol_case_with_options(&self.as_ref(), opts)
+        cobol_case_with_options(self.as_ref(), opts)
     }
 
     fn to_cobol_case_with_nums_as_word(&self) -> String {
@@ -441,7 +441,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        cobol_case_with_options(&self.as_ref(), &opts)
+        cobol_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_cobol_case_with_sep(&self, seps: &str) -> String {
@@ -451,7 +451,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: seps,
             keep: "",
         };
-        cobol_case_with_options(&self.as_ref(), &opts)
+        cobol_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_cobol_case_with_keep(&self, kept: &str) -> String {
@@ -461,7 +461,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: kept,
         };
-        cobol_case_with_options(&self.as_ref(), &opts)
+        cobol_case_with_options(self.as_ref(), &opts)
     }
 
     // kebab case
@@ -473,11 +473,11 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        kebab_case_with_options(&self.as_ref(), &opts)
+        kebab_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_kebab_case_with_options(&self, opts: &Options) -> String {
-        kebab_case_with_options(&self.as_ref(), opts)
+        kebab_case_with_options(self.as_ref(), opts)
     }
 
     fn to_kebab_case_with_nums_as_word(&self) -> String {
@@ -487,7 +487,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        kebab_case_with_options(&self.as_ref(), &opts)
+        kebab_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_kebab_case_with_sep(&self, seps: &str) -> String {
@@ -497,7 +497,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: seps,
             keep: "",
         };
-        kebab_case_with_options(&self.as_ref(), &opts)
+        kebab_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_kebab_case_with_keep(&self, kept: &str) -> String {
@@ -507,7 +507,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: kept,
         };
-        kebab_case_with_options(&self.as_ref(), &opts)
+        kebab_case_with_options(self.as_ref(), &opts)
     }
 
     // macro case
@@ -519,11 +519,11 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        macro_case_with_options(&self.as_ref(), &opts)
+        macro_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_macro_case_with_options(&self, opts: &Options) -> String {
-        macro_case_with_options(&self.as_ref(), opts)
+        macro_case_with_options(self.as_ref(), opts)
     }
 
     fn to_macro_case_with_nums_as_word(&self) -> String {
@@ -533,7 +533,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        macro_case_with_options(&self.as_ref(), &opts)
+        macro_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_macro_case_with_sep(&self, seps: &str) -> String {
@@ -543,7 +543,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: seps,
             keep: "",
         };
-        macro_case_with_options(&self.as_ref(), &opts)
+        macro_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_macro_case_with_keep(&self, kept: &str) -> String {
@@ -553,7 +553,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: kept,
         };
-        macro_case_with_options(&self.as_ref(), &opts)
+        macro_case_with_options(self.as_ref(), &opts)
     }
 
     // pascal case
@@ -565,11 +565,11 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        pascal_case_with_options(&self.as_ref(), &opts)
+        pascal_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_pascal_case_with_options(&self, opts: &Options) -> String {
-        pascal_case_with_options(&self.as_ref(), opts)
+        pascal_case_with_options(self.as_ref(), opts)
     }
 
     fn to_pascal_case_with_sep(&self, seps: &str) -> String {
@@ -579,7 +579,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: seps,
             keep: "",
         };
-        pascal_case_with_options(&self.as_ref(), &opts)
+        pascal_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_pascal_case_with_keep(&self, kept: &str) -> String {
@@ -589,7 +589,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: kept,
         };
-        pascal_case_with_options(&self.as_ref(), &opts)
+        pascal_case_with_options(self.as_ref(), &opts)
     }
 
     // snake case
@@ -601,11 +601,11 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        snake_case_with_options(&self.as_ref(), &opts)
+        snake_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_snake_case_with_options(&self, opts: &Options) -> String {
-        snake_case_with_options(&self.as_ref(), opts)
+        snake_case_with_options(self.as_ref(), opts)
     }
 
     fn to_snake_case_with_nums_as_word(&self) -> String {
@@ -615,7 +615,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        snake_case_with_options(&self.as_ref(), &opts)
+        snake_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_snake_case_with_sep(&self, seps: &str) -> String {
@@ -625,7 +625,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: seps,
             keep: "",
         };
-        snake_case_with_options(&self.as_ref(), &opts)
+        snake_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_snake_case_with_keep(&self, kept: &str) -> String {
@@ -635,7 +635,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: kept,
         };
-        snake_case_with_options(&self.as_ref(), &opts)
+        snake_case_with_options(self.as_ref(), &opts)
     }
 
     // train case
@@ -647,11 +647,11 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        train_case_with_options(&self.as_ref(), &opts)
+        train_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_train_case_with_options(&self, opts: &Options) -> String {
-        train_case_with_options(&self.as_ref(), opts)
+        train_case_with_options(self.as_ref(), opts)
     }
 
     fn to_train_case_with_nums_as_word(&self) -> String {
@@ -661,7 +661,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: "",
         };
-        train_case_with_options(&self.as_ref(), &opts)
+        train_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_train_case_with_sep(&self, seps: &str) -> String {
@@ -671,7 +671,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: seps,
             keep: "",
         };
-        train_case_with_options(&self.as_ref(), &opts)
+        train_case_with_options(self.as_ref(), &opts)
     }
 
     fn to_train_case_with_keep(&self, kept: &str) -> String {
@@ -681,7 +681,7 @@ impl<T: AsRef<str>> Caser<T> for T {
             separators: "",
             keep: kept,
         };
-        train_case_with_options(&self.as_ref(), &opts)
+        train_case_with_options(self.as_ref(), &opts)
     }
 }
 
