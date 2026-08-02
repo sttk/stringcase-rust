@@ -5,31 +5,31 @@
 use crate::options::Options;
 
 /// A generic function that converts string cases into a capitalized format joined by a specified
-/// concatenator character.
+/// joiner character.
 ///
 /// It processes the input string `input`, identifies word boundaries based on character casing and
 /// non-alphabetic character rules defined in `opts`, capitalizes the head character of each word,
 /// lowercases subsequent letters, and joins the words using the const generic character
-/// `CONCATENATOR`.
+/// `JOINER`.
 ///
 /// It operates by iterating character by character through `input` using an internal state
 /// machine. It handles ASCII uppercase, ASCII lowercase, and non-alphabetic characters (digits and
 /// symbols) according to options such as `opts.separators`, `opts.keep`,
 /// `opts.separate_before_non_alphabets`, and `opts.separate_after_non_alphabets` to determine
-/// word boundaries, capitalize initial letters, and insert the `CONCATENATOR` character.
+/// word boundaries, capitalize initial letters, and insert the `JOINER` character.
 /// If a character is specified in both `opts.separators` and `opts.keep`, the character in
 /// `opts.separators` takes precedence and the character in `opts.keep` is ignored.
 ///
 /// # Parameters
 ///
-/// - `CONCATENATOR`: A const generic `char` used as the delimiter between capitalized words.
+/// - `JOINER`: A const generic `char` used as the joiner between capitalized words.
 /// - `input`: The target string slice (`&str`) to be capitalized.
 /// - `opts`: A reference to [`Options`] defining separator rules, retained characters, and boundary
 ///   behaviors.
 ///
 /// # Returns
 ///
-/// - Returns a [`String`] with all words capitalized and joined by `CONCATENATOR`.
+/// - Returns a [`String`] with all words capitalized and joined by `JOINER`.
 ///   Returns an empty [`String`] if `input` is empty.
 ///
 /// # Examples
@@ -46,7 +46,7 @@ use crate::options::Options;
 /// let result = capitalize::<'.'>("foo_bar_100_baz", &opts);
 /// assert_eq!(result, "Foo.Bar.100.Baz");
 /// ```
-pub fn capitalize<const CONCATENATOR: char>(input: &str, opts: &Options) -> String {
+pub fn capitalize<const JOINER: char>(input: &str, opts: &Options) -> String {
     let mut result = String::with_capacity(input.len() + input.len() / 2);
     // .len returns byte count but ok in this case!
 
@@ -74,7 +74,7 @@ pub fn capitalize<const CONCATENATOR: char>(input: &str, opts: &Options) -> Stri
                 result.push(ch.to_ascii_lowercase());
                 flag = ChIs::NextOfContdUpper;
             } else {
-                result.push(CONCATENATOR);
+                result.push(JOINER);
                 result.push(ch);
                 flag = ChIs::NextOfUpper;
             }
@@ -83,14 +83,14 @@ pub fn capitalize<const CONCATENATOR: char>(input: &str, opts: &Options) -> Stri
                 result.push(ch.to_ascii_uppercase());
             } else if flag == ChIs::NextOfContdUpper {
                 if let Some(prev) = result.pop() {
-                    result.push(CONCATENATOR);
+                    result.push(JOINER);
                     result.push(prev.to_ascii_uppercase());
                     result.push(ch);
                 }
             } else if flag == ChIs::NextOfSepMark
                 || (opts.separate_after_non_alphabets && flag == ChIs::NextOfKeptMark)
             {
-                result.push(CONCATENATOR);
+                result.push(JOINER);
                 result.push(ch.to_ascii_uppercase());
             } else {
                 result.push(ch);
@@ -116,14 +116,14 @@ pub fn capitalize<const CONCATENATOR: char>(input: &str, opts: &Options) -> Stri
                     if flag == ChIs::FirstOfStr || flag == ChIs::NextOfKeptMark {
                         result.push(ch);
                     } else {
-                        result.push(CONCATENATOR);
+                        result.push(JOINER);
                         result.push(ch);
                     }
                 } else {
                     if flag != ChIs::NextOfSepMark {
                         result.push(ch);
                     } else {
-                        result.push(CONCATENATOR);
+                        result.push(JOINER);
                         result.push(ch);
                     }
                 }

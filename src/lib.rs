@@ -5,7 +5,7 @@
 //! This library provides some functions that convert string cases between camelCase, COBOL-CASE,
 //! kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
 //! In addition, generic functions `capitalize`, `lowerize`, and `upperize` are provided to convert
-//! string cases with a custom concatenator character.
+//! string cases with a custom joiner character.
 //! And this library also provides a trait `Caser` which enables strings to convert themselves
 //! to their cases by their own methods.
 //!
@@ -66,7 +66,7 @@
 //! ```
 //!
 //! You can also use the generic functions `capitalize`, `lowerize`, and `upperize` to convert
-//! strings into capitalized, lowercased, or uppercased words joined by a custom concatenator
+//! strings into capitalized, lowercased, or uppercased words joined by a custom joiner
 //! character:
 //!
 //! ```rust
