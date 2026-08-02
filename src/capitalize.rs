@@ -1,4 +1,4 @@
-// Copyright (C) 2024-2026 Takayuki Sato. All Rights Reserved.
+// Copyright (C) 2026 Takayuki Sato. All Rights Reserved.
 // This program is free software under MIT License.
 // See the file LICENSE in this distribution for more details.
 
@@ -17,6 +17,8 @@ use crate::options::Options;
 /// symbols) according to options such as `opts.separators`, `opts.keep`,
 /// `opts.separate_before_non_alphabets`, and `opts.separate_after_non_alphabets` to determine
 /// word boundaries, capitalize initial letters, and insert the `CONCATENATOR` character.
+/// If a character is specified in both `opts.separators` and `opts.keep`, the character in
+/// `opts.separators` takes precedence and the character in `opts.keep` is ignored.
 ///
 /// # Parameters
 ///
@@ -27,8 +29,9 @@ use crate::options::Options;
 ///
 /// # Returns
 ///
-/// - Returns a [`String`] with all words capitalized and joined by `CONCATENATOR`.
-///   Returns an empty [`String`] if `input` is empty.
+/// - **Normal Return**: Returns a [`String`] with all words capitalized and joined by
+///   `CONCATENATOR`. Returns an empty [`String`] if `input` is empty.
+/// - **Error Return**: This function is infallible and does not return a [`Result`] or panic.
 ///
 /// # Examples
 ///
