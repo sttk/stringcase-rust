@@ -29,9 +29,8 @@ use crate::options::Options;
 ///
 /// # Returns
 ///
-/// - **Normal Return**: Returns a [`String`] with all words capitalized and joined by
-///   `CONCATENATOR`. Returns an empty [`String`] if `input` is empty.
-/// - **Error Return**: This function is infallible and does not return a [`Result`] or panic.
+/// - Returns a [`String`] with all words capitalized and joined by `CONCATENATOR`.
+///   Returns an empty [`String`] if `input` is empty.
 ///
 /// # Examples
 ///
