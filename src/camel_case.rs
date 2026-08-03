@@ -107,6 +107,7 @@ pub fn camel_case(input: &str) -> String {
 }
 
 /// Converts the input string to camel case with the specified separator characters.
+#[doc(hidden)]
 #[deprecated(since = "0.4.0", note = "Should use camel_case_with_options instead")]
 #[inline(always)]
 pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
@@ -120,6 +121,7 @@ pub fn camel_case_with_sep(input: &str, seps: &str) -> String {
 }
 
 /// Converts the input string to camel case with the specified characters to be kept.
+#[doc(hidden)]
 #[deprecated(since = "0.4.0", note = "Should use camel_case_with_options instead")]
 #[inline(always)]
 pub fn camel_case_with_keep(input: &str, kept: &str) -> String {
