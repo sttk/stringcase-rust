@@ -16,6 +16,9 @@
 /// Alphanumeric characters specified in `separators` and `keep` are ignored.
 /// If both `separators` and `keep` are specified, `separators` takes precedence
 /// and `keep` is ignored.
+///
+/// If a character is specified in both `separators` and `keep`, the character in
+/// `separators` takes precedence and the character in `keep` is ignored.
 pub struct Options<'a> {
     /// Specifies whether to treat the beginning of a sequence of non-alphabetic
     /// characters as a word boundary.
