@@ -43,6 +43,7 @@ pub fn snake_case(input: &str) -> String {
 }
 
 /// Converts the input string to snake case with the specified separator characters.
+#[doc(hidden)]
 #[deprecated(since = "0.4.0", note = "Should use snake_case_with_options instead")]
 #[inline(always)]
 pub fn snake_case_with_sep(input: &str, seps: &str) -> String {
@@ -56,6 +57,7 @@ pub fn snake_case_with_sep(input: &str, seps: &str) -> String {
 }
 
 /// Converts the input string to snake case with the specified characters to be kept.
+#[doc(hidden)]
 #[deprecated(since = "0.4.0", note = "Should use snake_case_with_options instead")]
 #[inline(always)]
 pub fn snake_case_with_keep(input: &str, kept: &str) -> String {
@@ -72,6 +74,7 @@ pub fn snake_case_with_keep(input: &str, kept: &str) -> String {
 ///
 /// It treats the beginning and the end of a sequence of non-alphabetical characters as a word
 /// boundary.
+#[doc(hidden)]
 #[deprecated(since = "0.4.0", note = "Should use snake_case_with_options instead")]
 #[inline(always)]
 pub fn snake_case_with_nums_as_word(input: &str) -> String {
