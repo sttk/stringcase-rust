@@ -17,6 +17,7 @@ use crate::options::Options;
 ///     let kebab = stringcase::kebab_case_with_options("fooBar123Baz", &opts);
 ///     assert_eq!(kebab, "foo-bar-123-baz");
 /// ```
+#[inline(always)]
 pub fn kebab_case_with_options(input: &str, opts: &Options) -> String {
     lowerize::<'-'>(input, opts)
 }
@@ -30,6 +31,7 @@ pub fn kebab_case_with_options(input: &str, opts: &Options) -> String {
 ///     let kebab = stringcase::kebab_case("fooBar123Baz");
 ///     assert_eq!(kebab, "foo-bar123-baz");
 /// ```
+#[inline(always)]
 pub fn kebab_case(input: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
@@ -42,6 +44,7 @@ pub fn kebab_case(input: &str) -> String {
 
 /// Converts the input string to kebab case with the specified separator characters.
 #[deprecated(since = "0.4.0", note = "Should use kebab_case_with_options instead")]
+#[inline(always)]
 pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
@@ -54,6 +57,7 @@ pub fn kebab_case_with_sep(input: &str, seps: &str) -> String {
 
 /// Converts the input string to kebab case with the specified characters to be kept.
 #[deprecated(since = "0.4.0", note = "Should use kebab_case_with_options instead")]
+#[inline(always)]
 pub fn kebab_case_with_keep(input: &str, kept: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
@@ -69,6 +73,7 @@ pub fn kebab_case_with_keep(input: &str, kept: &str) -> String {
 /// It treats the beginning and the end of a sequence of non-alphabetical characters as a word
 /// boundary.
 #[deprecated(since = "0.4.0", note = "Should use kebab_case_with_options instead")]
+#[inline(always)]
 pub fn kebab_case_with_nums_as_word(input: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: true,

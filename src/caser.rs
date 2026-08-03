@@ -1,4 +1,4 @@
-// Copyright (C) 2024-2025 Takayuki Sato. All Rights Reserved.
+// Copyright (C) 2024-2026 Takayuki Sato. All Rights Reserved.
 // This program is free software under MIT License.
 // See the file LICENSE in this distribution for more details.
 
@@ -384,6 +384,7 @@ pub trait Caser<T: AsRef<str>> {
 impl<T: AsRef<str>> Caser<T> for T {
     // camel case
 
+    #[inline(always)]
     fn to_camel_case(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -394,10 +395,12 @@ impl<T: AsRef<str>> Caser<T> for T {
         camel_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_camel_case_with_options(&self, opts: &Options) -> String {
         camel_case_with_options(self.as_ref(), opts)
     }
 
+    #[inline(always)]
     fn to_camel_case_with_sep(&self, seps: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -408,6 +411,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         camel_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_camel_case_with_keep(&self, kept: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -420,6 +424,7 @@ impl<T: AsRef<str>> Caser<T> for T {
 
     // cobol case
 
+    #[inline(always)]
     fn to_cobol_case(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -430,10 +435,12 @@ impl<T: AsRef<str>> Caser<T> for T {
         cobol_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_cobol_case_with_options(&self, opts: &Options) -> String {
         cobol_case_with_options(self.as_ref(), opts)
     }
 
+    #[inline(always)]
     fn to_cobol_case_with_nums_as_word(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: true,
@@ -444,6 +451,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         cobol_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_cobol_case_with_sep(&self, seps: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -454,6 +462,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         cobol_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_cobol_case_with_keep(&self, kept: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -466,6 +475,7 @@ impl<T: AsRef<str>> Caser<T> for T {
 
     // kebab case
 
+    #[inline(always)]
     fn to_kebab_case(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -476,10 +486,12 @@ impl<T: AsRef<str>> Caser<T> for T {
         kebab_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_kebab_case_with_options(&self, opts: &Options) -> String {
         kebab_case_with_options(self.as_ref(), opts)
     }
 
+    #[inline(always)]
     fn to_kebab_case_with_nums_as_word(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: true,
@@ -490,6 +502,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         kebab_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_kebab_case_with_sep(&self, seps: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -500,6 +513,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         kebab_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_kebab_case_with_keep(&self, kept: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -512,6 +526,7 @@ impl<T: AsRef<str>> Caser<T> for T {
 
     // macro case
 
+    #[inline(always)]
     fn to_macro_case(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -522,10 +537,12 @@ impl<T: AsRef<str>> Caser<T> for T {
         macro_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_macro_case_with_options(&self, opts: &Options) -> String {
         macro_case_with_options(self.as_ref(), opts)
     }
 
+    #[inline(always)]
     fn to_macro_case_with_nums_as_word(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: true,
@@ -536,6 +553,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         macro_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_macro_case_with_sep(&self, seps: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -546,6 +564,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         macro_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_macro_case_with_keep(&self, kept: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -558,6 +577,7 @@ impl<T: AsRef<str>> Caser<T> for T {
 
     // pascal case
 
+    #[inline(always)]
     fn to_pascal_case(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -568,10 +588,12 @@ impl<T: AsRef<str>> Caser<T> for T {
         pascal_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_pascal_case_with_options(&self, opts: &Options) -> String {
         pascal_case_with_options(self.as_ref(), opts)
     }
 
+    #[inline(always)]
     fn to_pascal_case_with_sep(&self, seps: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -582,6 +604,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         pascal_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_pascal_case_with_keep(&self, kept: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -594,6 +617,7 @@ impl<T: AsRef<str>> Caser<T> for T {
 
     // snake case
 
+    #[inline(always)]
     fn to_snake_case(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -604,10 +628,12 @@ impl<T: AsRef<str>> Caser<T> for T {
         snake_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_snake_case_with_options(&self, opts: &Options) -> String {
         snake_case_with_options(self.as_ref(), opts)
     }
 
+    #[inline(always)]
     fn to_snake_case_with_nums_as_word(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: true,
@@ -618,6 +644,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         snake_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_snake_case_with_sep(&self, seps: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -628,6 +655,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         snake_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_snake_case_with_keep(&self, kept: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -640,6 +668,7 @@ impl<T: AsRef<str>> Caser<T> for T {
 
     // train case
 
+    #[inline(always)]
     fn to_train_case(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -650,10 +679,12 @@ impl<T: AsRef<str>> Caser<T> for T {
         train_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_train_case_with_options(&self, opts: &Options) -> String {
         train_case_with_options(self.as_ref(), opts)
     }
 
+    #[inline(always)]
     fn to_train_case_with_nums_as_word(&self) -> String {
         let opts = Options {
             separate_before_non_alphabets: true,
@@ -664,6 +695,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         train_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_train_case_with_sep(&self, seps: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,
@@ -674,6 +706,7 @@ impl<T: AsRef<str>> Caser<T> for T {
         train_case_with_options(self.as_ref(), &opts)
     }
 
+    #[inline(always)]
     fn to_train_case_with_keep(&self, kept: &str) -> String {
         let opts = Options {
             separate_before_non_alphabets: false,

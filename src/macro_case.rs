@@ -17,6 +17,7 @@ use crate::upperize::upperize;
 ///     let result = stringcase::macro_case_with_options("fooBar123Baz", &opts);
 ///     assert_eq!(result, "FOO_BAR_123_BAZ");
 /// ```
+#[inline(always)]
 pub fn macro_case_with_options(input: &str, opts: &Options) -> String {
     upperize::<'_'>(input, opts)
 }
@@ -30,6 +31,7 @@ pub fn macro_case_with_options(input: &str, opts: &Options) -> String {
 ///     let result = stringcase::macro_case("fooBar123Baz");
 ///     assert_eq!(result, "FOO_BAR123_BAZ");
 /// ```
+#[inline(always)]
 pub fn macro_case(input: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
@@ -42,6 +44,7 @@ pub fn macro_case(input: &str) -> String {
 
 /// Converts the input string to macro case with the specified separator characters.
 #[deprecated(since = "0.4.0", note = "Should use macro_case_with_options instead")]
+#[inline(always)]
 pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
@@ -54,6 +57,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
 
 /// Converts the input string to macro case with the specified characters to be kept.
 #[deprecated(since = "0.4.0", note = "Should use macro_case_with_options instead")]
+#[inline(always)]
 pub fn macro_case_with_keep(input: &str, kept: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
@@ -69,6 +73,7 @@ pub fn macro_case_with_keep(input: &str, kept: &str) -> String {
 /// It treats the beginning and the end of a sequence of non-alphabetical characters as a word
 /// boundary.
 #[deprecated(since = "0.4.0", note = "Should use macro_case_with_options instead")]
+#[inline(always)]
 pub fn macro_case_with_nums_as_word(input: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: true,
