@@ -1,8 +1,9 @@
-// Copyright (C) 2024-2025 Takayuki Sato. All Rights Reserved.
+// Copyright (C) 2024-2026 Takayuki Sato. All Rights Reserved.
 // This program is free software under MIT License.
 // See the file LICENSE in this distribution for more details.
 
 use crate::options::Options;
+use crate::upperize::upperize;
 
 /// Converts the input string to macro case with the specified options.
 ///
@@ -17,94 +18,7 @@ use crate::options::Options;
 ///     assert_eq!(result, "FOO_BAR_123_BAZ");
 /// ```
 pub fn macro_case_with_options(input: &str, opts: &Options) -> String {
-    let mut result = String::with_capacity(input.len() + input.len() / 2);
-    // .len returns byte count but ok in this case!
-
-    #[derive(PartialEq)]
-    enum ChIs {
-        FirstOfStr,
-        NextOfUpper,
-        NextOfContdUpper,
-        NextOfSepMark,
-        NextOfKeptMark,
-        Other,
-    }
-
-    let mut flag = ChIs::FirstOfStr;
-
-    for ch in input.chars() {
-        if ch.is_ascii_uppercase() {
-            if flag == ChIs::FirstOfStr {
-                result.push(ch);
-                flag = ChIs::NextOfUpper;
-            } else if flag == ChIs::NextOfUpper
-                || flag == ChIs::NextOfContdUpper
-                || (!opts.separate_after_non_alphabets && flag == ChIs::NextOfKeptMark)
-            {
-                result.push(ch);
-                flag = ChIs::NextOfContdUpper;
-            } else {
-                result.push('_');
-                result.push(ch);
-                flag = ChIs::NextOfUpper;
-            }
-        } else if ch.is_ascii_lowercase() {
-            if flag == ChIs::NextOfContdUpper {
-                if let Some(prev) = result.pop() {
-                    result.push('_');
-                    result.push(prev);
-                    result.push(ch.to_ascii_uppercase());
-                }
-            } else if flag == ChIs::NextOfSepMark
-                || (opts.separate_after_non_alphabets && flag == ChIs::NextOfKeptMark)
-            {
-                result.push('_');
-                result.push(ch.to_ascii_uppercase());
-            } else {
-                result.push(ch.to_ascii_uppercase());
-            }
-            flag = ChIs::Other;
-        } else {
-            let mut is_kept_char = false;
-            if ch.is_ascii_digit() {
-                is_kept_char = true;
-            } else if !opts.separators.is_empty() {
-                if !opts.separators.contains(ch) {
-                    is_kept_char = true;
-                }
-            } else if !opts.keep.is_empty() {
-                #[allow(clippy::collapsible_if)]
-                if opts.keep.contains(ch) {
-                    is_kept_char = true;
-                }
-            }
-
-            if is_kept_char {
-                if opts.separate_before_non_alphabets {
-                    if flag == ChIs::FirstOfStr || flag == ChIs::NextOfKeptMark {
-                        result.push(ch);
-                    } else {
-                        result.push('_');
-                        result.push(ch);
-                    }
-                } else {
-                    if flag != ChIs::NextOfSepMark {
-                        result.push(ch);
-                    } else {
-                        result.push('_');
-                        result.push(ch);
-                    }
-                }
-                flag = ChIs::NextOfKeptMark;
-            } else {
-                if flag != ChIs::FirstOfStr {
-                    flag = ChIs::NextOfSepMark;
-                }
-            }
-        }
-    }
-
-    result
+    upperize::<'_'>(input, opts)
 }
 
 /// Converts the input string to macro case.
@@ -123,7 +37,7 @@ pub fn macro_case(input: &str) -> String {
         separators: "",
         keep: "",
     };
-    macro_case_with_options(input, &opts)
+    upperize::<'_'>(input, &opts)
 }
 
 /// Converts the input string to macro case with the specified separator characters.
@@ -135,7 +49,7 @@ pub fn macro_case_with_sep(input: &str, seps: &str) -> String {
         separators: seps,
         keep: "",
     };
-    macro_case_with_options(input, &opts)
+    upperize::<'_'>(input, &opts)
 }
 
 /// Converts the input string to macro case with the specified characters to be kept.
@@ -147,7 +61,7 @@ pub fn macro_case_with_keep(input: &str, kept: &str) -> String {
         separators: "",
         keep: kept,
     };
-    macro_case_with_options(input, &opts)
+    upperize::<'_'>(input, &opts)
 }
 
 /// Converts the input string to macro case.
@@ -162,7 +76,7 @@ pub fn macro_case_with_nums_as_word(input: &str) -> String {
         separators: "",
         keep: "",
     };
-    macro_case_with_options(input, &opts)
+    upperize::<'_'>(input, &opts)
 }
 
 #[cfg(test)]
