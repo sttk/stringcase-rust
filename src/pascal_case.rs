@@ -1,4 +1,4 @@
-// Copyright (C) 2024-2025 Takayuki Sato. All Rights Reserved.
+// Copyright (C) 2024-2026 Takayuki Sato. All Rights Reserved.
 // This program is free software under MIT License.
 // See the file LICENSE in this distribution for more details.
 
@@ -93,6 +93,7 @@ pub fn pascal_case_with_options(input: &str, opts: &Options) -> String {
 ///     let pascal = stringcase::pascal_case("foo_bar100_baz");
 ///     assert_eq!(pascal, "FooBar100Baz");
 /// ```
+#[inline(always)]
 pub fn pascal_case(input: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
@@ -105,6 +106,7 @@ pub fn pascal_case(input: &str) -> String {
 
 /// Converts the input string to pascal case with the specified separator characters.
 #[deprecated(since = "0.4.0", note = "Should use pascal_case_with_options instead")]
+#[inline(always)]
 pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
@@ -117,6 +119,7 @@ pub fn pascal_case_with_sep(input: &str, seps: &str) -> String {
 
 /// Converts the input string to pascal case with the specified characters to be kept.
 #[deprecated(since = "0.4.0", note = "Should use pascal_case_with_options instead")]
+#[inline(always)]
 pub fn pascal_case_with_keep(input: &str, kept: &str) -> String {
     let opts = Options {
         separate_before_non_alphabets: false,
