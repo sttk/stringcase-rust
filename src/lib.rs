@@ -124,9 +124,13 @@ pub use snake_case::*;
 mod capitalize;
 pub use capitalize::capitalize;
 
+mod ada_case;
 mod pascal_case;
+mod title_case;
 mod train_case;
+pub use ada_case::*;
 pub use pascal_case::*;
+pub use title_case::*;
 pub use train_case::*;
 
 mod camel_case;
