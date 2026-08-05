@@ -1,6 +1,8 @@
 # [stringcase for Rust][repo-url] [![crates.io][cratesio-img]][cratesio-url] [![doc.rs][docrs-img]][docrs-url] [![CI Status][ci-img]][ci-url] [![MIT License][mit-img]][mit-url]
 
-This library provides some functions that convert string cases between camelCase, COBOL-CASE, kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
+This library provides some functions that convert string cases between Ada_Case, camelCase, COBOL-CASE, kebab-case, MACRO_CASE, PascalCase, snake_case, Title Case, and Train-Case.
+In addition, generic functions `capitalize`, `lowerize`, and `upperize` are provided to convert
+string cases with a custom joiner character.
 And this library also provides a trait `Caser` which enables strings to convert themselves to their cases by their own methods.
 
 Basically, these functions only target ASCII uppercase and lowercase letters for capitalization. All characters other than ASCII uppercase and lowercase letters and ASCII numbers are removed as word separators.
@@ -47,6 +49,26 @@ fn main() {
     let input = "fooBar123Baz";
     let snake = snake_case_with_options(input, &opts);
     assert_eq!(snake, "foo_bar_123_baz");
+}
+```
+
+You can also use the generic functions `capitalize`, `lowerize`, and `upperize` to convert
+strings into capitalized, lowercased, or uppercased words joined by a custom joiner
+character:
+
+```rust
+use stringcase::{capitalize, lowerize, upperize, Options};
+
+fn main() {
+    let opts = Options {
+        separate_before_non_alphabets: true,
+        separate_after_non_alphabets: true,
+        ..Default::default()
+    };
+    let input = "fooBar123Baz";
+    assert_eq!(capitalize::<'.'>(input, &opts), "Foo.Bar.123.Baz");
+    assert_eq!(lowerize::<'.'>(input, &opts), "foo.bar.123.baz");
+    assert_eq!(upperize::<'.'>(input, &opts), "FOO.BAR.123.BAZ");
 }
 ```
 
