@@ -35,7 +35,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! stringcase = "0.4.0"
+//! stringcase = "1.0.0"
 //! ```
 //!
 //! ## Usage

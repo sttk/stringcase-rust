@@ -1,3 +1,126 @@
+## 1.0.0
+
+> - Date: 2026/08/05
+> - rustc 1.97.1 (8bab26f4f 2026-07-14)
+> - macOS Tahoe 25.6
+> - Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+
+```
+% ./build.sh bench
+
+running 1798 tests
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 87/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 174/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 261/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 348/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 435/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 522/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 609/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 696/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 783/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 870/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 957/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1044/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1131/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1218/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1305/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1392/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1479/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1566/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1653/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 1740/1798
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+test result: ok. 0 passed; 0 failed; 1798 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 5 tests
+test bench_ada_case                   ... bench:          79.82 ns/iter (+/- 11.65)
+test bench_ada_case_with_keep         ... bench:          85.21 ns/iter (+/- 5.86)
+test bench_ada_case_with_nums_as_word ... bench:          79.91 ns/iter (+/- 4.28)
+test bench_ada_case_with_options      ... bench:          85.39 ns/iter (+/- 4.78)
+test bench_ada_case_with_sep          ... bench:          87.03 ns/iter (+/- 10.34)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 9.27s
+
+
+running 4 tests
+test bench_camel_case              ... bench:          84.87 ns/iter (+/- 2.63)
+test bench_camel_case_with_keep    ... bench:          90.94 ns/iter (+/- 4.51)
+test bench_camel_case_with_options ... bench:          92.56 ns/iter (+/- 7.77)
+test bench_camel_case_with_sep     ... bench:          92.46 ns/iter (+/- 29.48)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 12.16s
+
+
+running 5 tests
+test bench_cobol_case                   ... bench:          75.06 ns/iter (+/- 8.82)
+test bench_cobol_case_with_keep         ... bench:          81.85 ns/iter (+/- 8.19)
+test bench_cobol_case_with_nums_as_word ... bench:          77.90 ns/iter (+/- 11.76)
+test bench_cobol_case_with_options      ... bench:          81.93 ns/iter (+/- 5.70)
+test bench_cobol_case_with_sep          ... bench:          87.75 ns/iter (+/- 6.75)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 13.36s
+
+
+running 5 tests
+test bench_kebab_case                   ... bench:          73.65 ns/iter (+/- 5.93)
+test bench_kebab_case_with_keep         ... bench:          79.95 ns/iter (+/- 4.71)
+test bench_kebab_case_with_nums_as_word ... bench:          76.82 ns/iter (+/- 8.98)
+test bench_kebab_case_with_options      ... bench:          80.31 ns/iter (+/- 10.22)
+test bench_kebab_case_with_sep          ... bench:          83.94 ns/iter (+/- 9.53)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 5.06s
+
+
+running 5 tests
+test bench_macro_case                   ... bench:          75.64 ns/iter (+/- 4.58)
+test bench_macro_case_with_keep         ... bench:          81.74 ns/iter (+/- 7.47)
+test bench_macro_case_with_nums_as_word ... bench:          78.54 ns/iter (+/- 25.50)
+test bench_macro_case_with_options      ... bench:          81.90 ns/iter (+/- 4.89)
+test bench_macro_case_with_sep          ... bench:          83.31 ns/iter (+/- 5.15)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 8.32s
+
+
+running 4 tests
+test bench_pascal_case              ... bench:          76.61 ns/iter (+/- 3.14)
+test bench_pascal_case_with_keep    ... bench:          87.77 ns/iter (+/- 4.18)
+test bench_pascal_case_with_options ... bench:          88.20 ns/iter (+/- 8.27)
+test bench_pascal_case_with_sep     ... bench:          88.99 ns/iter (+/- 5.91)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 4 measured; 0 filtered out; finished in 9.60s
+
+
+running 5 tests
+test bench_snake_case                   ... bench:          73.26 ns/iter (+/- 4.04)
+test bench_snake_case_with_keep         ... bench:          81.68 ns/iter (+/- 9.67)
+test bench_snake_case_with_nums_as_word ... bench:          75.10 ns/iter (+/- 4.58)
+test bench_snake_case_with_options      ... bench:          78.80 ns/iter (+/- 4.74)
+test bench_snake_case_with_sep          ... bench:          83.21 ns/iter (+/- 1.98)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 2.65s
+
+
+running 5 tests
+test bench_title_case                   ... bench:          78.06 ns/iter (+/- 4.85)
+test bench_title_case_with_keep         ... bench:          83.69 ns/iter (+/- 3.54)
+test bench_title_case_with_nums_as_word ... bench:          78.55 ns/iter (+/- 3.73)
+test bench_title_case_with_options      ... bench:          82.93 ns/iter (+/- 4.64)
+test bench_title_case_with_sep          ... bench:          82.75 ns/iter (+/- 6.04)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 14.84s
+
+
+running 5 tests
+test bench_train_case                   ... bench:          77.93 ns/iter (+/- 3.29)
+test bench_train_case_with_keep         ... bench:          88.89 ns/iter (+/- 14.83)
+test bench_train_case_with_nums_as_word ... bench:          79.92 ns/iter (+/- 35.61)
+test bench_train_case_with_options      ... bench:          84.88 ns/iter (+/- 8.56)
+test bench_train_case_with_sep          ... bench:          87.79 ns/iter (+/- 8.08)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 5 measured; 0 filtered out; finished in 11.94s
+```
+
 ## 0.4.0
 
 > - Date: 2025/03/02
