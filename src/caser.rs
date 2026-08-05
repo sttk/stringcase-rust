@@ -14,14 +14,14 @@ use crate::train_case::*;
 /// `Caser` is the trait to attach methods for converting strings `&str` and
 /// `String` to various cases.
 ///
-/// By declarating this trait with `use` keyword, all conversion methods
+/// By declaring this trait with `use` keyword, all conversion methods
 /// provided by this library become available for `&str` and `String`.
 pub trait Caser<T: AsRef<str>> {
     // camel case
 
     /// Converts the input string to camel case.
     ///
-    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// It treats the end of a sequence of non-alphabetic characters as a word boundary,
     /// but not the beginning.
     ///
     /// ```rust
@@ -64,7 +64,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to cobol case.
     ///
-    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// It treats the end of a sequence of non-alphabetic characters as a word boundary,
     /// but not the beginning.
     ///
     /// ```rust
@@ -93,7 +93,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to cobol case.
     ///
-    /// It treats the begin and the end of a sequence of non-alphabetical characters as a word
+    /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
     #[deprecated(
         since = "0.4.0",
@@ -119,7 +119,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to kebab case.
     ///
-    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// It treats the end of a sequence of non-alphabetic characters as a word boundary,
     /// but not the beginning.
     ///
     /// ```rust
@@ -148,7 +148,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to kebab case.
     ///
-    /// It treats the begin and the end of a sequence of non-alphabetical characters as a word
+    /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
     #[deprecated(
         since = "0.4.0",
@@ -174,7 +174,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to macro case.
     ///
-    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// It treats the end of a sequence of non-alphabetic characters as a word boundary,
     /// but not the beginning.
     ///
     /// ```rust
@@ -203,7 +203,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to macro case.
     ///
-    /// It treats the begin and the end of a sequence of non-alphabetical characters as a word
+    /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
     #[deprecated(
         since = "0.4.0",
@@ -229,7 +229,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to pascal case.
     ///
-    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// It treats the end of a sequence of non-alphabetic characters as a word boundary,
     /// but not the beginning.
     ///
     /// ```rust
@@ -274,7 +274,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to snake case.
     ///
-    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// It treats the end of a sequence of non-alphabetic characters as a word boundary,
     /// but not the beginning.
     ///
     /// ```rust
@@ -303,7 +303,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to snake case.
     ///
-    /// It treats the begin and the end of a sequence of non-alphabetical characters as a word
+    /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
     #[deprecated(
         since = "0.4.0",
@@ -329,7 +329,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to train case.
     ///
-    /// It treats the end of a sequence of non-alphabetical characters as a word boundary,
+    /// It treats the end of a sequence of non-alphabetic characters as a word boundary,
     /// but not the beginning.
     ///
     /// ```rust
@@ -358,7 +358,7 @@ pub trait Caser<T: AsRef<str>> {
 
     /// Converts the input string to train case.
     ///
-    /// It treats the begin and the end of a sequence of non-alphabetical characters as a word
+    /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
     #[deprecated(
         since = "0.4.0",

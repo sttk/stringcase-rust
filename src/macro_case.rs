@@ -24,7 +24,7 @@ pub fn macro_case_with_options(input: &str, opts: &Options) -> String {
 
 /// Converts the input string to macro case.
 ///
-/// It treats the end of a sequence of non-alphabetical characters as a word boundary, but not
+/// It treats the end of a sequence of non-alphabetic characters as a word boundary, but not
 /// the beginning.
 ///
 /// ```rust
@@ -72,7 +72,7 @@ pub fn macro_case_with_keep(input: &str, kept: &str) -> String {
 
 /// Converts the input string to macro case.
 ///
-/// It treats the beginning and the end of a sequence of non-alphabetical characters as a word
+/// It treats the beginning and the end of a sequence of non-alphabetic characters as a word
 /// boundary.
 #[doc(hidden)]
 #[deprecated(since = "0.4.0", note = "Should use macro_case_with_options instead")]
