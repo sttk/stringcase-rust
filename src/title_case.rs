@@ -132,7 +132,7 @@ mod tests_of_title_case {
 }
 
 #[cfg(test)]
-mod tests_of_cobol_case_with_options {
+mod tests_of_title_case_with_options {
     use super::*;
 
     mod non_alphabets_as_head_of_a_word {
