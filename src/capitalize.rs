@@ -273,7 +273,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string_with_options() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: false,
@@ -415,7 +415,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string_with_options() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: true,
@@ -557,7 +557,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string_with_options() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: true,
@@ -699,7 +699,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string_with_options() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: false,
@@ -865,7 +865,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: false,
@@ -877,7 +877,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn alphabets_and_numbers_in_separators_have_no_effect() {
+        fn alphabets_and_numbers_in_separators_are_no_effect() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: false,
@@ -1221,7 +1221,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: true,
@@ -1233,7 +1233,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn alphabets_and_numbers_in_separators_no_effect() {
+        fn alphabets_and_numbers_in_separators_are_no_effect() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: true,
@@ -1383,7 +1383,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: false,
@@ -1395,7 +1395,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn alphabets_and_numbers_in_separators_have_no_effect() {
+        fn alphabets_and_numbers_in_separators_are_no_effect() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: false,
@@ -1561,7 +1561,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: false,
@@ -1573,7 +1573,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn alphabets_and_numbers_in_separators_have_no_effect() {
+        fn alphabets_and_numbers_in_separators_are_no_effect() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: false,
@@ -1739,7 +1739,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: true,
@@ -1905,7 +1905,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: true,
@@ -2071,7 +2071,7 @@ mod tests_of_capitalize {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: false,

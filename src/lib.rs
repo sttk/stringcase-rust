@@ -2,8 +2,8 @@
 // This program is free software under MIT License.
 // See the file LICENSE in this distribution for more details.
 
-//! This library provides some functions that convert string cases between camelCase, COBOL-CASE,
-//! kebab-case, MACRO_CASE, PascalCase, snake_case and Train-Case.
+//! This library provides some functions that convert string cases between Ada_Case, camelCase,
+//! COBOL-CASE, kebab-case, MACRO_CASE, PascalCase, snake_case, Title Case, and Train-Case.
 //! In addition, generic functions `capitalize`, `lowerize`, and `upperize` are provided to convert
 //! string cases with a custom joiner character.
 //! And this library also provides a trait `Caser` which enables strings to convert themselves

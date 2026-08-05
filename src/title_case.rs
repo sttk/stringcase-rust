@@ -42,23 +42,6 @@ pub fn title_case(input: &str) -> String {
     capitalize::<' '>(input, &opts)
 }
 
-/// Converts the input string to title case.
-///
-/// It treats the beginning and the end of a sequence of non-alphabetical characters as a word
-/// boundary.
-#[doc(hidden)]
-#[deprecated(since = "0.4.0", note = "Should use title_case_with_options instead")]
-#[inline(always)]
-pub fn title_case_with_nums_as_word(input: &str) -> String {
-    let opts = Options {
-        separate_before_non_alphabets: true,
-        separate_after_non_alphabets: true,
-        separators: "",
-        keep: "",
-    };
-    capitalize::<' '>(input, &opts)
-}
-
 #[cfg(test)]
 mod tests_of_title_case {
     use super::*;
@@ -142,7 +125,7 @@ mod tests_of_title_case {
     }
 
     #[test]
-    fn convert_empty_string() {
+    fn convert_an_empty_string() {
         let result = title_case("");
         assert_eq!(result, "");
     }
@@ -306,7 +289,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string_with_options() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: false,
@@ -472,7 +455,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string_with_options() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: true,
@@ -638,7 +621,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string_with_options() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: true,
@@ -804,7 +787,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string_with_options() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: false,
@@ -1002,7 +985,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: false,
@@ -1422,7 +1405,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: true,
@@ -1616,7 +1599,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: false,
@@ -1826,7 +1809,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: false,
@@ -2036,7 +2019,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: true,
@@ -2234,7 +2217,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: true,
                 separate_after_non_alphabets: true,
@@ -2432,7 +2415,7 @@ mod tests_of_cobol_case_with_options {
         }
 
         #[test]
-        fn convert_empty_string() {
+        fn convert_an_empty_string() {
             let opts = Options {
                 separate_before_non_alphabets: false,
                 separate_after_non_alphabets: false,
