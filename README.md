@@ -94,15 +94,15 @@ This library supports Rust 1.56.1 or later.
 
 ```bash
 % ./build.sh msrv
-  [Meta]   cargo-msrv 0.18.4
+  [Meta]   cargo-msrv 0.19.3
 
-Compatibility Check #1: Rust 1.74.1
+Compatibility Check #1: Rust 1.77.2
   [OK]     Is compatible
 
-Compatibility Check #2: Rust 1.65.0
+Compatibility Check #2: Rust 1.66.1
   [OK]     Is compatible
 
-Compatibility Check #3: Rust 1.60.0
+Compatibility Check #3: Rust 1.61.0
   [OK]     Is compatible
 
 Compatibility Check #4: Rust 1.58.1
@@ -115,7 +115,7 @@ Compatibility Check #6: Rust 1.56.1
   [OK]     Is compatible
 
 Result:
-   Considered (min … max):   Rust 1.56.1 … Rust 1.91.0
+   Considered (min … max):   Rust 1.56.1 … Rust 1.97.1
    Search method:            bisect
    MSRV:                     1.56.1
    Target:                   x86_64-apple-darwin
