@@ -88,7 +88,7 @@ pub fn camel_case_with_options(input: &str, opts: &Options) -> String {
 
 /// Converts the input string to camel case.
 ///
-/// It treats the end of a sequence of non-alphabetical characters as a word boundary, but not
+/// It treats the end of a sequence of non-alphabetic characters as a word boundary, but not
 /// the beginning.
 ///
 /// ```rust
