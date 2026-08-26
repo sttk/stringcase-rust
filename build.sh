@@ -1,64 +1,47 @@
 #!/usr/bin/env bash
 
-errcheck() {
-  exitcd=$1
-  if [[ "$exitcd" != "0" ]]; then
-    exit $exitcd
-  fi
-}
+set -euo pipefail
 
 clean() {
   cargo clean
-  errcheck $?
 }
 
 format() {
   cargo fmt
-  errcheck $?
 }
 
 lint() {
   cargo clippy
-  errcheck $?
 }
 
 compile() {
   cargo build
-  errcheck $?
 }
 
 test() {
   cargo test -- --show-output
-  errcheck $?
 }
 
 unit() {
   cargo test -- --show-output $1
-  errcheck $?
 }
 
 cover() {
   cargo llvm-cov clean
-  errcheck $?
   cargo llvm-cov --html --quiet
-  errcheck $?
   cargo llvm-cov report
-  errcheck $?
 }
 
 bench() {
   cargo +nightly bench --quiet -- $1
-  errcheck $?
 }
 
 doc() {
   cargo doc
-  errcheck $?
 }
 
 msrv() {
   cargo msrv find --ignore-lockfile --no-check-feedback
-  errcheck $?
 }
 
 if [[ "$#" == "0" ]]; then
