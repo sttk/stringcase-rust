@@ -47,6 +47,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_camel_case_with_options(&self, opts: &Options) -> String;
 
     /// Converts the input string to camel case with the specified separator characters.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_camel_case_with_options instead"
@@ -54,6 +55,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_camel_case_with_sep(&self, seps: &str) -> String;
 
     /// Converts the input string to camel case with the specified characters to be kept.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_camel_case_with_options instead"
@@ -95,6 +97,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_cobol_case_with_options instead"
@@ -102,6 +105,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_cobol_case_with_nums_as_word(&self) -> String;
 
     /// Converts the input string to cobol case with the specified separator characters.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_cobol_case_with_options instead"
@@ -109,6 +113,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_cobol_case_with_sep(&self, seps: &str) -> String;
 
     /// Converts the input string to cobol case with the specified characters to be kept.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_cobol_case_with_options instead"
@@ -150,6 +155,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_kebab_case_with_options instead"
@@ -157,6 +163,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_kebab_case_with_nums_as_word(&self) -> String;
 
     /// Converts the input string to kebab case with the specified separator characters.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_kebab_case_with_options instead"
@@ -164,6 +171,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_kebab_case_with_sep(&self, seps: &str) -> String;
 
     /// Converts the input string to kebab case with the specified characters to be kept.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_kebab_case_with_options instead"
@@ -205,6 +213,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_macro_case_with_options instead"
@@ -212,6 +221,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_macro_case_with_nums_as_word(&self) -> String;
 
     /// Converts the input string to macro case with the specified separator characters.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_macro_case_with_options instead"
@@ -219,6 +229,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_macro_case_with_sep(&self, seps: &str) -> String;
 
     /// Converts the input string to macro case with the specified characters to be kept.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_macro_case_with_options instead"
@@ -257,6 +268,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_pascal_case_with_options(&self, opts: &Options) -> String;
 
     /// Converts the input string to pascal case with the specified separator characters.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_pascal_case_with_options instead"
@@ -264,6 +276,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_pascal_case_with_sep(&self, seps: &str) -> String;
 
     /// Converts the input string to pascal case with the specified characters to be kept.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_pascal_case_with_options instead"
@@ -305,6 +318,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_snake_case_with_options instead"
@@ -312,6 +326,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_snake_case_with_nums_as_word(&self) -> String;
 
     /// Converts the input string to snake case with the specified separator characters.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_snake_case_with_options instead"
@@ -319,6 +334,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_snake_case_with_sep(&self, seps: &str) -> String;
 
     /// Converts the input string to snake case with the specified characters to be kept.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_snake_case_with_options instead"
@@ -360,6 +376,7 @@ pub trait Caser<T: AsRef<str>> {
     ///
     /// It treats the begin and the end of a sequence of non-alphabetic characters as a word
     /// boundary.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_train_case_with_options instead"
@@ -367,6 +384,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_train_case_with_nums_as_word(&self) -> String;
 
     /// Converts the input string to train case with the specified separator characters.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_train_case_with_options instead"
@@ -374,6 +392,7 @@ pub trait Caser<T: AsRef<str>> {
     fn to_train_case_with_sep(&self, seps: &str) -> String;
 
     /// Converts the input string to train case with the specified characters to be kept.
+    #[doc(hidden)]
     #[deprecated(
         since = "0.4.0",
         note = "Should use to_train_case_with_options instead"
